@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+// 💡 調整：同時引入 getPostData (拿原始內文) 與 getSerializedPost (拿渲染後的 MDX)
 import { getPostData, getAllPostSlugs, formatDate, getSerializedPost } from '@/lib/posts';
 import { MDXComponents } from '@/components/MDXComponents';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -46,6 +47,9 @@ function slugify(text: string) {
 }
 
 function extractHeadings(content: string) {
+  // 💡 安全防護：確保 content 存在，若不存在則直接回傳空陣列，避免 split 崩潰
+  if (!content) return [];
+  
   const headings: { id: string; title: string; level: number }[] = [];
   const lines = content.split('\n');
   const usedIds: Record<string, number> = {};
@@ -73,24 +77,31 @@ function extractHeadings(content: string) {
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  let post;
+  
+  let rawPost;
+  let serializedPost;
+  
   try {
-    // fetch serialized MDX so we can render with MDXRemote
-    post = await getSerializedPost(slug);
-  } catch {
+    // 1. 先透過 getPostData 取得未處理的原始 Markdown 內文（用來解析 TOC 目錄）
+    rawPost = getPostData(slug);
+    // 2. 再取得經由 next-mdx-remote 序列化後的 MDX 物件（用來渲染畫面）
+    serializedPost = await getSerializedPost(slug);
+  } catch (error) {
+    console.error("讀取文章失敗:", error);
     notFound();
   }
 
-  const headings = extractHeadings(post.content);
+  // 💡 修正：傳入擁有明確 content 純文字字串的 rawPost.content
+  const headings = extractHeadings(rawPost.content);
 
   return (
     <>
-      {/* Background Image - Fixed Position */}
-      {post.image && (
+      {/* 背景圖片 - 固定位置 */}
+      {serializedPost.image && (
         <div className="fixed top-0 left-0 w-1/3 h-80 -z-10 hidden lg:block pointer-events-none overflow-hidden">
           <Image
-            src={post.image}
-            alt={post.title}
+            src={serializedPost.image}
+            alt={serializedPost.title}
             fill
             className="object-cover opacity-10 dark:opacity-5"
             sizes="33vw"
@@ -100,63 +111,66 @@ export default async function PostPage({ params }: PostPageProps) {
       )}
 
       <article className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="space-y-6 sm:space-y-8 min-w-0">
-        {/* Post Header */}
-        <header className="space-y-4 pb-6 sm:pb-8 border-b border-neutral-200 dark:border-neutral-800">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words">
-            {post.title}
-          </h1>
+        <div className="space-y-6 sm:space-y-8 min-w-0">
+          {/* 文章標頭 */}
+          <header className="space-y-4 pb-6 sm:pb-8 border-b border-neutral-200 dark:border-neutral-800">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words">
+              {serializedPost.title}
+            </h1>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
-            <time className="font-mono text-neutral-500 dark:text-neutral-500">
-              {formatDate(post.date)}
-            </time>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
+              <time className="font-mono text-neutral-500 dark:text-neutral-500">
+                {formatDate(serializedPost.date)}
+              </time>
 
-            <ReadingTime minutes={post.readingTime} />
+              <ReadingTime minutes={serializedPost.readingTime} />
 
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <TagPill key={tag} tag={tag} />
-                ))}
-              </div>
-            )}
+              {serializedPost.tags && serializedPost.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {serializedPost.tags.map((tag) => (
+                    <TagPill key={tag} tag={tag} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              {serializedPost.description}
+            </p>
+          </header>
+
+          {/* 行動裝置目錄 */}
+          <TableOfContents headings={headings} variant="mobile" />
+
+          {/* 文章內文 */}
+          <div className="prose-custom space-y-4">
+            {/* 💡 修正：傳入序列化後的 mdxSource 內容 */}
+            <MDXRemote {...serializedPost.mdxSource} components={MDXComponents} />
           </div>
 
-          <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            {post.description}
-          </p>
-        </header>
+          {/* 分享區塊 */}
+          <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
+            <ShareButtons
+              title={serializedPost.title}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${slug}`}
+              description={serializedPost.description}
+            />
+          </div>
 
-        <TableOfContents headings={headings} variant="mobile" />
-
-        {/* Post Content */}
-        <div className="prose-custom space-y-4">
-          <MDXRemote {...post.mdxSource} components={MDXComponents} />
+          {/* 評論區塊 */}
+          <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">
+              評論
+            </h2>
+            <LazyGiscus />
+          </div>
         </div>
 
-        {/* Share Section */}
-        <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
-          <ShareButtons
-            title={post.title}
-            url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${slug}`}
-            description={post.description}
-          />
-        </div>
-
-        {/* Comments Section */}
-        <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
-          <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">
-            評論
-          </h2>
-          <LazyGiscus />
-        </div>
-      </div>
-
-      <aside className="hidden lg:block sticky top-24 self-start">
-        <TableOfContents headings={headings} variant="sidebar" />
-      </aside>
-    </article>
+        {/* 側邊欄目錄 */}
+        <aside className="hidden lg:block sticky top-24 self-start">
+          <TableOfContents headings={headings} variant="sidebar" />
+        </aside>
+      </article>
     </>
   );
 }
