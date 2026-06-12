@@ -1,184 +1,213 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { Post, PostMetadata, formatDate } from './types';
-import { serialize } from 'next-mdx-remote/serialize';
-import remarkGfm from 'remark-gfm';
+import { marked } from 'marked';
 
-export { formatDate };
+const postsDirectory = path.join(process.cwd(), 'public/post');
 
-const postsDirectory = path.join(process.cwd(), 'public', 'post');
-
-/**
- * 計算閱讀時間（平均每分鐘 200 字）
- */
-export function calculateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
+export interface PostData {
+  slug: string;
+  title: string;
+  date: string;
+  description: string;
+  tags: string[];
+  category: string;
+  image: string | undefined;
+  published: boolean;
+  content: string;
+  readingTime: number;
 }
 
-/**
- * Get all published posts sorted by date (newest first)
- */
-export function getSortedPostsData(): PostMetadata[] {
-  const fileNames = fs.readdirSync(postsDirectory);
-  
-  const allPostsData = fileNames
-    .filter(fileName => fileName.endsWith('.md'))
-    .map(fileName => {
-      const slug = fileName.replace(/\.md$/, '');
-      const filePath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      
-      const { data, content } = matter(fileContents);
-      
-      return {
-        slug,
-        title: data.title || 'Untitled',
-        date: data.date || '',
-        description: data.description || '',
-        tags: data.tags || [],
-        published: data.published !== false,
-        readingTime: calculateReadingTime(content),
-        category: data.category || 'general',
-        image: data.image,
-      };
-    })
-    .filter(post => post.published)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  return allPostsData;
-}
-
-/**
- * Get a specific post by slug
- */
-export function getPostData(slug: string): Post {
-  const fileName = `${slug}.md`;
-  const filePath = path.join(postsDirectory, fileName);
-  
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Post not found: ${slug}`);
-  }
-
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return {
-    slug,
-    title: data.title || 'Untitled',
-    date: data.date || '',
-    description: data.description || '',
-    tags: data.tags || [],
-    published: data.published !== false,
-    content,
-    readingTime: calculateReadingTime(content),
-    category: data.category || 'general',
-    image: data.image,
+export interface SerializedPost extends Omit<PostData, 'content'> {
+  mdxSource: {
+    compiledSource: string;
+    frontmatter?: any;
+    scope?: any;
   };
 }
 
 /**
- * Get all available post slugs (for static generation)
+ * 格式化日期字串
  */
-export function getAllPostSlugs(): string[] {
-  return getSortedPostsData().map(post => post.slug);
+export function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  return new Date(dateString).toLocaleDateString('zh-TW', options);
 }
 
 /**
- * Get all categories
+ * 獲取所有文章的 Slug 列表
+ */
+export function getAllPostSlugs(): string[] {
+  if (!fs.existsSync(postsDirectory)) {
+    return [];
+  }
+
+  const fileNames = fs.readdirSync(postsDirectory);
+  return fileNames
+    .filter((fileName) => fileName.endsWith('.md'))
+    .map((fileName) => fileName.replace(/\.md$/, ''));
+}
+
+/**
+ * 根據 Slug 獲取原始文章資料
+ */
+export function getPostData(slug: string): PostData {
+  let cleanSlug = decodeURIComponent(slug);
+  let fullPath = path.join(postsDirectory, `${cleanSlug}.md`);
+
+  if (!fs.existsSync(fullPath)) {
+    const alternativeSlug1 = cleanSlug.replace(/_/g, '+');
+    const alternativeSlug2 = cleanSlug.replace(/_/g, '-');
+    const alternativeSlug3 = cleanSlug.replace(/\+/g, '_');
+    
+    if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug1}.md`))) {
+      fullPath = path.join(postsDirectory, `${alternativeSlug1}.md`);
+    } else if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug2}.md`))) {
+      fullPath = path.join(postsDirectory, `${alternativeSlug2}.md`);
+    } else if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug3}.md`))) {
+      fullPath = path.join(postsDirectory, `${alternativeSlug3}.md`);
+    } else {
+      throw new Error(`Post not found: ${slug}`);
+    }
+  }
+
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { data, content } = matter(fileContents);
+
+  const wordsPerMinute = 200;
+  const cleanContent = content.replace(/[#*`\s]/g, '');
+  const readingTime = Math.max(1, Math.ceil(cleanContent.length / wordsPerMinute));
+
+  return {
+    slug: cleanSlug,
+    title: data.title || cleanSlug,
+    date: data.date || new Date().toISOString().split('T')[0],
+    description: data.description || '',
+    tags: data.tags || [],
+    category: data.category || '未分類',
+    image: data.image !== undefined && data.image !== null ? data.image : undefined,
+    published: data.published !== false,
+    content,
+    readingTime,
+  };
+}
+
+/**
+ * 獲取所有已發布的文章，並按日期排序
+ */
+export function getSortedPostsData(): PostData[] {
+  if (!fs.existsSync(postsDirectory)) {
+    return [];
+  }
+
+  const fileNames = fs.readdirSync(postsDirectory);
+  const allPostsData = fileNames
+    .filter((fileName) => fileName.endsWith('.md'))
+    .map((fileName) => {
+      const slug = fileName.replace(/\.md$/, '');
+      return getPostData(slug);
+    })
+    .filter((post) => post.published);
+
+  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/**
+ * 將文章的 Markdown 內文序列化為 HTML
+ */
+export async function getSerializedPost(slug: string): Promise<SerializedPost> {
+  const post = getPostData(slug);
+  const htmlContent = marked.parse(post.content) as string;
+
+  return {
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    description: post.description,
+    tags: post.tags,
+    category: post.category,
+    image: post.image,
+    published: post.published,
+    readingTime: post.readingTime,
+    mdxSource: {
+      compiledSource: htmlContent,
+      frontmatter: {},
+      scope: {}
+    },
+  };
+}
+
+/* ==========================================================================
+   分類與標籤相關工具函式
+   ========================================================================== */
+
+/**
+ * 獲取所有文章中不重複的分類列表
  */
 export function getAllCategories(): string[] {
   const posts = getSortedPostsData();
-  const categories = new Set(posts.map(post => post.category || 'general'));
-  return Array.from(categories).sort();
+  const categories = posts.map((post) => post.category).filter(Boolean);
+  return Array.from(new Set(categories));
 }
 
 /**
- * Get posts by category
+ * 根據分類名稱篩選文章列表
  */
-export function getPostsByCategory(category: string): PostMetadata[] {
-  return getSortedPostsData().filter(post => (post.category || 'general') === category);
+export function getPostsByCategory(category: string): PostData[] {
+  const posts = getSortedPostsData();
+  const decodedCategory = decodeURIComponent(category).toLowerCase();
+  return posts.filter((post) => post.category.toLowerCase() === decodedCategory);
 }
 
 /**
- * Get all unique tags
+ * 獲取所有不重複的標籤純字串陣列列表
  */
 export function getAllTags(): string[] {
-  const allPosts = getSortedPostsData();
-  const tags = new Set<string>();
-  
-  allPosts.forEach(post => {
-    post.tags.forEach(tag => tags.add(tag));
+  const posts = getSortedPostsData();
+  const tagsSet = new Set<string>();
+  posts.forEach((post) => {
+    if (post.tags && Array.isArray(post.tags)) {
+      post.tags.forEach((tag) => tagsSet.add(tag));
+    }
   });
-  
-  return Array.from(tags).sort();
-}
-
-export interface TagWithCount {
-  tag: string;
-  count: number;
-}
-
-export function getAllTagsWithCount(): TagWithCount[] {
-  const allPosts = getSortedPostsData();
-  const tagCounts = new Map<string, number>();
-
-  allPosts.forEach(post => {
-    post.tags.forEach(tag => {
-      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-    });
-  });
-
-  return Array.from(tagCounts.entries())
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => {
-      if (b.count !== a.count) return b.count - a.count;
-      return a.tag.localeCompare(b.tag, 'zh-Hant', { numeric: true, sensitivity: 'base' });
-    });
+  return Array.from(tagsSet);
 }
 
 /**
- * Get serialized MDX for a specific post (for rendering in App Router server components)
+ * 獲取標籤列表，並附帶數量
  */
-export async function getSerializedPost(slug: string): Promise<Post & { mdxSource: any }> {
-  const fileName = `${slug}.md`;
-  const filePath = path.join(postsDirectory, fileName);
+export function getAllTagsWithCount(): { tag: string; text: string; value: number; count: number }[] {
+  const posts = getSortedPostsData();
+  const tagCounts: Record<string, number> = {};
 
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Post not found: ${slug}`);
-  }
-
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  const mdxSource = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [],
-    },
-    parseFrontmatter: false,
+  posts.forEach((post) => {
+    if (post.tags && Array.isArray(post.tags)) {
+      post.tags.forEach((tag) => {
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+      });
+    }
   });
 
-  return {
-    slug,
-    title: data.title || 'Untitled',
-    date: data.date || '',
-    description: data.description || '',
-    tags: data.tags || [],
-    published: data.published !== false,
-    content,
-    readingTime: calculateReadingTime(content),
-    category: data.category || 'general',
-    image: data.image,
-    mdxSource,
-  };
+  // 💡 終極相容修正：將所有前端元件可能要求的欄位（tag, text, value, count）全部一次回傳！
+  return Object.entries(tagCounts).map(([text, value]) => ({
+    tag: text,
+    text: text,
+    value: value,
+    count: value,
+  }));
 }
 
 /**
- * Get posts by tag
+ * 根據指定標籤篩選文章列表
  */
-export function getPostsByTag(tag: string): PostMetadata[] {
-  return getSortedPostsData().filter(post => post.tags.includes(tag));
+export function getPostsByTag(tag: string): PostData[] {
+  const posts = getSortedPostsData();
+  const decodedTag = decodeURIComponent(tag).toLowerCase();
+  return posts.filter((post) => 
+    post.tags && post.tags.some((t) => t.toLowerCase() === decodedTag)
+  );
 }

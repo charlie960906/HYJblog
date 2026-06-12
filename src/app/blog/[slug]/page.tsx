@@ -1,9 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-// 💡 調整：同時引入 getPostData (拿原始內文) 與 getSerializedPost (拿渲染後的 MDX)
 import { getPostData, getAllPostSlugs, formatDate, getSerializedPost } from '@/lib/posts';
-import { MDXComponents } from '@/components/MDXComponents';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import ShareButtons from '@/components/ShareButtons';
 import ReadingTime from '@/components/ReadingTime';
 import LazyGiscus from '@/components/LazyGiscus';
@@ -26,7 +23,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PostPageProps) {
   try {
     const { slug } = await params;
-    const post = getPostData(slug);
+    const decodedSlug = decodeURIComponent(slug);
+    const post = getPostData(decodedSlug);
     return {
       title: post.title,
       description: post.description,
@@ -47,7 +45,6 @@ function slugify(text: string) {
 }
 
 function extractHeadings(content: string) {
-  // 💡 安全防護：確保 content 存在，若不存在則直接回傳空陣列，避免 split 崩潰
   if (!content) return [];
   
   const headings: { id: string; title: string; level: number }[] = [];
@@ -77,21 +74,19 @@ function extractHeadings(content: string) {
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
   
   let rawPost;
   let serializedPost;
   
   try {
-    // 1. 先透過 getPostData 取得未處理的原始 Markdown 內文（用來解析 TOC 目錄）
-    rawPost = getPostData(slug);
-    // 2. 再取得經由 next-mdx-remote 序列化後的 MDX 物件（用來渲染畫面）
-    serializedPost = await getSerializedPost(slug);
+    rawPost = getPostData(decodedSlug);
+    serializedPost = await getSerializedPost(decodedSlug);
   } catch (error) {
-    console.error("讀取文章失敗:", error);
+    console.error(`讀取文章失敗 (${decodedSlug}):`, error);
     notFound();
   }
 
-  // 💡 修正：傳入擁有明確 content 純文字字串的 rawPost.content
   const headings = extractHeadings(rawPost.content);
 
   return (
@@ -127,7 +122,8 @@ export default async function PostPage({ params }: PostPageProps) {
 
               {serializedPost.tags && serializedPost.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {serializedPost.tags.map((tag) => (
+                  {/* 💡 修正位置：明確為 (tag: string) 加上型別宣告，解決 7006 錯誤 */}
+                  {serializedPost.tags.map((tag: string) => (
                     <TagPill key={tag} tag={tag} />
                   ))}
                 </div>
@@ -143,10 +139,10 @@ export default async function PostPage({ params }: PostPageProps) {
           <TableOfContents headings={headings} variant="mobile" />
 
           {/* 文章內文 */}
-          <div className="prose-custom space-y-4">
-            {/* 💡 修正：傳入序列化後的 mdxSource 內容 */}
-            <MDXRemote {...serializedPost.mdxSource} components={MDXComponents} />
-          </div>
+          <div 
+            className="prose-custom space-y-4"
+            dangerouslySetInnerHTML={{ __html: serializedPost.mdxSource.compiledSource }}
+          />
 
           {/* 分享區塊 */}
           <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
