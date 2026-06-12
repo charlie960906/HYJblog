@@ -1,0 +1,574 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  /* Tag box color variables for light/dark mode */
+  :root {
+    --tag-box-fill: rgba(255,255,255,0.72);
+    --tag-box-stroke: rgba(0,0,0,0.06);
+  }
+
+  html.dark :root,
+  html.dark {
+    --tag-box-fill: rgba(10,10,10,0.48);
+    --tag-box-stroke: rgba(255,255,255,0.06);
+  }
+
+  body {
+    @apply bg-cream-50 text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Theme wave animation overlay */
+  .theme-wave {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 120vh;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translateY(100%);
+  }
+
+
+  @keyframes waveUp {
+    0% { transform: translateY(100%) translateX(0); }
+    30% { transform: translateY(40%) translateX(-6%); }
+    55% { transform: translateY(12%) translateX(6%); }
+    80% { transform: translateY(-6%) translateX(-4%); }
+    100% { transform: translateY(-12%) translateX(0); }
+  }
+
+  @keyframes waveSway {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-6%); }
+    50% { transform: translateX(6%); }
+    80% { transform: translateX(-4%); }
+    100% { transform: translateX(0); }
+  }
+
+  .theme-wave.active {
+    /* slower, more natural */
+    animation: waveUp 1600ms cubic-bezier(.22,.9,.31,1) forwards;
+  }
+
+  .theme-wave svg { width: 100%; height: 100%; display: block; }
+  .theme-wave.active svg path { transform-origin: 50% 50%; animation: waveSway 1600ms ease-in-out forwards; }
+
+  /* New SVG mask based wave sweep */
+  .theme-sweep {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  .theme-sweep .sweep-fill {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+  }
+
+  .theme-sweep.active .wave-path {
+    /* translate path upward slowly and add horizontal sway */
+    animation: sweepUp 1800ms cubic-bezier(.22,.9,.31,1) forwards,
+               sweepSway 1600ms ease-in-out forwards;
+  }
+
+  .theme-sweep .wave-path {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+  }
+
+  @keyframes sweepUp {
+    0% { transform: translateY(60vh); }
+    30% { transform: translateY(30vh); }
+    70% { transform: translateY(6vh); }
+    100% { transform: translateY(-8vh); }
+  }
+
+  @keyframes sweepSway {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4%); }
+    50% { transform: translateX(6%); }
+    75% { transform: translateX(-3%); }
+    100% { transform: translateX(0); }
+  }
+
+
+  a {
+    @apply text-neutral-900 dark:text-neutral-200 transition-colors duration-200;
+  }
+
+  ::selection {
+    @apply bg-neutral-200 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .prose-custom {
+    @apply prose prose-neutral dark:prose-invert max-w-none;
+  }
+
+  .prose-custom :where(h1, h2, h3, h4, h5, h6) {
+    @apply font-sans font-semibold scroll-mt-24;
+  }
+
+  .prose-custom :where(code):not(:where([class~="not-prose"] *)) {
+    @apply font-mono text-sm bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
+  }
+
+  .prose-custom :where(pre):not(:where([class~="not-prose"] *)) {
+    @apply bg-neutral-100 dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200 dark:border-neutral-800;
+  }
+
+  .prose-custom :where(blockquote):not(:where([class~="not-prose"] *)) {
+    @apply border-l-4 border-neutral-300 dark:border-neutral-700 pl-4 italic;
+  }
+
+  .prose-custom :where(a):not(:where([class~="not-prose"] *)) {
+    @apply underline decoration-neutral-300 dark:decoration-neutral-600 underline-offset-2 hover:decoration-neutral-500 dark:hover:decoration-neutral-400;
+  }
+
+  .link-subtle {
+    @apply relative inline-block underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2 hover:decoration-neutral-500 dark:hover:decoration-neutral-400;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .nav-link {
+    @apply relative text-neutral-800 dark:text-neutral-300 transition-smooth hover:text-neutral-950 dark:hover:text-neutral-100;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-neutral-900 dark:bg-neutral-100 transition-transform duration-200 ease-out;
+  }
+
+  .nav-link:hover::after {
+    @apply scale-x-100;
+  }
+
+  .animate-page-in {
+    animation: page-in 420ms ease-out both;
+  }
+
+  .animate-search-drop {
+    animation: search-drop 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform-origin: top right;
+  }
+
+  .animate-popover-in {
+    animation: popover-in 180ms ease-out both;
+    transform-origin: top center;
+  }
+
+  .animate-list-item {
+    animation: list-item-in 420ms ease-out both;
+  }
+
+  .interactive-lift {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:border-neutral-300 dark:hover:border-neutral-700;
+  }
+
+  .inline-markdown code {
+    @apply font-mono text-sm bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
+  }
+
+  .inline-markdown strong {
+    @apply font-semibold text-neutral-900 dark:text-neutral-100;
+  }
+
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes search-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes list-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Wave overlay for theme transition */
+.theme-wave-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.theme-wave-overlay svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: waveRiseUp 2000ms cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+}
+
+/* Wave animations with sway for fluid effect */
+.theme-wave-overlay .wave-primary {
+  animation: waveSway 2000ms ease-in-out forwards;
+}
+
+.theme-wave-overlay .wave-secondary {
+  animation: waveSwaySecondary 2000ms ease-in-out forwards;
+}
+
+@keyframes waveRiseUp {
+  0% {
+    transform: translateY(65%) scaleY(0.95);
+  }
+  20% {
+    transform: translateY(50%) scaleY(1.02);
+  }
+  40% {
+    transform: translateY(35%) scaleY(0.98);
+  }
+  60% {
+    transform: translateY(15%) scaleY(1.01);
+  }
+  80% {
+    transform: translateY(-5%) scaleY(0.99);
+  }
+  100% {
+    transform: translateY(-18%) scaleY(1);
+  }
+}
+
+@keyframes waveSway {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-8px);
+  }
+  20% {
+    transform: translateX(6px);
+  }
+  35% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  65% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes waveSwaySecondary {
+  0% {
+    transform: translateX(0) scaleX(0.98);
+  }
+  15% {
+    transform: translateX(5px) scaleX(1.02);
+  }
+  30% {
+    transform: translateX(-4px) scaleX(0.99);
+  }
+  45% {
+    transform: translateX(3px) scaleX(1.01);
+  }
+  60% {
+    transform: translateX(-2px) scaleX(0.99);
+  }
+  80% {
+    transform: translateX(1px) scaleX(1);
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+  }
+}
+
+/* ===== WAVE THEME TRANSITION ANIMATIONS ===== */
+
+.theme-wave-transition {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.theme-wave-transition.active {
+  animation: themeWaveActive var(--wave-duration) cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+}
+
+.theme-wave-transition .wave-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Wave path animations - Primary wave (main visual) */
+.theme-wave-transition .wave-fill-bottom {
+  animation: waveBottomReveal var(--wave-duration) ease-out forwards;
+}
+
+.theme-wave-transition .wave-line {
+  stroke: none;
+  animation: waveLineRise var(--wave-duration) cubic-bezier(0.22, 0.9, 0.31, 1) forwards;
+  transform-origin: 50% 50%;
+}
+
+/* Wave bottom reveal - fills from bottom up */
+@keyframes waveBottomReveal {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Wave line rises from bottom to top */
+@keyframes waveLineRise {
+  0% {
+    transform: translateY(300px);
+  }
+  20% {
+    transform: translateY(280px);
+  }
+  40% {
+    transform: translateY(240px);
+  }
+  60% {
+    transform: translateY(160px);
+  }
+  80% {
+    transform: translateY(60px);
+  }
+  100% {
+    transform: translateY(-100px);
+  }
+}
+
+/* Secondary wave - slightly different timing for natural flow */
+@keyframes waveSmoothRiseSecondary {
+  0% {
+    transform: translateY(82vh) scaleY(0.95);
+  }
+  15% {
+    transform: translateY(68vh) scaleY(1.03);
+  }
+  30% {
+    transform: translateY(48vh) scaleY(0.97);
+  }
+  50% {
+    transform: translateY(28vh) scaleY(1.02);
+  }
+  70% {
+    transform: translateY(8vh) scaleY(0.98);
+  }
+  85% {
+    transform: translateY(-8vh) scaleY(1.01);
+  }
+  100% {
+    transform: translateY(-18vh) scaleY(1);
+  }
+}
+
+/* Horizontal flow - creates organic sway motion */
+@keyframes waveHorizontalFlow {
+  0% {
+    transform: translateX(0);
+  }
+  12% {
+    transform: translateX(-12px);
+  }
+  25% {
+    transform: translateX(18px);
+  }
+  38% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(15px);
+  }
+  62% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+  87% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Secondary horizontal flow - offset timing for depth */
+@keyframes waveHorizontalFlowSecondary {
+  0% {
+    transform: translateX(0);
+  }
+  12% {
+    transform: translateX(10px);
+  }
+  25% {
+    transform: translateX(-15px);
+  }
+  38% {
+    transform: translateX(12px);
+  }
+  50% {
+    transform: translateX(-12px);
+  }
+  62% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-8px);
+  }
+  87% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Main wave container animation */
+@keyframes themeWaveActive {
+  0% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* Current bottom-to-top theme wave transition */
+.theme-wave-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  transform: translateY(100%);
+  animation: themeWaveSlideUp var(--wave-duration) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+}
+
+.theme-wave-transition__content {
+  position: absolute;
+  top: -20vh;
+  left: 0;
+  width: 100%;
+  height: 120vh;
+  background: var(--next-theme-color);
+}
+
+.theme-wave-transition__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+@keyframes themeWaveSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
