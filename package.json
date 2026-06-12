@@ -13,6 +13,7 @@
   "dependencies": {
     "feed": "^5.2.1",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^1.18.0",
     "lunr": "^2.3.9",
     "marked": "^18.0.5",
     "next": "latest",
