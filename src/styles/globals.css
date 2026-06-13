@@ -29,7 +29,8 @@
   }
 
   body {
-    @apply bg-cream-50 text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300;
+    /* 修改此處：將 bg-cream-50 替換成高質感的奶油白 #FDFBF7 */
+    @apply bg-[#FDFBF7] text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
@@ -146,12 +147,13 @@
     @apply font-sans font-semibold scroll-mt-24;
   }
 
+  /* 為了搭配全域奶油白，將行內程式碼與代碼區塊的淺色背景微調為淡米杏色 #F5F2EB */
   .prose-custom :where(code):not(:where([class~="not-prose"] *)) {
-    @apply font-mono text-sm bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
+    @apply font-mono text-sm bg-[#F5F2EB] dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
   }
 
   .prose-custom :where(pre):not(:where([class~="not-prose"] *)) {
-    @apply bg-neutral-100 dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200 dark:border-neutral-800;
+    @apply bg-[#F5F2EB] dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200/60 dark:border-neutral-800;
   }
 
   .prose-custom :where(blockquote):not(:where([class~="not-prose"] *)) {
@@ -206,7 +208,7 @@
   }
 
   .inline-markdown code {
-    @apply font-mono text-sm bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
+    @apply font-mono text-sm bg-[#F5F2EB] dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-800 dark:text-neutral-200;
   }
 
   .inline-markdown strong {
@@ -571,4 +573,3 @@
     transform: translateY(0);
   }
 }
-

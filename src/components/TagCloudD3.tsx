@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface TagItem {
   tag: string;
@@ -23,24 +23,44 @@ function hashString(s: string) {
 export default function TagCloudD3({ tags, height = 480 }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const sizeRef = useRef({ w: 760, h: height });
+  const [containerWidth, setContainerWidth] = useState(760);
+
+  // 監聽容器寬度來達成 RWD
+  useEffect(() => {
+    const handleResize = () => {
+      if (wrapperRef.current) {
+        setContainerWidth(wrapperRef.current.clientWidth);
+      }
+    };
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    const padding = 16; // shared padding for placement and overlap resolution
 
     function measureAndPlace() {
-      const w = sizeRef.current.w;
-      const h = sizeRef.current.h;
+      const w = containerWidth;
+      const h = height;
 
       if (!w || !h) return [] as any[];
 
+      const isMobile = w < 600;
+      const padding = isMobile ? 4 : 12; // 手機版縮小間距
       const maxCount = tags.reduce((m, t) => Math.max(m, t.count), 1);
+      
+      const baseSize = isMobile ? 12 : 14;
+      const sizeMultiplier = isMobile ? 36 : 52;
+
       const words = [...tags]
         .sort((a, b) => b.count - a.count)
-        .map(t => ({ text: t.tag, size: 14 + (t.count / Math.max(1, maxCount)) * 52, original: t }));
+        .map(t => ({ 
+          text: t.tag, 
+          size: baseSize + (t.count / Math.max(1, maxCount)) * sizeMultiplier, 
+          original: t 
+        }));
 
-      // measure text sizes using temporary SVG
       const svgNS = 'http://www.w3.org/2000/svg';
       const tempSvg = document.createElementNS(svgNS, 'svg');
       tempSvg.setAttribute('width', String(w));
@@ -54,7 +74,7 @@ export default function TagCloudD3({ tags, height = 480 }: Props) {
       words.forEach(wd => {
         const t = document.createElementNS(svgNS, 'text');
         t.setAttribute('font-size', `${wd.size}px`);
-        t.setAttribute('font-family', 'serif');
+        t.setAttribute('font-family', 'sans-serif');
         t.textContent = wd.text;
         tempSvg.appendChild(t);
         const bbox = t.getBBox();
@@ -64,11 +84,9 @@ export default function TagCloudD3({ tags, height = 480 }: Props) {
 
       document.body.removeChild(tempSvg);
 
-      // place using phyllotaxis (golden angle) with overlap avoidance
       const goldenAngle = Math.PI * (3 - Math.sqrt(5));
       const centerX = w / 2;
       const centerY = h / 2;
-
       const placed: Array<any> = [];
 
       const overlaps = (r: { left: number; right: number; top: number; bottom: number }) =>
@@ -78,206 +96,107 @@ export default function TagCloudD3({ tags, height = 480 }: Props) {
         const first = measured[0];
         const lx = Math.max(0, Math.round(centerX - first.width / 2));
         const ty = Math.max(0, Math.round(centerY - first.height / 2));
-        placed.push({ ...first, x: lx, y: ty, angle: 0, left: lx - padding, right: lx + first.width + padding, top: ty - padding, bottom: ty + first.height + padding });
+        placed.push({ 
+          ...first, x: lx, y: ty, angle: 0, 
+          left: lx - padding, right: lx + first.width + padding, 
+          top: ty - padding, bottom: ty + first.height + padding 
+        });
       }
 
+      const rBase = Math.max(10, Math.min(w, h) / 45); 
       for (let i = 1; i < measured.length; i++) {
         const item = measured[i];
         let k = i;
         let placedOk = false;
-        const maxAttempts = 5000; // give more attempts to find free slot
-          const rBase = Math.max(18, Math.min(w, h) / 45); // larger base radius for spacing
+        const maxAttempts = 3000;
+        
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
           const angle = (k * goldenAngle) % (Math.PI * 2);
-          const radius = rBase * Math.sqrt(k) + Math.max(0, 52 - item.size) * 0.6;
-          const cx = Math.round(centerX + radius * Math.cos(angle) - item.width / 2);
-          const cy = Math.round(centerY + radius * Math.sin(angle) - item.height / 2);
-          const rect = { left: cx - padding, right: cx + item.width + padding, top: cy - padding, bottom: cy + item.height + padding };
-          if (rect.left >= 0 && rect.top >= 0 && rect.right <= w && rect.bottom <= h && !overlaps(rect)) {
-            // store angle for placement direction but do not rotate text to avoid rotated bbox overlap
-            placed.push({ ...item, x: cx, y: cy, angle: 0, left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom });
-            placedOk = true;
-            break;
-          }
-          k += 1;
-        }
-        if (!placedOk) {
-          // brute force grid fallback
-          let found = false;
-          for (let yy = 0; yy < h - item.height && !found; yy += 8) {
-            for (let xx = 0; xx < w - item.width; xx += 8) {
-              const rect = { left: xx - padding, right: xx + item.width + padding, top: yy - padding, bottom: yy + item.height + padding };
-              if (!overlaps(rect) && rect.left >= 0 && rect.top >= 0 && rect.right <= w && rect.bottom <= h) {
-                placed.push({ ...item, x: xx, y: yy, angle: 0, left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom });
-                found = true;
-                break;
-              }
+          const radius = rBase * Math.sqrt(k);
+          
+          const px = Math.round(centerX + radius * Math.cos(angle) - item.width / 2);
+          const py = Math.round(centerY + radius * Math.sin(angle) - item.height / 2);
+
+          const r = {
+            left: px - padding,
+            right: px + item.width + padding,
+            top: py - padding,
+            bottom: py + item.height + padding
+          };
+
+          if (r.left >= 0 && r.right <= w && r.top >= 0 && r.bottom <= h) {
+            if (!overlaps(r)) {
+              placed.push({ ...item, x: px, y: py });
+              placedOk = true;
+              break;
             }
           }
-          if (!found) placed.push({ ...item, x: Math.max(0, Math.round(centerX - item.width / 2)), y: Math.max(0, Math.round(centerY - item.height / 2)), angle: 0, left: centerX - item.width / 2 - padding, right: centerX + item.width / 2 + padding, top: centerY - item.height / 2 - padding, bottom: centerY + item.height / 2 + padding });
+          k++;
+        }
+        
+        if (!placedOk) {
+            placed.push({ ...item, x: Math.random() * (w - item.width), y: Math.random() * (h - item.height) });
         }
       }
 
       return placed;
     }
 
-    function drawPlaced(placed: any[], w: number, h: number) {
-      if (cancelled) return;
-      const svg = svgRef.current;
-      if (!svg) return;
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const placedWords = measureAndPlace();
+    if (cancelled) return;
 
-      const svgNS = 'http://www.w3.org/2000/svg';
-      const g = document.createElementNS(svgNS, 'g');
-      g.setAttribute('transform', `translate(${w / 2},${h / 2})`);
+    const svg = svgRef.current;
+    if (!svg) return;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-      // center reference is already considered in placed.x/y
-      placed.forEach((wd, i) => {
-        const gx = wd.x - w / 2;
-        const gy = wd.y - h / 2;
+    svg.setAttribute('width', String(containerWidth));
+    svg.setAttribute('height', String(height));
+    svg.setAttribute('viewBox', `0 0 ${containerWidth} ${height}`);
 
-        const group = document.createElementNS(svgNS, 'g');
-        // do not rotate text; keep transform only for translation
-        group.setAttribute('transform', `translate(${gx},${gy})`);
-        group.setAttribute('style', 'transition: transform 150ms ease, opacity 300ms ease; opacity: 0; transform-box: fill-box; transform-origin: center;');
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    
+    const colors = [
+      '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', 
+      '#ec4899', '#06b6d4', '#84cc16', '#6366f1', '#f97316'
+    ];
 
-        const rectW = (wd.width || (wd.size * wd.text.length * 0.6)) + 12; // fallback estimate
-        const rectH = (wd.height || wd.size) + 8;
+    placedWords.forEach(pw => {
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', String(pw.x));
+      text.setAttribute('y', String(pw.y - pw.bboxY)); 
+      text.setAttribute('font-size', `${pw.size}px`);
+      text.setAttribute('font-family', 'sans-serif');
+      text.setAttribute('font-weight', '600');
+      text.setAttribute('fill', colors[hashString(pw.text) % colors.length]);
+      text.style.cursor = 'pointer';
+      text.style.transition = 'all 0.3s ease';
+      text.textContent = pw.text;
 
-        const rectEl = document.createElementNS(svgNS, 'rect');
-        rectEl.setAttribute('x', String(-rectW / 2));
-        rectEl.setAttribute('y', String(-rectH / 2));
-        rectEl.setAttribute('width', String(rectW));
-        rectEl.setAttribute('height', String(rectH));
-        rectEl.setAttribute('rx', '10');
-        // glassmorphism: semi-transparent fill + subtle stroke + drop shadow
-        rectEl.setAttribute('fill', 'var(--tag-box-fill, rgba(255,255,255,0.72))');
-        rectEl.setAttribute('stroke', 'var(--tag-box-stroke, rgba(0,0,0,0.06))');
-        rectEl.setAttribute('stroke-width', '1');
-        rectEl.setAttribute('class', 'pointer-events-none');
-        rectEl.setAttribute('style', 'filter: drop-shadow(0 6px 12px rgba(0,0,0,0.06));');
-
-        const textEl = document.createElementNS(svgNS, 'text');
-        textEl.setAttribute('text-anchor', 'middle');
-        textEl.setAttribute('x', '0');
-        // compute y offset so measured bbox is vertically centered at y=0
-        const textY = -((wd.bboxY || 0) + (wd.height || 0) / 2);
-        textEl.setAttribute('y', String(textY));
-        textEl.setAttribute('font-size', `${wd.size}px`);
-        textEl.setAttribute('font-family', 'serif');
-        textEl.setAttribute('fill', 'currentColor');
-        textEl.classList.add('cursor-pointer', 'select-none');
-        textEl.textContent = wd.text;
-
-        group.appendChild(rectEl);
-        group.appendChild(textEl);
-
-        group.addEventListener('click', () => {
-          window.location.href = `/tags/${encodeURIComponent(wd.text)}`;
-        });
-        group.addEventListener('mouseenter', () => {
-          group.style.transform = `translate(${gx}px,${gy}px) scale(1.08)`;
-        });
-        group.addEventListener('mouseleave', () => {
-          group.style.transform = `translate(${gx}px,${gy}px) scale(1)`;
-        });
-
-        g.appendChild(group);
+      text.addEventListener('mouseover', () => {
+        text.setAttribute('opacity', '0.7');
+        text.setAttribute('transform', `scale(1.1) translate(${pw.x * -0.1}, ${pw.y * -0.1})`);
+      });
+      text.addEventListener('mouseout', () => {
+        text.setAttribute('opacity', '1');
+        text.setAttribute('transform', 'none');
+      });
+      text.addEventListener('click', () => {
+        window.location.href = `/tags/${encodeURIComponent(pw.text)}`;
       });
 
-      svg.appendChild(g);
+      g.appendChild(text);
+    });
 
-      // trigger fade-in
-      requestAnimationFrame(() => {
-        const groups = svg.querySelectorAll('g > g');
-        groups.forEach(gr => {
-          (gr as HTMLElement).style.opacity = '1';
-        });
-      });
-    }
-
-    function render() {
-      const w = wrapperRef.current?.clientWidth || 760;
-      const h = sizeRef.current.h;
-      sizeRef.current = { w, h };
-      const placed = measureAndPlace();
-        // attempt to resolve remaining overlaps by iterative repulsion
-        const resolveOverlaps = () => {
-          const maxIter = 1000; // increase iterations for stronger repulsion
-          let changed = false;
-          for (let iter = 0; iter < maxIter; iter++) {
-            changed = false;
-            for (let i = 0; i < placed.length; i++) {
-              for (let j = i + 1; j < placed.length; j++) {
-                const a = placed[i];
-                const b = placed[j];
-                // compute overlap on x and y
-                const overlapX = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
-                const overlapY = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-                if (overlapX > 0 && overlapY > 0) {
-                  // push the smaller area one away from the larger
-                  const areaA = (a.right - a.left) * (a.bottom - a.top);
-                  const areaB = (b.right - b.left) * (b.bottom - b.top);
-                  const small = areaA <= areaB ? a : b;
-                  const large = areaA <= areaB ? b : a;
-
-                  // vector from large center to small center
-                  const largeCx = (large.left + large.right) / 2;
-                  const largeCy = (large.top + large.bottom) / 2;
-                  const smallCx = (small.left + small.right) / 2;
-                  const smallCy = (small.top + small.bottom) / 2;
-                  let vx = smallCx - largeCx;
-                  let vy = smallCy - largeCy;
-                  const len = Math.sqrt(vx * vx + vy * vy) || 1;
-                  vx /= len;
-                  vy /= len;
-
-                  // push amount proportional to overlap area, capped
-                  const push = Math.min(80, Math.max(6, (overlapX + overlapY) / 2));
-                  const dx = Math.round(vx * push);
-                  const dy = Math.round(vy * push);
-
-                  // apply movement to small
-                  small.x = Math.max(0, Math.min(w - (small.right - small.left) - padding, small.x + dx));
-                  small.y = Math.max(0, Math.min(h - (small.bottom - small.top) - padding, small.y + dy));
-                  small.left = small.x - padding;
-                  small.top = small.y - padding;
-                  small.right = small.x + (small.right - small.left) + padding;
-                  small.bottom = small.y + (small.bottom - small.top) + padding;
-
-                  changed = true;
-                }
-              }
-            }
-            if (!changed) break;
-          }
-        };
-
-        resolveOverlaps();
-
-      drawPlaced(placed, w, h);
-    }
-
-    render();
-
-    let ro: ResizeObserver | null = null;
-    if (wrapperRef.current && typeof ResizeObserver !== 'undefined') {
-      ro = new ResizeObserver(() => {
-        if (cancelled) return;
-        render();
-      });
-      ro.observe(wrapperRef.current);
-    }
+    svg.appendChild(g);
 
     return () => {
       cancelled = true;
-      if (ro && wrapperRef.current) ro.unobserve(wrapperRef.current);
     };
-  }, [tags, height]);
+  }, [tags, height, containerWidth]);
 
   return (
-    <div ref={wrapperRef} className="mx-auto text-neutral-800 dark:text-neutral-200" style={{ width: '100%', height }}>
-      <svg ref={svgRef} width="100%" height={height} />
+    <div ref={wrapperRef} className="w-full flex justify-center items-center overflow-hidden">
+      <svg ref={svgRef} className="max-w-full" />
     </div>
   );
 }
