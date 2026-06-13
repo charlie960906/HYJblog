@@ -92,7 +92,7 @@ export function searchPosts(query: string): SearchResult[] {
   return results.filter(p => p.score > 0).sort((a, b) => b.score - a.score);
 }
 
-// 供前端元件呼叫的分頁搜尋功能
+// 供前端搜尋頁面元件直接呼叫的分頁函數
 export function searchPostsWithPagination(query: string, page: number = 1, limit: number = 10): PaginatedSearchResults {
   const allResults = searchPosts(query);
   const total = allResults.length;

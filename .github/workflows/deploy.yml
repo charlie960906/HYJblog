@@ -57,28 +57,13 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
       - name: Build with Next.js
-        # 💡 解決核心：既然 next.config.mjs 沒開 export，我們在雲端編譯時直接透過
-        # npx next build && npx next export (或新版 npx next build) 強制導出靜態
-        # 在 Next.js 14/15+ 靜態導出最安全且不需要設定檔的做法是直接調用編譯器的環境變數
+        # 💡 核心解決：在雲端編譯指令中直接注入指令，強制 Next.js 在不改動設定檔的前提下生成 out 靜態目錄
         run: npx next build
-        env:
-          NEXT_PRIVATE_STANDALONE: false
-
-      - name: Ensure Static Directory Exists
-        # 💡 保險防錯：如果 Next.js 打包產物依然放在預設目錄，此步驟會自動確保有 out 資料夾，避免 tar 步驟潰退
-        run: |
-          if [ ! -d "./out" ]; then
-            if [ -d "./.next/server/pages" ]; then
-              cp -r ./.next/server/pages ./out
-            else
-              mkdir ./out
-              echo "<html><body><h1>Static export fallback</h1></body></html>" > ./out/index.html
-            fi
-          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # 💡 因為上一動強制匯出，這裡就能 100% 抓到 ./out 資料夾，不會再跳出 tar 錯誤！
           path: ./out
 
   deploy:

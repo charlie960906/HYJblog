@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
-  // 💡 如果你是部署到自訂獨立網域，這裡保持空字串即可
+  // 💡 本地保持不開啟 export 模式，方便你日後進行其他擴充
   basePath: '',
   assetPrefix: '',
 
@@ -9,7 +8,7 @@ const nextConfig = {
     unoptimized: true,
   },
 
-  // 💡 徹底移除無效且會引發警告的 allowedDevOrigins 欄位
+  // 💡 徹底移除引發警告的 allowedDevOrigins
   experimental: {},
 };
 
