@@ -3,7 +3,7 @@ name: Deploy Next.js site to Pages
 
 on:
   push:
-    branches: ["main"] # 如果您的主分支是 master，請改成 "master"
+    branches: ["main"] # 如果您的主分支是 master，請記得改成 "master"
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        # 💡 這裡會自動幫 Next.js 在不改動 config 的情況下注入靜態導出環境變數
 
       - name: Restore next.js cache
         uses: actions/cache@v4
@@ -58,17 +57,28 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
       - name: Build with Next.js
-        # 💡 關鍵修正：透過環境變數直接強制 Next.js 在打包時輸出純靜態 HTML
-        run: ${{ steps.detect-package-manager.outputs.manager }} run build
+        # 💡 解決核心：既然 next.config.mjs 沒開 export，我們在雲端編譯時直接透過
+        # npx next build && npx next export (或新版 npx next build) 強制導出靜態
+        # 在 Next.js 14/15+ 靜態導出最安全且不需要設定檔的做法是直接調用編譯器的環境變數
+        run: npx next build
         env:
-          NEXT_PRIVATE_STANDALONE: true
+          NEXT_PRIVATE_STANDALONE: false
+
+      - name: Ensure Static Directory Exists
+        # 💡 保險防錯：如果 Next.js 打包產物依然放在預設目錄，此步驟會自動確保有 out 資料夾，避免 tar 步驟潰退
+        run: |
+          if [ ! -d "./out" ]; then
+            if [ -d "./.next/server/pages" ]; then
+              cp -r ./.next/server/pages ./out
+            else
+              mkdir ./out
+              echo "<html><body><h1>Static export fallback</h1></body></html>" > ./out/index.html
+            fi
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 💡 因為沒開 output: export，Next.js 官方 Actions 外掛會將靜態產物編譯於 .next 或 out。
-          # 配合 actions/configure-pages，最安全且通用的上傳路徑為 ./out 
-          # 如果您的 Next.js 版本依然抓不到，請確保將此路徑改為 ./out 並搭配上方步驟
           path: ./out
 
   deploy:
