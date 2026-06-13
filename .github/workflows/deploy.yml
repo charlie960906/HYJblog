@@ -2,26 +2,20 @@
 name: Deploy Next.js site to Pages
 
 on:
-  # 當 main 分支有 push 時觸發 (如果你的主分支是 master，請將 main 改為 master)
   push:
-    branches: ["main"]
-
-  # 允許從 GitHub 介面手動觸發執行
+    branches: ["main"] # 如果您的主分支是 master，請記得改成 "master"
   workflow_dispatch:
 
-# 設定 GitHub Actions 的權限，允許讀取內容並部署到 GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 確保同時只有一個部署工作流在執行
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # 建置工作
   build:
     runs-on: ubuntu-latest
     steps:
@@ -45,12 +39,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect-package-manager().outputs.manager }}
+          # 💡 已修正：這裡移除了錯誤的括號 ()
+          cache: ${{ steps.detect-package-manager.outputs.manager }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
-          # 如果沒有自訂網域，且專案是儲存庫子路徑，Next.js 會自動透過此動作配置 basePath
           static_site_generator: next
 
       - name: Restore next.js cache
@@ -58,7 +52,6 @@ jobs:
         with:
           path: |
             .next/cache
-          # 每次 package-lock.json 改變時產生新快取
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
@@ -74,7 +67,6 @@ jobs:
         with:
           path: ./out
 
-  # 部署工作
   deploy:
     environment:
       name: github-pages
