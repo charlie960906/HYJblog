@@ -3,7 +3,7 @@ name: Deploy Next.js site to Pages
 
 on:
   push:
-    branches: ["main"] # 如果您的主分支是 master，請記得改成 "master"
+    branches: ["main"] # 如果您的主分支是 master，請改成 "master"
   workflow_dispatch:
 
 permissions:
@@ -57,13 +57,13 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
       - name: Build with Next.js
-        # 💡 核心解決：在雲端編譯指令中直接注入指令，強制 Next.js 在不改動設定檔的前提下生成 out 靜態目錄
-        run: npx next build
+        # 💡 因為 next.config.mjs 已設定 output: export，此處單純執行 build 即可穩定在根目錄產出 ./out
+        run: ${{ steps.detect-package-manager.outputs.manager }} run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 💡 因為上一動強制匯出，這裡就能 100% 抓到 ./out 資料夾，不會再跳出 tar 錯誤！
+          # 💡 100% 抓取靜態導出資料夾
           path: ./out
 
   deploy:
