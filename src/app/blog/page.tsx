@@ -1,14 +1,16 @@
+// src/app/blog/page.tsx
+import React from 'react';
 import { getSortedPostsData, getAllCategories } from '@/lib/posts';
 import BlogArchiveClient from './client';
 
-export const metadata = {
-  title: '文章歸檔',
-  description: '所有已發佈的部落格文章',
-};
+export const dynamic = 'force-static';
 
-export default function BlogArchive() {
+export default function BlogPage() {
   const allPosts = getSortedPostsData();
-  const categories = getAllCategories();
+  const categoriesObj = getAllCategories();
+
+  // 將 {[key: string]: number} 物件字典轉化為字串陣列 string[]
+  const categories = Object.keys(categoriesObj);
 
   return <BlogArchiveClient allPosts={allPosts} categories={categories} />;
 }

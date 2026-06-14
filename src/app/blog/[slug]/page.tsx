@@ -1,172 +1,137 @@
+// src/app/blog/[slug]/page.tsx
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { getPostData, getAllPostSlugs, formatDate, getSerializedPost } from '@/lib/posts';
+import Link from 'next/link';
+import { Calendar, Clock, Folder, ArrowLeft, Tag } from 'lucide-react';
+import { getPostData, getAllPostSlugs, formatDate } from '@/lib/posts';
 import ShareButtons from '@/components/ShareButtons';
 import ReadingTime from '@/components/ReadingTime';
 import LazyGiscus from '@/components/LazyGiscus';
-import TableOfContents from '@/components/TableOfContents';
-import TagPill from '@/components/TagPill';
+
+export const dynamic = 'force-static';
 
 interface PostPageProps {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 }
 
-export async function generateStaticParams() {
-  const slugs = getAllPostSlugs();
-  return slugs.map(slug => ({
-    slug,
-  }));
+// 關鍵修正：對齊新版 App Router 規格，直接將含有 { slug: '...' } 的陣列回傳給 Next.js
+export function generateStaticParams() {
+  return getAllPostSlugs();
 }
 
-export async function generateMetadata({ params }: PostPageProps) {
+export default function PostPage({ params }: PostPageProps) {
+  let postData;
   try {
-    const { slug } = await params;
-    const decodedSlug = decodeURIComponent(slug);
-    const post = getPostData(decodedSlug);
-    return {
-      title: post.title,
-      description: post.description,
-    };
-  } catch {
-    return {
-      title: 'Post Not Found',
-    };
-  }
-}
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-');
-}
-
-function extractHeadings(content: string) {
-  if (!content) return [];
-  
-  const headings: { id: string; title: string; level: number }[] = [];
-  const lines = content.split('\n');
-  const usedIds: Record<string, number> = {};
-
-  for (const line of lines) {
-    if (line.startsWith('## ')) {
-      const title = line.slice(3).trim();
-      let id = slugify(title);
-      usedIds[id] = (usedIds[id] ?? 0) + 1;
-      const count = usedIds[id] ?? 0;
-      if (count > 1) id = `${id}-${count}`;
-      headings.push({ id, title, level: 2 });
-    } else if (line.startsWith('### ')) {
-      const title = line.slice(4).trim();
-      let id = slugify(title);
-      usedIds[id] = (usedIds[id] ?? 0) + 1;
-      const count = usedIds[id] ?? 0;
-      if (count > 1) id = `${id}-${count}`;
-      headings.push({ id, title, level: 3 });
-    }
-  }
-
-  return headings;
-}
-
-export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
-  
-  let rawPost;
-  let serializedPost;
-  
-  try {
-    rawPost = getPostData(decodedSlug);
-    serializedPost = await getSerializedPost(decodedSlug);
+    postData = getPostData(params.slug);
   } catch (error) {
-    console.error(`讀取文章失敗 (${decodedSlug}):`, error);
     notFound();
   }
 
-  const headings = extractHeadings(rawPost.content);
+  if (!postData || !postData.published) {
+    notFound();
+  }
+
+  // 取得文章當前的絕對 URL (請依據您的網域自行調整，此處用於分享按鈕)
+  const postUrl = `https://github.com/charlie960906/HYJblog/blog/${params.slug}`;
 
   return (
-    <>
-      {/* 背景圖片 - 固定位置 */}
-      {serializedPost.image && (
-        <div className="fixed top-0 left-0 w-1/3 h-80 -z-10 hidden lg:block pointer-events-none overflow-hidden">
+    <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 animate-fade-in">
+      {/* 返回按鈕 */}
+      <div className="mb-8">
+        <Link 
+          href="/blog" 
+          className="inline-flex items-center text-sm font-medium text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          返回文章列表
+        </Link>
+      </div>
+
+      {/* 文章標頭區塊 */}
+      <header className="space-y-4 mb-8 sm:mb-12">
+        <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-mono">
+          <span className="flex items-center">
+            <Calendar className="w-4 h-4 mr-1.5" />
+            {formatDate(postData.date)}
+          </span>
+          <span className="flex items-center">
+            <Clock className="w-4 h-4 mr-1.5" />
+            <ReadingTime minutes={postData.readingTime} />
+          </span>
+          {postData.category && (
+            <Link 
+              href={`/folder/${encodeURIComponent(postData.category)}`}
+              className="flex items-center hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              <Folder className="w-4 h-4 mr-1.5" />
+              {postData.category}
+            </Link>
+          )}
+        </div>
+
+        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl lg:text-5xl leading-tight">
+          {postData.title}
+        </h1>
+
+        {postData.description && (
+          <p className="text-lg text-neutral-500 dark:text-neutral-400 font-normal leading-relaxed border-l-4 border-neutral-200 dark:border-neutral-800 pl-4 italic">
+            {postData.description}
+          </p>
+        )}
+
+        {/* 標籤區 */}
+        {postData.tags && postData.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {postData.tags.map((tag) => (
+              <span 
+                key={tag}
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 border border-neutral-200/50 dark:border-neutral-800/50"
+              >
+                <Tag className="w-3 h-3 mr-1 text-neutral-400" />
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {/* 特色主圖 */}
+      {postData.image && (
+        <div className="relative aspect-video w-full overflow-hidden rounded-3xl mb-8 sm:mb-12 shadow-md">
           <Image
-            src={serializedPost.image}
-            alt={serializedPost.title}
+            src={postData.image}
+            alt={postData.title}
             fill
-            className="object-cover opacity-10 dark:opacity-5"
-            sizes="33vw"
             priority
+            className="object-cover"
+            sizes="(max-w-4xl) 100vw, 896px"
           />
         </div>
       )}
 
-      <article className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="space-y-6 sm:space-y-8 min-w-0">
-          {/* 文章標頭 */}
-          <header className="space-y-4 pb-6 sm:pb-8 border-b border-neutral-200 dark:border-neutral-800">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words">
-              {serializedPost.title}
-            </h1>
+      {/* 文章主體內文 */}
+      <div className="prose prose-neutral dark:prose-invert max-w-none mb-12 sm:mb-16">
+        {/* 關鍵型別防禦：安全讀取 mdxSource.compiledSource，若不存在則退回內容本文 */}
+        <div 
+          className="prose-custom space-y-4"
+          dangerouslySetInnerHTML={{ __html: postData.mdxSource?.compiledSource || postData.content }}
+        />
+      </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
-              <time className="font-mono text-neutral-500 dark:text-neutral-500">
-                {formatDate(serializedPost.date)}
-              </time>
+      {/* 分享區塊 */}
+      <div className="border-t border-b border-neutral-200 dark:border-neutral-800 py-6 my-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <span className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+          如果這篇文章對你有幫助，歡迎分享給更多人：
+        </span>
+        <ShareButtons url={postUrl} title={postData.title} />
+      </div>
 
-              <ReadingTime minutes={serializedPost.readingTime} />
-
-              {serializedPost.tags && serializedPost.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {/* 💡 修正位置：明確為 (tag: string) 加上型別宣告，解決 7006 錯誤 */}
-                  {serializedPost.tags.map((tag: string) => (
-                    <TagPill key={tag} tag={tag} />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              {serializedPost.description}
-            </p>
-          </header>
-
-          {/* 行動裝置目錄 */}
-          <TableOfContents headings={headings} variant="mobile" />
-
-          {/* 文章內文 */}
-          <div 
-            className="prose-custom space-y-4"
-            dangerouslySetInnerHTML={{ __html: serializedPost.mdxSource.compiledSource }}
-          />
-
-          {/* 分享區塊 */}
-          <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
-            <ShareButtons
-              title={serializedPost.title}
-              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${slug}`}
-              description={serializedPost.description}
-            />
-          </div>
-
-          {/* 評論區塊 */}
-          <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">
-              評論
-            </h2>
-            <LazyGiscus />
-          </div>
-        </div>
-
-        {/* 側邊欄目錄 */}
-        <aside className="hidden lg:block sticky top-24 self-start">
-          <TableOfContents headings={headings} variant="sidebar" />
-        </aside>
-      </article>
-    </>
+      {/* Giscus 評論區塊 */}
+      <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+        <LazyGiscus />
+      </div>
+    </article>
   );
 }
