@@ -10,13 +10,13 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-4 text-sm">
-            <Link href="/api/rss" className="link-subtle">
+            <Link href="/rss.xml" className="link-subtle">
               RSS
             </Link>
-            <Link href="/api/atom" className="link-subtle">
+            <Link href="/atom.xml" className="link-subtle">
               Atom
             </Link>
-            <a href="https://github.com/" target="_blank" rel="noreferrer" className="link-subtle">
+            <a href="https://github.com/charlie960906/HYJblog" target="_blank" rel="noreferrer" className="link-subtle">
               GitHub
             </a>
           </div>

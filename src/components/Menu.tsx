@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu as MenuIcon, X, Home, Folder, Tag, Search, Sun, Moon, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
-export default function Menu() { // 修改此處：組件名稱改為 Menu
+export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -45,8 +45,9 @@ export default function Menu() { // 修改此處：組件名稱改為 Menu
             </Link>
           </div>
 
+          {/* 桌面版選單 */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-center space-x-4">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -65,23 +66,27 @@ export default function Menu() { // 修改此處：組件名稱改為 Menu
                   </Link>
                 );
               })}
+              
+              {/* 修改後的主題切換按鈕：外框、間距、圓角與 Hover 顏色完全同步上方導覽按鈕 */}
               {mounted && (
                 <button
                   onClick={toggleTheme}
-                  className="ml-4 p-2 rounded-xl text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-50 transition-all duration-200"
+                  className="flex items-center justify-center p-2 rounded-md text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white transition-colors duration-200"
                   aria-label="Toggle theme"
+                  style={{ height: '38px', width: '38px' }} // 精準對齊導覽連結 py-2 撐開後的 38px 總高度
                 >
-                  {renderThemeIcon()}
+                  {React.cloneElement(renderThemeIcon(), { className: 'w-4 h-4' })}
                 </button>
               )}
             </div>
           </div>
 
-          <div className="-mr-2 flex md:hidden">
+          {/* 行動版右側控制區：主題按鈕與漢堡選單並排 */}
+          <div className="flex items-center md:hidden gap-2">
             {mounted && (
               <button
                 onClick={toggleTheme}
-                className="mr-2 p-2 rounded-xl text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-50 transition-all duration-200"
+                className="p-2 rounded-md text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white transition-all duration-200"
                 aria-label="Toggle theme"
               >
                 {renderThemeIcon()}
@@ -98,6 +103,7 @@ export default function Menu() { // 修改此處：組件名稱改為 Menu
         </div>
       </div>
 
+      {/* 行動版展開選單 */}
       {isOpen && (
         <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">

@@ -1,124 +1,106 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Search, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-type Result = {
+interface SearchItem {
   slug: string;
   title: string;
   description: string;
-  score: number;
-};
+  content: string;
+}
 
-export default function SearchPageClient() {
-  const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState<Result[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const debounceRef = useRef<number | null>(null);
+interface SearchPageClientProps {
+  initialPosts: SearchItem[];
+}
 
+export default function SearchPageClient({ initialPosts = [] }: SearchPageClientProps) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchItem[]>([]);
+
+  // 當使用者輸入關鍵字時，直接在純前端進行秒級篩選
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get('q') || '';
-    setQuery(q);
-  }, []);
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (query) params.set('q', query); else params.delete('q');
-    const newUrl = window.location.pathname + '?' + params.toString();
-    window.history.replaceState(null, '', newUrl);
-
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    debounceRef.current = window.setTimeout(() => {
-      doFetch(query);
-    }, 300) as unknown as number;
-
-    return () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    };
-  }, [query]);
-
-  async function doFetch(q: string) {
-    if (!q.trim()) {
+    const trimmedQuery = query.trim().toLowerCase();
+    if (!trimmedQuery) {
       setResults([]);
-      setTotal(0);
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setResults(data as Result[]);
-        setTotal((data as Result[]).length);
-      } else {
-        // fallback: try to read results field
-        setResults(data.results || []);
-        setTotal(data.total || (data.results ? data.results.length : 0));
-      }
-    } catch (err) {
-      console.error(err);
-      setResults([]);
-      setTotal(0);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+    const filtered = initialPosts.filter((post) => {
+      return (
+        post.title.toLowerCase().includes(trimmedQuery) ||
+        post.description.toLowerCase().includes(trimmedQuery) ||
+        post.content.includes(trimmedQuery)
+      );
+    });
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    doFetch(query);
-  }
+    setResults(filtered);
+  }, [query, initialPosts]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-3xl px-4">
-        <form onSubmit={onSubmit} className="w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 dark:text-neutral-100">BLOG.HYJ</h1>
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
+          搜尋文章
+        </h1>
+        <p className="mt-3 text-lg text-neutral-500 dark:text-neutral-400">
+          輸入關鍵字，尋找您感興趣的技術內容與心得分享。
+        </p>
+      </div>
 
-            <div className="w-full relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-                  <path fillRule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clipRule="evenodd" />
-                </svg>
-              </span>
+      <div className="max-w-2xl mx-auto mb-12">
+        <div className="relative rounded-2xl shadow-sm">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+            <Search className="h-5 w-5 text-neutral-400" aria-hidden="true" />
+          </div>
+          <input
+            type="text"
+            name="search"
+            id="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="block w-full rounded-2xl border-0 py-4 pl-12 pr-4 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-500 dark:bg-neutral-900 dark:text-white dark:ring-neutral-800 dark:focus:ring-neutral-400 transition-all text-base sm:text-lg bg-neutral-50/50"
+            placeholder="輸入關鍵字，例如：C++、陣列、指標..."
+          />
+        </div>
+      </div>
 
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="搜尋文章..."
-                className="w-full text-xl sm:text-2xl pl-14 pr-6 py-4 rounded-full border border-neutral-200 dark:border-neutral-800 bg-cream-50 dark:bg-neutral-900 shadow-md focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700"
-                aria-label="搜尋"
-                autoFocus
-              />
+      <div className="max-w-2xl mx-auto">
+        {query.trim() && (
+          <div className="mb-4 text-sm text-neutral-500 dark:text-neutral-400 font-mono">
+            找到 {results.length} 筆符合「{query}」的結果
+          </div>
+        )}
+
+        <div className="space-y-4">
+          {results.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group block p-5 rounded-2xl border border-neutral-100 hover:border-neutral-200 dark:border-neutral-900 dark:hover:border-neutral-800 bg-white dark:bg-neutral-950 shadow-sm hover:shadow-md transition-all duration-200"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-bold text-neutral-900 group-hover:text-neutral-600 dark:text-neutral-100 dark:group-hover:text-neutral-300 transition-colors truncate">
+                    {post.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                    {post.description || "點擊閱讀完整文章內容。"}
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-neutral-300 group-hover:text-neutral-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
+              </div>
+            </Link>
+          ))}
+
+          {query.trim() && results.length === 0 && (
+            <div className="text-center py-12 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800">
+              <p className="text-neutral-400 dark:text-neutral-500 text-base">
+                沒有找到符合的相關文章，換個關鍵字試試看吧！
+              </p>
             </div>
-          </div>
-        </form>
-
-        <div className="w-full mt-6">
-          {isLoading && <p className="text-neutral-500">搜尋中…</p>}
-
-          {!isLoading && query && results.length === 0 && (
-            <p className="text-neutral-500">沒有找到相關文章</p>
           )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {results.map((r) => (
-              <Link key={r.slug} href={`/blog/${r.slug}`} className="block">
-                <article className="animate-list-item group overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all hover:shadow-md p-4 h-full bg-cream-50 dark:bg-[#050505]">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2 line-clamp-2">{r.title}</h3>
-                  <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 line-clamp-3" dangerouslySetInnerHTML={{ __html: (r as any).snippet || r.description }} />
-                  <div className="text-xs text-neutral-500 dark:text-neutral-500 mt-auto">分數: {Math.round(r.score ?? 0)}</div>
-                </article>
-              </Link>
-            ))}
-          </div>
-
-          {/* No pagination: show all results */}
         </div>
       </div>
     </div>
