@@ -4,7 +4,7 @@
         <title>個人部落格</title>
         <link>http://localhost:3000</link>
         <description>使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間</description>
-        <lastBuildDate>Sun, 14 Jun 2026 13:34:22 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 16 Jun 2026 13:32:21 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>Next.js Blog Generator</generator>
         <language>zh-TW</language>
@@ -18,21 +18,6 @@
             <content:encoded><![CDATA[
 # F1 Movie 影評
 ![F1 movie劇照](/images/f1_movie_pic3.jpg)
-## 文章目錄
-- [F1 Movie 影評](#f1-movie-影評)
-  - [文章目錄](#文章目錄)
-  - [劇情(無爆雷版本)](#劇情無爆雷版本)
-  - [劇情(含爆雷完整版)](#劇情含爆雷完整版)
-    - [第一段：](#第一段)
-    - [第二段：](#第二段)
-    - [第三段：](#第三段)
-    - [第四段：](#第四段)
-  - [心得](#心得)
-  - [技術](#技術)
-    - [簡介](#簡介)
-    - [真實賽道與賽車改裝](#真實賽道與賽車改裝)
-    - [攝影技術與後期製作](#攝影技術與後期製作)
-    - [演員拍攝訓練與F1車隊合作](#演員拍攝訓練與f1車隊合作)
 
 ## 劇情(無爆雷版本)
 > 有含爆雷完整版想看可以往下滑
