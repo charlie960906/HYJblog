@@ -5,6 +5,8 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    /* 💡 新增：設定錨點滾動時的上方緩衝空間，防止標題被固定的 Menu 導覽列遮擋 */
+    scroll-padding-top: 6rem;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -29,7 +31,7 @@
   }
 
   body {
-    /* 修改此處：將 bg-cream-50 替換成高質感的奶油白 #FDFBF7 */
+    /* 將 bg-cream-50 替換成高質感的奶油白 #FDFBF7 */
     @apply bg-[#FDFBF7] text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);

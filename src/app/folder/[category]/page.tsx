@@ -29,5 +29,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const decodedCategory = decodeURIComponent(category);
   const categoryPosts = getPostsByCategory(decodedCategory);
 
-  return <CategoryPostsClient category={decodedCategory} posts={categoryPosts} />;
+  return (
+    // w-full pt-16 pb-12 max-w-7xl mx-auto 確保與其他頁面完全一致的黃金閱讀高度與中央置中留白
+    <div className="w-full pt-16 pb-12 max-w-7xl mx-auto">
+      <div className="animate-page-in">
+        <CategoryPostsClient category={decodedCategory} posts={categoryPosts} />
+      </div>
+    </div>
+  );
 }
