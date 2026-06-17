@@ -4,7 +4,7 @@
         <title>個人部落格</title>
         <link>http://localhost:3000</link>
         <description>使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間</description>
-        <lastBuildDate>Wed, 17 Jun 2026 12:27:22 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Jun 2026 12:48:46 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>Next.js Blog Generator</generator>
         <language>zh-TW</language>
@@ -69,9 +69,7 @@
 
 阿誰先賺大錢 誰就請客]]></content:encoded>
             <author>作者名稱</author>
-            <category>C++</category>
-            <category>Array</category>
-            <category>陣列</category>
+            <category>日記</category>
         </item>
         <item>
             <title><![CDATA[F1 Movie 影評]]></title>
