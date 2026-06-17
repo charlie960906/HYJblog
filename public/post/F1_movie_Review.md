@@ -9,7 +9,6 @@ image: /images/f1_movie_pic3.jpg
 published: true
 ---
 
-# F1 Movie 影評
 ![F1 movie劇照](/images/f1_movie_pic3.jpg)
 
 ## 劇情(無爆雷版本)
