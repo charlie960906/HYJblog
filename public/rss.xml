@@ -4,11 +4,75 @@
         <title>個人部落格</title>
         <link>http://localhost:3000</link>
         <description>使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間</description>
-        <lastBuildDate>Wed, 17 Jun 2026 11:44:01 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Jun 2026 12:27:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>Next.js Blog Generator</generator>
         <language>zh-TW</language>
         <copyright>© 2026 All rights reserved.</copyright>
+        <item>
+            <title><![CDATA[每天寫文章的起點]]></title>
+            <link>http://localhost:3000/blog/2026_06_17</link>
+            <guid isPermaLink="false">http://localhost:3000/blog/2026_06_17</guid>
+            <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[希望我每天都會寫文章]]></description>
+            <content:encoded><![CDATA[
+## Update 日常
+歐歐歐最近有點太幸運了
+
+上了中興資管，原本還以為沒有機會了
+
+備取4上，不用留在嘉義吃四年的雞肉飯
+
+在畢聯會認識好多朋友
+
+也找到幾個可以出去玩的好朋友超開心
+
+畢聯會心得就有空再寫吧
+
+我也有點懶惰
+
+但我會逼自己每天紀錄和寫文章的
+
+希望我可以寫超過一年(而且還不用AI寫哈哈哈哈)
+
+去看了後室 好這個也要記的寫心得
+
+然侯股票可以繼續漲嗎
+
+||~~什麼時候讓我的股票部位超過50個W~~||
+
+(不要看 我亂講的 我連10w都沒有啦)
+
+喔喔喔我的畢業貼文還沒Po
+
+明明很多時間嗎(?
+
+我努力 最近在社群上花的時間蠻少的
+
+期待去台中玩，還有下個月的台南局(非常期待)
+
+都沒有emoji是為什麼，因為windows打emoji小麻煩
+
+之後會加一點的
+
+保齡球還是很爛
+
+我以為長大會好一點超好笑
+
+6/18之後要上微積分(危機分) 
+
+7/18考試、8月考試(希望會過啦 直接免修)
+
+好 最後愛大家 最近一起出去玩的朋友們
+
+愛您🫰🫰🫰 上大學還是要約 不要忘記彼此
+
+阿誰先賺大錢 誰就請客]]></content:encoded>
+            <author>作者名稱</author>
+            <category>C++</category>
+            <category>Array</category>
+            <category>陣列</category>
+        </item>
         <item>
             <title><![CDATA[F1 Movie 影評]]></title>
             <link>http://localhost:3000/blog/F1_movie_Review</link>
@@ -16,7 +80,6 @@
             <pubDate>Sun, 13 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹觀賞 F1 Movie 後的劇情、心得感想、拍攝技巧、實際場地、電影中事件與現實。]]></description>
             <content:encoded><![CDATA[
-# F1 Movie 影評
 ![F1 movie劇照](/images/f1_movie_pic3.jpg)
 
 ## 劇情(無爆雷版本)
