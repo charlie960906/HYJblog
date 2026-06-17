@@ -3,7 +3,7 @@ title: C++ 程式結構
 date: "2025-07-08"
 description: "本文介紹 C++ 程式語言的結構，包括循序、選擇和重複結構，以及 if-else、for、while、do-while、switch 與條件運算子。"
 tags: ["C++", "初學", "程式結構"]
-category: information
+category: C++
 published: true
 ---
 

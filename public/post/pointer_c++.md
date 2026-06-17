@@ -3,7 +3,7 @@ title: C++ 指標與參照
 date: "2025-07-08"
 description: "本文介紹 C++ 指標與參照的概念，包括指標的宣告與運算、函數指標、陣列與雙重指標、靜態與動態記憶體配置。"
 tags: ["C++", "初學", "Pointers", "指標"]
-category: information
+category: C++
 published: true
 render_with_liquid: false
 ---

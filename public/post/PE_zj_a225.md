@@ -3,7 +3,7 @@ title: 題解ZJ - a225.明明愛排列
 date: "2024-02-21"
 description: "ZeroJudge a225 明明愛排列的題解與完整 C++ 程式碼。"
 tags: ["C++", "ZJ題解", "ZeroJudge"]
-category: information
+category: ZJ解題
 published: true
 ---
 

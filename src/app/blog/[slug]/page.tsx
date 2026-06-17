@@ -115,29 +115,12 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <>
-      {/* 背景圖片 - 固定位置 */}
-      {serializedPost.image && (
-        <div className="fixed top-0 left-0 w-1/3 h-80 -z-10 hidden lg:block pointer-events-none overflow-hidden">
-          <Image
-            src={serializedPost.image}
-            alt={serializedPost.title}
-            fill
-            className="object-cover opacity-10 dark:opacity-5"
-            sizes="33vw"
-            priority
-          />
-        </div>
-      )}
-
-      {/* 外層總容器，確保整體寬度 */}
-      <div className="w-full space-y-8 lg:space-y-10">
+      <div className="w-full pt-20 lg:pt-24 space-y-8 lg:space-y-10">
         
-        {/* 💡 核心佈局調整：這個 Grid 容器只包裹「文章主體」與「側邊欄目錄」 */}
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_320px] items-start">
           
-          {/* 左側：主要文章內文區域 */}
           <article className="space-y-6 sm:space-y-8 min-w-0">
-            {/* 文章標頭 */}
+
             <header className="space-y-4 pb-6 sm:pb-8 border-b border-neutral-200 dark:border-neutral-800">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words">
                 {serializedPost.title}
@@ -164,6 +147,7 @@ export default async function PostPage({ params }: PostPageProps) {
               </p>
             </header>
 
+
             {/* 行動裝置目錄 */}
             <TableOfContents headings={headings} variant="mobile" />
 
@@ -175,13 +159,13 @@ export default async function PostPage({ params }: PostPageProps) {
           </article>
 
           {/* 右側：側邊欄目錄 */}
-          {/* 💡 注意：加上 self-start 配合 sticky，這會讓 aside 的高度縮減為目錄本身的高度，並完美卡在父 Grid 底部 */}
+          {/* 注意：加上 self-start 配合 sticky，這會讓 aside 的高度縮減為目錄本身的高度，並完美卡在父 Grid 底部 */}
           <aside className="hidden lg:block sticky top-24 self-start">
             <TableOfContents headings={headings} variant="sidebar" />
           </aside>
         </div>
 
-        {/* 💡 核心移動：將分享區塊與評論區塊移出上述的 Grid，放到最下面 */}
+        {/* 核心移動：將分享區塊與評論區塊移出上述的 Grid，放到最下面 */}
         <div className="max-w-3xl lg:max-w-none w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-360px)] space-y-8">
           {/* 分享區塊 */}
           <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">

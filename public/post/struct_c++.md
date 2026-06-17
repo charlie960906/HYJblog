@@ -3,7 +3,7 @@ title: C++ 結構（Struct）基礎與應用
 date: "2025-07-09"
 description: "本文介紹 C++ 結構（struct）的概念，包括定義、宣告、別名（typedef）、成員存取、初始化，以及結構與函數的應用。"
 tags: ["C++", "進階", "Struct", "結構"]
-category: information
+category: C++
 published: true
 ---
 

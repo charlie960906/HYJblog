@@ -3,7 +3,7 @@ title: C++ 函數與變數等級
 date: "2025-07-08"
 description: "本文介紹 C++ 函數的優點、宣告方式、回傳值、呼叫方法、inline 函數、變數等級以及遞迴概念，包含程式碼範例與遞迴階乘實作，適合初學者學習。"
 tags: ["C++", "初學", "函式", "變數"]
-category: information
+category: C++
 published: true
 ---
 
