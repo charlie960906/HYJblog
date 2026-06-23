@@ -155,12 +155,12 @@ export function getAllCategories(): string[] {
 }
 
 /**
- * 根據分類名稱篩選文章列表
+ * 根據分類名稱篩選文章列表（💡 已完美支援大小寫與 URL 解碼）
  */
 export function getPostsByCategory(category: string): PostData[] {
   const posts = getSortedPostsData();
   const decodedCategory = decodeURIComponent(category).toLowerCase();
-  return posts.filter((post) => post.category.toLowerCase() === decodedCategory);
+  return posts.filter((post) => post.category && post.category.toLowerCase() === decodedCategory);
 }
 
 /**
@@ -192,7 +192,6 @@ export function getAllTagsWithCount(): { tag: string; text: string; value: numbe
     }
   });
 
-  // 💡 終極相容修正：將所有前端元件可能要求的欄位（tag, text, value, count）全部一次回傳！
   return Object.entries(tagCounts).map(([text, value]) => ({
     tag: text,
     text: text,
@@ -202,7 +201,7 @@ export function getAllTagsWithCount(): { tag: string; text: string; value: numbe
 }
 
 /**
- * 根據指定標籤篩選文章列表
+ * 根據指定標籤篩選文章列表（💡 已完美支援大小寫與 URL 解碼）
  */
 export function getPostsByTag(tag: string): PostData[] {
   const posts = getSortedPostsData();

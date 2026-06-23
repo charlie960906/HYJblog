@@ -18,12 +18,47 @@ export async function generateMetadata({ params }: TagPageProps) {
 
 export async function generateStaticParams() {
   const tags = getAllTags();
-  return tags.map(t => ({ tag: encodeURIComponent(t) }));
+  const paramsList: { tag: string }[] = [];
+  
+  tags.forEach(t => {
+    // 1. 原始字串
+    paramsList.push({ tag: t });
+    
+    // 2. URL 編碼字串
+    const encoded = encodeURIComponent(t);
+    if (encoded !== t) {
+      paramsList.push({ tag: encoded });
+    }
+    
+    // 3. 小寫與小寫編碼字串
+    const lower = t.toLowerCase();
+    if (lower !== t) {
+      paramsList.push({ tag: lower });
+      const encodedLower = encodeURIComponent(lower);
+      if (encodedLower !== lower && encodedLower !== encoded) {
+        paramsList.push({ tag: encodedLower });
+      }
+    }
+  });
+
+  return paramsList;
 }
 
 export default async function TagPage({ params }: TagPageProps) {
   const { tag } = await params;
-  const decodedTag = decodeURIComponent(tag);
+  
+  // 安全解碼
+  let decodedTag = tag;
+  try {
+    decodedTag = decodeURIComponent(decodeURIComponent(tag));
+  } catch (e) {
+    try {
+      decodedTag = decodeURIComponent(tag);
+    } catch (err) {
+      decodedTag = tag;
+    }
+  }
+  
   const posts = getPostsByTag(decodedTag);
 
   return (
