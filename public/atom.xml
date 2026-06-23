@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hyjblog.hyjdevelop.com</id>
     <title>HYJblog</title>
-    <updated>2026-06-23T13:31:38.996Z</updated>
+    <updated>2026-06-23T13:37:32.612Z</updated>
     <generator>Next.js Blog Generator</generator>
     <link rel="alternate" href="https://hyjblog.hyjdevelop.com"/>
-    <subtitle>聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。在這裡記錄學習過程、範例與技術筆記。</subtitle>
+    <subtitle>聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。BUT感謝你發現了我的BLOG 期待我會努力寫它也會努力創業</subtitle>
     <icon>https://hyjblog.hyjdevelop.com/favicon.ico</icon>
-    <rights>© 2026 charlie960906. All rights reserved.</rights>
+    <rights>© 2026 HUANG YOU-JYUN. All rights reserved.</rights>
     <entry>
         <title type="html"><![CDATA[每天寫文章的起點]]></title>
         <id>https://hyjblog.hyjdevelop.com/blog/2026_06_17</id>
@@ -68,7 +68,7 @@
 
 阿誰先賺大錢 誰就請客]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="日記"/>
@@ -130,7 +130,7 @@
 - [Formula1.com: F1 Explains - How F1 The Movie was made with director Joseph Kosinski](https://www.formula1.com/en/latest/article/f1-explains-how-f1-the-movie-was-made-with-director-joseph-kosinski.2uaPicSZRTDSK1GoLMLBQ7)
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="F1"/>
@@ -548,7 +548,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -912,7 +912,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -1488,7 +1488,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -2293,7 +2293,7 @@ window D: 10000
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -2943,7 +2943,7 @@ int main() {
 - `istringstream` 詳細介紹：<https://blog.cckluo.com/post/112758074>
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -3320,7 +3320,7 @@ return 0;
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -3652,7 +3652,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -4017,7 +4017,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -4571,7 +4571,7 @@ int main() {
 **圖示**：傳值、傳址、傳參照的比較（待補充圖示）。
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -4859,7 +4859,7 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -5002,7 +5002,7 @@ C++ 標頭檔類型：
 新版 C++ 需使用 `using namespace std;` 來指定命名空間。
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -5419,7 +5419,7 @@ int main() {
 - 無明確基本情況，可能導致無限遞迴。
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -5866,7 +5866,7 @@ int arr[MAX];
 
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
@@ -5960,7 +5960,7 @@ published: true
 - 圖片為固定位置，不會跟著頁面滾動
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="示例"/>
@@ -6018,7 +6018,7 @@ return 0;
 ```
 ]]></content>
         <author>
-            <name>charlie960906</name>
+            <name>HUANG YOU-JYUN</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
