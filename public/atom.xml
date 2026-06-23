@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>http://localhost:3000</id>
-    <title>個人部落格</title>
-    <updated>2026-06-23T12:33:22.642Z</updated>
+    <id>https://hyjblog.hyjdevelop.com</id>
+    <title>HYJblog</title>
+    <updated>2026-06-23T13:31:38.996Z</updated>
     <generator>Next.js Blog Generator</generator>
-    <link rel="alternate" href="http://localhost:3000"/>
-    <subtitle>使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間</subtitle>
-    <icon>http://localhost:3000/favicon.ico</icon>
-    <rights>© 2026 All rights reserved.</rights>
+    <link rel="alternate" href="https://hyjblog.hyjdevelop.com"/>
+    <subtitle>聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。在這裡記錄學習過程、範例與技術筆記。</subtitle>
+    <icon>https://hyjblog.hyjdevelop.com/favicon.ico</icon>
+    <rights>© 2026 charlie960906. All rights reserved.</rights>
     <entry>
         <title type="html"><![CDATA[每天寫文章的起點]]></title>
-        <id>http://localhost:3000/blog/2026_06_17</id>
-        <link href="http://localhost:3000/blog/2026_06_17"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/2026_06_17</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/2026_06_17"/>
         <updated>2026-06-17T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[希望我每天都會寫文章]]></summary>
         <content type="html"><![CDATA[
@@ -68,14 +68,15 @@
 
 阿誰先賺大錢 誰就請客]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="日記"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[F1 Movie 影評]]></title>
-        <id>http://localhost:3000/blog/F1_movie_Review</id>
-        <link href="http://localhost:3000/blog/F1_movie_Review"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/F1_movie_Review</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/F1_movie_Review"/>
         <updated>2025-07-13T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹觀賞 F1 Movie 後的劇情、心得感想、拍攝技巧、實際場地、電影中事件與現實。]]></summary>
         <content type="html"><![CDATA[
@@ -129,15 +130,16 @@
 - [Formula1.com: F1 Explains - How F1 The Movie was made with director Joseph Kosinski](https://www.formula1.com/en/latest/article/f1-explains-how-f1-the-movie-was-made-with-director-joseph-kosinski.2uaPicSZRTDSK1GoLMLBQ7)
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="F1"/>
         <category label="評測"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 結構（Struct）基礎與應用]]></title>
-        <id>http://localhost:3000/blog/struct_c++</id>
-        <link href="http://localhost:3000/blog/struct_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/struct_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/struct_c++"/>
         <updated>2025-07-09T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 結構（struct）的概念，包括定義、宣告、別名（typedef）、成員存取、初始化，以及結構與函數的應用。]]></summary>
         <content type="html"><![CDATA[
@@ -546,7 +548,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="進階"/>
@@ -555,8 +558,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ STL 與 Vector 容器]]></title>
-        <id>http://localhost:3000/blog/stl_vector_c++</id>
-        <link href="http://localhost:3000/blog/stl_vector_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/stl_vector_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/stl_vector_c++"/>
         <updated>2025-07-09T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 標準模板庫（STL）及其核心組成，並聚焦於 vector 容器的特色、宣告、操作（插入、刪除、遍歷等）與應用。]]></summary>
         <content type="html"><![CDATA[
@@ -909,7 +912,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -918,8 +922,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 鏈結串列基礎與應用]]></title>
-        <id>http://localhost:3000/blog/linked_list_c++</id>
-        <link href="http://localhost:3000/blog/linked_list_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/linked_list_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/linked_list_c++"/>
         <updated>2025-07-09T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 鏈結串列的概念，包括循序串列與鏈結串列的比較、動態記憶體配置、節點操作（建立、插入、刪除），以及鏈結堆疊與佇列的實現。]]></summary>
         <content type="html"><![CDATA[
@@ -1484,7 +1488,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="進階"/>
@@ -1493,8 +1498,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 類別（Class）基礎與應用]]></title>
-        <id>http://localhost:3000/blog/class_c++</id>
-        <link href="http://localhost:3000/blog/class_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/class_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/class_c++"/>
         <updated>2025-07-09T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 類別的概念，包括宣告、成員存取控制、物件、建構元、靜態成員、友誼函數及物件陣列的應用。]]></summary>
         <content type="html"><![CDATA[
@@ -2288,7 +2293,8 @@ window D: 10000
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="進階"/>
@@ -2297,8 +2303,8 @@ window D: 10000
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 字串基礎與應用]]></title>
-        <id>http://localhost:3000/blog/string_c++</id>
-        <link href="http://localhost:3000/blog/string_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/string_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/string_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 字串的定義、宣告、輸入輸出方式、緩衝區處理、字串長度計算、轉數字以及分割字串的方法。]]></summary>
         <content type="html"><![CDATA[
@@ -2937,7 +2943,8 @@ int main() {
 - `istringstream` 詳細介紹：<https://blog.cckluo.com/post/112758074>
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -2946,8 +2953,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 程式結構]]></title>
-        <id>http://localhost:3000/blog/Statements_c++</id>
-        <link href="http://localhost:3000/blog/Statements_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/Statements_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/Statements_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 程式語言的結構，包括循序、選擇和重複結構，以及 if-else、for、while、do-while、switch 與條件運算子。]]></summary>
         <content type="html"><![CDATA[
@@ -3313,7 +3320,8 @@ return 0;
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -3321,8 +3329,8 @@ return 0;
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 堆疊與佇列]]></title>
-        <id>http://localhost:3000/blog/stack_quere_c++</id>
-        <link href="http://localhost:3000/blog/stack_quere_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/stack_quere_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/stack_quere_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 堆疊與佇列的基本概念，包括其特色、宣告、使用方法（push、pop、front、back 等）以及遍歷方式。]]></summary>
         <content type="html"><![CDATA[
@@ -3644,7 +3652,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -3655,8 +3664,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 排序方法介紹]]></title>
-        <id>http://localhost:3000/blog/sorting_c++</id>
-        <link href="http://localhost:3000/blog/sorting_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/sorting_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/sorting_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 中常用的排序方法，包括氣泡排序、選擇排序、插入排序、快速排序和合併排序。]]></summary>
         <content type="html"><![CDATA[# C++ 排序（Sorting）
@@ -4008,7 +4017,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -4017,8 +4027,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 指標與參照]]></title>
-        <id>http://localhost:3000/blog/pointer_c++</id>
-        <link href="http://localhost:3000/blog/pointer_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/pointer_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/pointer_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 指標與參照的概念，包括指標的宣告與運算、函數指標、陣列與雙重指標、靜態與動態記憶體配置。]]></summary>
         <content type="html"><![CDATA[
@@ -4561,7 +4571,8 @@ int main() {
 **圖示**：傳值、傳址、傳參照的比較（待補充圖示）。
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -4570,8 +4581,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 運算式與運算子]]></title>
-        <id>http://localhost:3000/blog/Operators_c++</id>
-        <link href="http://localhost:3000/blog/Operators_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/Operators_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/Operators_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 中的運算式與運算子，包括設定、一元、算術、關係、遞增遞減、邏輯、位元邏輯與括號運算子。]]></summary>
         <content type="html"><![CDATA[
@@ -4848,7 +4859,8 @@ int main() {
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -4856,8 +4868,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ - 簡單介紹]]></title>
-        <id>http://localhost:3000/blog/Introduction_c++</id>
-        <link href="http://localhost:3000/blog/Introduction_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/Introduction_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/Introduction_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 的歷史、特色、程式結構、流程圖與基本編譯執行方式。]]></summary>
         <content type="html"><![CDATA[
@@ -4990,7 +5002,8 @@ C++ 標頭檔類型：
 新版 C++ 需使用 `using namespace std;` 來指定命名空間。
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -4998,8 +5011,8 @@ C++ 標頭檔類型：
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 函數與變數等級]]></title>
-        <id>http://localhost:3000/blog/function_variables_c++</id>
-        <link href="http://localhost:3000/blog/function_variables_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/function_variables_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/function_variables_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 函數的優點、宣告方式、回傳值、呼叫方法、inline 函數、變數等級以及遞迴概念，包含程式碼範例與遞迴階乘實作，適合初學者學習。]]></summary>
         <content type="html"><![CDATA[
@@ -5406,7 +5419,8 @@ int main() {
 - 無明確基本情況，可能導致無限遞迴。
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="初學"/>
@@ -5415,8 +5429,8 @@ int main() {
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 陣列基礎與應用]]></title>
-        <id>http://localhost:3000/blog/arrary_c++</id>
-        <link href="http://localhost:3000/blog/arrary_c++"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/arrary_c++</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/arrary_c++"/>
         <updated>2025-07-08T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[本文介紹 C++ 陣列的基本概念，包括一維、多維陣列的宣告與使用、記憶體表示法、字串、多項式與矩陣應用，以及陣列與指標的關係。]]></summary>
         <content type="html"><![CDATA[
@@ -5852,7 +5866,8 @@ int arr[MAX];
 
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="Array"/>
@@ -5860,8 +5875,8 @@ int arr[MAX];
     </entry>
     <entry>
         <title type="html"><![CDATA[圖片功能示例文章]]></title>
-        <id>http://localhost:3000/blog/example_with_images</id>
-        <link href="http://localhost:3000/blog/example_with_images"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/example_with_images</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/example_with_images"/>
         <updated>2025-01-15T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[這是一篇展示如何在文章中使用圖片功能的示例文章，包含各種圖片使用方式。]]></summary>
         <content type="html"><![CDATA[
@@ -5945,7 +5960,8 @@ published: true
 - 圖片為固定位置，不會跟著頁面滾動
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="示例"/>
         <category label="圖片"/>
@@ -5953,8 +5969,8 @@ published: true
     </entry>
     <entry>
         <title type="html"><![CDATA[題解ZJ - a225.明明愛排列]]></title>
-        <id>http://localhost:3000/blog/PE_zj_a225</id>
-        <link href="http://localhost:3000/blog/PE_zj_a225"/>
+        <id>https://hyjblog.hyjdevelop.com/blog/PE_zj_a225</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/PE_zj_a225"/>
         <updated>2024-02-21T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[ZeroJudge a225 明明愛排列的題解與完整 C++ 程式碼。]]></summary>
         <content type="html"><![CDATA[
@@ -6002,7 +6018,8 @@ return 0;
 ```
 ]]></content>
         <author>
-            <name>作者名稱</name>
+            <name>charlie960906</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="C++"/>
         <category label="ZJ題解"/>

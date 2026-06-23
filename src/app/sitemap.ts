@@ -4,7 +4,7 @@ import { getSortedPostsData } from '@/lib/posts';
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = 'https://hyjblog.hyjdevelop.com';
   const posts = getSortedPostsData();
 
   const postUrls = posts.map(post => ({

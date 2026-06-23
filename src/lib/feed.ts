@@ -1,21 +1,25 @@
 import { Feed } from 'feed';
 import { getSortedPostsData, getPostData, formatDate } from './posts';
 
+const SITE_URL = 'https://hyjblog.hyjdevelop.com';
+
 /**
  * 生成 RSS Feed
  */
 export function generateRSSFeed(): string {
-  const site_url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
   const feed = new Feed({
-    title: '個人部落格',
-    description: '使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間',
-    id: site_url,
-    link: site_url,
+    title: 'HYJblog',
+    description: '聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。在這裡記錄學習過程、範例與技術筆記。',
+    id: SITE_URL,
+    link: SITE_URL,
     language: 'zh-TW',
-    favicon: `${site_url}/favicon.ico`,
-    copyright: `© ${new Date().getFullYear()} All rights reserved.`,
+    favicon: `${SITE_URL}/favicon.ico`,
+    copyright: `© ${new Date().getFullYear()} charlie960906. All rights reserved.`,
     generator: 'Next.js Blog Generator',
+    feedLinks: {
+      rss2: `${SITE_URL}/rss.xml`,
+      atom1: `${SITE_URL}/atom.xml`,
+    },
   });
 
   const posts = getSortedPostsData();
@@ -25,13 +29,14 @@ export function generateRSSFeed(): string {
     
     feed.addItem({
       title: post.title,
-      id: `${site_url}/blog/${post.slug}`,
-      link: `${site_url}/blog/${post.slug}`,
+      id: `${SITE_URL}/blog/${post.slug}`,
+      link: `${SITE_URL}/blog/${post.slug}`,
       description: post.description,
       content: postData.content,
       author: [
         {
-          name: '作者名稱',
+          name: 'charlie960906',
+          link: SITE_URL,
         },
       ],
       date: new Date(post.date),
@@ -48,17 +53,19 @@ export function generateRSSFeed(): string {
  * 生成 Atom Feed
  */
 export function generateAtomFeed(): string {
-  const site_url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
   const feed = new Feed({
-    title: '個人部落格',
-    description: '使用 Next.js 和 Markdown 打造的極簡風格個人寫作空間',
-    id: site_url,
-    link: site_url,
+    title: 'HYJblog',
+    description: '聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。BUT感謝你發現了我的BLOG 期待我會努力寫它也會努力創業',
+    id: SITE_URL,
+    link: SITE_URL,
     language: 'zh-TW',
-    favicon: `${site_url}/favicon.ico`,
-    copyright: `© ${new Date().getFullYear()} All rights reserved.`,
+    favicon: `${SITE_URL}/favicon.ico`,
+    copyright: `© ${new Date().getFullYear()} HUANG YOU-JYUN. All rights reserved.`,
     generator: 'Next.js Blog Generator',
+    feedLinks: {
+      rss2: `${SITE_URL}/rss.xml`,
+      atom1: `${SITE_URL}/atom.xml`,
+    },
   });
 
   const posts = getSortedPostsData();
@@ -68,13 +75,14 @@ export function generateAtomFeed(): string {
     
     feed.addItem({
       title: post.title,
-      id: `${site_url}/blog/${post.slug}`,
-      link: `${site_url}/blog/${post.slug}`,
+      id: `${SITE_URL}/blog/${post.slug}`,
+      link: `${SITE_URL}/blog/${post.slug}`,
       description: post.description,
       content: postData.content,
       author: [
         {
-          name: '作者名稱',
+          name: 'HUANG YOU-JYUN',
+          link: SITE_URL,
         },
       ],
       date: new Date(post.date),
