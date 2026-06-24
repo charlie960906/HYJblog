@@ -1,10 +1,13 @@
 # HYJblog
 
 歡迎來到老黃的BLOG
+
 這是使用 **Next.js**、**TypeScript** 與 **Tailwind CSS** 打造的靜態部落格
+
 所有文章皆透過 Markdown / MDX 管理與撰寫。
 
 > "聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。"
+
 > "BUT 感謝你發現了我的 BLOG 期待我會努力寫它也會努力創業"
 
 ## 部落格特點
