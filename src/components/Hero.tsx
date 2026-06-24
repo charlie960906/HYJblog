@@ -36,29 +36,37 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
   }, [display, typing, index, sentences]);
 
   return (
-    // 1. 外層容器設定 [@container] 讓子元件能根據「這個容器的寬度」動態按比例縮放字體大小
-    <section className="py-12 sm:py-20 overflow-hidden @container">
-      <div className="mx-auto max-w-4xl text-center space-y-6 px-4 w-full">
+    <section className="py-12 sm:py-20 overflow-hidden w-full">
+      {/* 
+        1. 調整內層容器：
+           - 保持 px-4 留白，但確保 w-full 與 flex 排版讓內容永遠完美置中
+      */}
+      <div className="mx-auto max-w-4xl text-center space-y-6 px-4 w-full flex flex-col items-center justify-center">
         
-        {/* 2. 打字主標題優化：
-             - 移除 text-ellipsis，改用動態視窗與容器單位：
-             - text-[7cqw] 代表字體大小會精準隨著外框變窄而「等比例縮小」，到大螢幕則限制最大為 sm:text-4xl md:text-5xl
-             - whitespace-nowrap 確保絕對不變兩行
+        {/* 
+          2. 主標題打字效果優化：
+             - 使用 clamp(1rem, 5.5vw, 2.25rem)：
+               * 最小字體鎖定在 1rem (16px)，絕不無限縮小。
+               * 在手機上依據螢幕寬度的 5.5% 動態平滑縮小（這個比例預留了左右 padding 的空間，不會再被擋住）。
+               * 電腦大螢幕最高上限鎖定在 2.25rem (約 text-4xl)。
+             - sm:text-5xl：在寬度 640px 以上的平板與桌機，直接接手回歸原本霸氣的 5xl 尺寸。
         */}
-        <h1 className="text-[6.5cqw] sm:text-4xl md:text-5xl font-extrabold text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
+        <h1 className="text-[clamp(1rem,5.5vw,2.25rem)] sm:text-5xl font-extrabold text-neutral-900 dark:text-neutral-100 whitespace-nowrap block w-full text-center">
           {display}
-          <span className="inline-block w-1 h-[5.5cqw] sm:h-8 align-middle bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink" />
+          <span className="inline-block w-1 h-[1.2em] align-middle bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink" />
         </h1>
 
-        {/* 3. 副標題兩行文字優化：
-             - 使用 whitespace-nowrap 強制各自維持單行
-             - text-[3.8cqw] 讓它們在接近手機邊緣時，會像主標題一樣流暢、滑順地變小，絕不折行
+        {/* 
+          3. 副標題兩行文字優化：
+             - 使用 clamp(0.75rem, 3.1vw, 1rem)：
+               * 手機上字體依 3.1% 寬度平滑縮小，剛好可以讓這兩行長句子在小螢幕安全避開左右 padding，維持完美單行。
+             - sm:text-base md:text-lg：大螢幕恢復舒適的內文字體大小。
         */}
-        <div className="space-y-2">
-          <p className="text-neutral-600 dark:text-neutral-400 text-[3.6cqw] sm:text-base md:text-lg leading-relaxed whitespace-nowrap">
+        <div className="space-y-2 w-full flex flex-col items-center">
+          <p className="text-neutral-600 dark:text-neutral-400 text-[clamp(0.75rem,3.1vw,1rem)] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center">
             聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度
           </p>
-          <p className="text-neutral-600 dark:text-neutral-400 text-[3.6cqw] sm:text-base md:text-lg leading-relaxed whitespace-nowrap">
+          <p className="text-neutral-600 dark:text-neutral-400 text-[clamp(0.75rem,3.1vw,1rem)] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center">
             BUT 感謝你發現了我的BLOG 期待我會努力寫它也會努力創業
           </p>
         </div>
