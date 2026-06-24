@@ -11,12 +11,12 @@
 
 - **高效能架構**：基於 Next.js App Router 進行靜態優化，載入速度快。
 - **動態打字機特效**：首頁 Hero 區段有動態打字效果，並支援全響應式設計，小螢幕下字體會自動縮小且絕不換行。
-- **Markdown 寫作系統**：文章全面採用 Markdown 格式管理，支援代碼高亮與自訂元件。
-- **SEO 與自動化整合**：
-  - 自動生成指向自訂網域的 **RSS Feed** (`rss.xml`)
+- **Markdown 轉換系統**：文章採用 Markdown 格式管理，支援代碼高亮與自訂元件。
+- **SEO 與自動整合**：
+  - 自動生成 **RSS Feed** (`rss.xml`)
   - 自動生成 **Atom Feed** (`atom.xml`)
-  - 自動生成 **Sitemap** (`sitemap.xml`)，完美符合搜尋引擎最佳化。
-- **深色模式**：支援切換深色（Dark Mode）與淺色（Light Mode）模式，提供舒適的閱讀體驗。
+  - 自動生成 **Sitemap** (`sitemap.xml`)，符合搜尋引擎最佳化。
+- **深色模式**：支援切換深色（Dark Mode）與淺色（Light Mode）模式。
 
 ## 🌐 官方網站網址
 
@@ -48,8 +48,6 @@ npm run dev
 
 ```
 
-啟動後，在瀏覽器打開 [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) 即可即時預覽網站。
-
 ### 4. 編譯與打包生產版本
 
 ```bash
@@ -59,17 +57,18 @@ npm run build
 
 ---
 
-## ✍️ 如何新增文章？
+## 新增文章
 
-所有的部落格文章都存放在 `public/post/` 目錄下。若要撰寫新文章，只需建立一個新的 `.md` 檔案（例如 `my-new-post.md`），並在檔案頂部加入 Front Matter 格式的中介資料：
+所有的文章存放在 `public/post/` 目錄下。
+撰寫新文章，建立一個新的 `.md` 檔案並在檔案頂部加入 Front Matter 格式的中介資料。
 
 ```markdown
 ---
-title: "我的新技術筆記"
-date: "2026-06-24"
-description: "這是一篇關於前端開發或學習心得的介紹。"
-tags: ["Next.js", "TypeScript", "學習筆記"]
-category: "技術"
+title: 
+date: 
+description: 
+tags: 
+category:
 ---
 
 這裡開始寫你的文章內容...
@@ -96,17 +95,4 @@ category: "技術"
 
 ---
 
-*Made with ❤️ by [charlie960906*](https://www.google.com/search?q=https://github.com/charlie960906)
-
-```
-
-### 💡 調整提示：
-這份 README 已經幫你整合了：
-1. **你的首頁經典名言**。
-2. **你新改好的自訂網域** (`hyjblog.hyjdevelop.com`)。
-3. 新增文章時的前置格式教學（Front Matter）。
-4. 自動化生成 RSS / Atom / Sitemap 的功能描述。
-
-直接複製貼上就能讓你的 GitHub 專案首頁看起來非常完整且有專業架構！
-
-```
+*powered by [HUANG YOU JYUN](https://www.google.com/search?q=https://github.com/charlie960906)
