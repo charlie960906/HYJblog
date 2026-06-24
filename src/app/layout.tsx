@@ -1,44 +1,53 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
+import { Providers } from "./providers";
 import Menu from "@/components/Menu";
 import Footer from "@/components/Footer";
-// 修正處：改用具名引入 { Providers }
-import { Providers } from "./providers"; 
-import ThemeColorMeta from "@/components/ThemeColorMeta";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import ThemeColorMeta from "@/components/ThemeColorMeta";
+import AnimePageWrapper from "@/components/AnimePageWrapper"; // 💡 引入全域動畫包裹元件
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "HYJBLOG",
-  description: "HYJdevelop 的個人部落格 - 分享技術心得與生活點滴",
-  alternates: {
-    types: {
-      'application/rss+xml': '/rss.xml',
-      'application/atom+xml': '/atom.xml',
-    },
+  title: {
+    template: '%s - HYJBLOG',
+    default: 'HYJBLOG - 技術與生活隨筆',
   },
+  description: "分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/images/icon.jpg",
+    apple: "/images/icon.jpg",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="zh-TW" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="zh-TW" suppressHydrationWarning>
       <head>
-        <ThemeColorMeta />
         <GoogleAnalytics />
+        <ThemeColorMeta />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col bg-[#fcfaf7] text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50 transition-colors duration-300 antialiased selection:bg-neutral-200 dark:selection:bg-neutral-800`}>
+      <body className={`${inter.className} bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-screen flex flex-col antialiased transition-colors duration-300`}>
         <Providers>
           <Menu />
-          {/* 修改處：為 main 加上 max-w-7xl (最大寬度 1280px)、mx-auto (水平置中) 與 px (左右內邊距避免貼邊) */}
-          <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+          {/* 💡 使用 AnimePageWrapper 包裹全站的頁面內容 */}
+          <AnimePageWrapper>
             {children}
-          </main>
+          </AnimePageWrapper>
           <Footer />
         </Providers>
       </body>

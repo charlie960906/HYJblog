@@ -1,0 +1,21 @@
+{
+  "name": "HYJBLOG",
+  "short_name": "HYJBLOG",
+  "description": "分享 C++、前端開發、資料結構與演算法的個人部落格。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/images/icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/images/icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
