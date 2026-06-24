@@ -575,3 +575,14 @@
     transform: translateY(0);
   }
 }
+
+/* 隱藏滾動條的實用 Tailwind 小工具 */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
