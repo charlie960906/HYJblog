@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "animejs": "^4.5.0",
     "d3-cloud": "^1.2.9",
     "feed": "^5.2.1",
     "gray-matter": "^4.0.3",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
+    "@types/animejs": "^3.1.13",
     "@types/d3-cloud": "^1.2.9",
     "@types/lunr": "^2.3.7",
     "@types/node": "latest",

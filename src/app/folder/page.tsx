@@ -1,5 +1,6 @@
 import { getSortedPostsData, getAllCategories } from '@/lib/posts';
 import FolderClient from './client';
+import AnimePageWrapper from '@/components/AnimePageWrapper'; // 💡 引入 Anime.js 動畫包裹元件
 
 export const metadata = {
   title: '文章分類 - HYJBLOG',
@@ -11,10 +12,13 @@ export default function FolderArchive() {
   const categories = getAllCategories();
 
   return (
-    <div className="w-full pt-16 pb-12 max-w-7xl mx-auto">
-      <div className="animate-page-in">
-        <FolderClient allPosts={allPosts} categories={categories} />
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+      <div className="mx-auto max-w-4xl w-full">
+
+        <AnimePageWrapper>
+          <FolderClient allPosts={allPosts} categories={categories} />
+        </AnimePageWrapper>
       </div>
-    </div>
+    </main>
   );
 }

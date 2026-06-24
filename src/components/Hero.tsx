@@ -10,17 +10,9 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
   const [index, setIndex] = useState(0);
   const [display, setDisplay] = useState('');
   const [typing, setTyping] = useState(true);
-  
-  // =========================================================
-  // 【打字效果專用 Ref 與 State】完全不變動
-  // =========================================================
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
   const [scale, setScale] = useState(1);
-
-  // =========================================================
-  // 💡【下方兩行字專用 Ref 與 State】獨立出來處理
-  // =========================================================
   const subContainerRef = useRef<HTMLDivElement>(null);
   const subTextRef = useRef<HTMLDivElement>(null);
   const [subScale, setSubScale] = useState(1);
@@ -71,7 +63,6 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
       const textWidth = subTextRef.current.scrollWidth;
 
       if (textWidth > containerWidth) {
-        // 快超出時，精準計算縮小比例，保持 5% 的安全間距
         const newScale = (containerWidth / textWidth) * 0.95;
         setSubScale(newScale);
       } else {
@@ -106,13 +97,6 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
             <span className="inline-block w-[3px] h-[1.1em] bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink shrink-0" />
           </h1>
         </div>
-
-        {/* =========================================================
-            💡【副標題兩行文字修正】
-            - 使用獨立的 subContainerRef 監聽可用寬度
-            - 加上 whitespace-nowrap 確保打死都不換行
-            - 綁定 style transform scale 達成當螢幕裝不下時，整體平滑變小
-           ========================================================= */}
         <div ref={subContainerRef} className="w-full max-w-full flex items-center justify-center min-h-[4rem] overflow-visible">
           <div 
             ref={subTextRef}

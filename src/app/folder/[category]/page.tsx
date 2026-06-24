@@ -64,10 +64,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryPosts = getPostsByCategory(decodedCategory);
 
   return (
-    <div className="w-full pt-16 pb-12 max-w-7xl mx-auto">
-      <div className="animate-page-in">
-        <CategoryPostsClient category={decodedCategory} posts={categoryPosts} />
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+      <div className="mx-auto max-w-4xl w-full">
+        <div className="animate-page-in">
+          <CategoryPostsClient category={decodedCategory} posts={categoryPosts} />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

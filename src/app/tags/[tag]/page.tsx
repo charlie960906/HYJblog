@@ -21,16 +21,13 @@ export async function generateStaticParams() {
   const paramsList: { tag: string }[] = [];
   
   tags.forEach(t => {
-    // 1. 原始字串
     paramsList.push({ tag: t });
     
-    // 2. URL 編碼字串
     const encoded = encodeURIComponent(t);
     if (encoded !== t) {
       paramsList.push({ tag: encoded });
     }
     
-    // 3. 小寫與小寫編碼字串
     const lower = t.toLowerCase();
     if (lower !== t) {
       paramsList.push({ tag: lower });
@@ -47,7 +44,6 @@ export async function generateStaticParams() {
 export default async function TagPage({ params }: TagPageProps) {
   const { tag } = await params;
   
-  // 安全解碼
   let decodedTag = tag;
   try {
     decodedTag = decodeURIComponent(decodeURIComponent(tag));
@@ -62,25 +58,28 @@ export default async function TagPage({ params }: TagPageProps) {
   const posts = getPostsByTag(decodedTag);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100">
-          標籤：{decodedTag}
-        </h1>
-        <p className="text-neutral-600 dark:text-neutral-400">共有 {posts.length} 篇文章</p>
-      </div>
+    /* 💡 關鍵修改：使用 px-4，讓左右留白與首頁完全對齊一模一樣 */
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+      <div className="mx-auto max-w-4xl space-y-6">
+        
+        <div>
+          <Link href="/tags" className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors block mb-4">
+            ← 返回所有標籤
+          </Link>
+          
+          <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100">
+            標籤：{decodedTag}
+          </h1>
+          <p className="text-neutral-600 dark:text-neutral-400 mt-2">共有 {posts.length} 篇文章</p>
+        </div>
 
-      {posts.length > 0 ? (
-        <PostGrid posts={posts} itemsPerPage="all" />
-      ) : (
-        <p className="text-neutral-600 dark:text-neutral-400">目前此標籤尚無文章</p>
-      )}
+        {posts.length > 0 ? (
+          <PostGrid posts={posts} itemsPerPage="all" />
+        ) : (
+          <p className="text-neutral-600 dark:text-neutral-400">目前此標籤尚無文章</p>
+        )}
 
-      <div>
-        <Link href="/tags" className="link-subtle">
-          ← 返回標籤
-        </Link>
       </div>
-    </div>
+    </main>
   );
 }
