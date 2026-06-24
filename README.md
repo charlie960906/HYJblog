@@ -98,4 +98,4 @@ category:
 
 ---
 
-*powered by [HUANG YOU JYUN](https://www.google.com/search?q=https://github.com/charlie960906)
+*powered by [HUANG YOU JYUN](https://github.com/charlie960906)
