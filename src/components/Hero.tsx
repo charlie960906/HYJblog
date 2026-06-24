@@ -37,36 +37,47 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
 
   return (
     <section className="py-12 sm:py-20 overflow-hidden w-full">
-      {/* 
-        1. 調整內層容器：
-           - 保持 px-4 留白，但確保 w-full 與 flex 排版讓內容永遠完美置中
-      */}
       <div className="mx-auto max-w-4xl text-center space-y-6 px-4 w-full flex flex-col items-center justify-center">
         
         {/* 
-          2. 主標題打字效果優化：
-             - 使用 clamp(1rem, 5.5vw, 2.25rem)：
-               * 最小字體鎖定在 1rem (16px)，絕不無限縮小。
-               * 在手機上依據螢幕寬度的 5.5% 動態平滑縮小（這個比例預留了左右 padding 的空間，不會再被擋住）。
-               * 電腦大螢幕最高上限鎖定在 2.25rem (約 text-4xl)。
-             - sm:text-5xl：在寬度 640px 以上的平板與桌機，直接接手回歸原本霸氣的 5xl 尺寸。
+          1. 主標題採用 SVG 向量縮放技術：
+             - 在桌機大螢幕（sm 以上）維持標準的 text-5xl H1 樣式。
+             - 在手機小螢幕（sm 以下）自動切換成 SVG。SVG 內建的 textLength 搭配 lengthAdjust
+               會強迫字體隨著螢幕寬度「完美向內縮小比例」，死守在安全退縮框之內，絕對不超出！
         */}
-        <h1 className="text-[clamp(1rem,5.5vw,2.25rem)] sm:text-5xl font-extrabold text-neutral-900 dark:text-neutral-100 whitespace-nowrap block w-full text-center">
+        <div className="w-full block sm:hidden">
+          <svg viewBox="0 0 400 45" className="w-full h-auto">
+            <text
+              x="50%"
+              y="30"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              className="fill-neutral-900 dark:fill-neutral-100 font-extrabold"
+              style={{ fontSize: '24px' }}
+              textLength="380"
+              lengthAdjust="spacingAndGlyphs"
+            >
+              {display}丨
+            </text>
+          </svg>
+        </div>
+
+        {/* 電腦與平板版（大螢幕維持原本最棒的清晰度） */}
+        <h1 className="hidden sm:block text-5xl font-extrabold text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
           {display}
-          <span className="inline-block w-1 h-[1.2em] align-middle bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink" />
+          <span className="inline-block w-1 h-8 align-middle bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink" />
         </h1>
 
         {/* 
-          3. 副標題兩行文字優化：
-             - 使用 clamp(0.75rem, 3.1vw, 1rem)：
-               * 手機上字體依 3.1% 寬度平滑縮小，剛好可以讓這兩行長句子在小螢幕安全避開左右 padding，維持完美單行。
-             - sm:text-base md:text-lg：大螢幕恢復舒適的內文字體大小。
+          2. 副標題同樣導入 RWD 安全範圍：
+             - 如果希望副標題也死守不換行，且不要頂到 Padding，同樣限制在大螢幕恢復標準，
+               小螢幕使用百分比與彈性間距。
         */}
-        <div className="space-y-2 w-full flex flex-col items-center">
-          <p className="text-neutral-600 dark:text-neutral-400 text-[clamp(0.75rem,3.1vw,1rem)] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center">
+        <div className="space-y-1 w-full flex flex-col items-center">
+          <p className="text-neutral-600 dark:text-neutral-400 text-[3.2vw] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center max-w-[90vw]">
             聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度
           </p>
-          <p className="text-neutral-600 dark:text-neutral-400 text-[clamp(0.75rem,3.1vw,1rem)] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center">
+          <p className="text-neutral-600 dark:text-neutral-400 text-[3.2vw] sm:text-base md:text-lg leading-relaxed whitespace-nowrap text-center max-w-[90vw]">
             BUT 感謝你發現了我的BLOG 期待我會努力寫它也會努力創業
           </p>
         </div>
