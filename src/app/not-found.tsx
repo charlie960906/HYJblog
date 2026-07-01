@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-cream-50 dark:bg-neutral-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-cream-50 dark:bg-neutral-950 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
       <div className="w-full max-w-md text-center space-y-8 animate-page-in">
         <div className="relative h-48 flex items-center justify-center mb-8">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -34,21 +34,33 @@ export default function NotFound() {
         </div>
 
         <p className="text-neutral-500 dark:text-neutral-500 leading-relaxed">
-          你可以回到首頁，或透過標籤找找其他文章。
+          你可以回到首頁，或透過標籤與分類快速找到其他文章。
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 justify-center pt-6">
           <Link
             href="/"
-            className="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl active:translate-y-0"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl active:translate-y-0 whitespace-nowrap text-center"
           >
             返回首頁
           </Link>
           <Link
             href="/tags"
-            className="px-6 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-medium transition-all hover:-translate-y-0.5"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-medium transition-all hover:-translate-y-0.5 whitespace-nowrap text-center"
           >
-            瀏覽標籤
+            標籤雲
+          </Link>
+          <Link
+            href="/folder"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-medium transition-all hover:-translate-y-0.5 whitespace-nowrap text-center"
+          >
+            分類目錄
+          </Link>
+          <Link
+            href="/search"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-medium transition-all hover:-translate-y-0.5 whitespace-nowrap text-center"
+          >
+            文章搜尋
           </Link>
         </div>
 

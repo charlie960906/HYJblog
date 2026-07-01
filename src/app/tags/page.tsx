@@ -29,10 +29,10 @@ export default function TagsPage() {
   return (
     /* 💡 關鍵修改：
        1. 改用 <main> 配合 pt-24 md:pt-28 頂出安全區，不被 Menu 遮擋
-       2. 加上 px-4 確保左右縮排不論在手機或桌機都跟首頁 100% 精準對齊
+       2. 加上 px-4 sm:px-6 lg:px-8 確保左右縮排不論在手機或桌機都跟首頁 100% 精準對齊
        3. 限制 max-w-4xl mx-auto，讓 D3 標籤雲與全站維持一致的置中視覺比例
     */
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl w-full space-y-10">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 tracking-tight">

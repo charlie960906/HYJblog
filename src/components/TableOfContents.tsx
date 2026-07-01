@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import { animate } from 'animejs';
 
 export interface Heading {
   id: string;
@@ -18,6 +19,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   
   // 用於控制目錄內部滾動與點擊鎖定
   const containerRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
   const isClickScrolling = useRef<boolean>(false);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -81,35 +83,39 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     };
   }, [headings, activeId]);
 
-  // 💡 核心新增：當 activeId 改變時，檢查右側目錄標籤有沒有沉到螢幕外，有的話自動滾動它
   useEffect(() => {
-    if (variant === 'mobile' || !activeId || !containerRef.current) return;
+    if (variant === 'mobile' || !activeId || !containerRef.current || !highlightRef.current) return;
 
-    // 尋找目錄中被高亮的 a 標籤連結
-    const activeLink = containerRef.current.querySelector(`a[href="#${activeId}"]`) as HTMLElement;
-    if (activeLink) {
-      const container = containerRef.current;
-      
-      // 計算標籤在目錄容器內部的相對位置
-      const linkTop = activeLink.offsetTop;
-      const linkHeight = activeLink.offsetHeight;
-      const containerHeight = container.clientHeight;
-      const containerScrollTop = container.scrollTop;
+    const activeLink = containerRef.current.querySelector(`a[href="#${activeId}"]`) as HTMLElement | null;
+    if (!activeLink) return;
 
-      // 如果高亮的標籤在目前視窗的下方外面，或者快要貼到底部
-      if (linkTop + linkHeight > containerScrollTop + containerHeight - 40) {
-        container.scrollTo({
-          top: linkTop - containerHeight + 80,
-          behavior: 'smooth'
-        });
-      } 
-      // 如果高亮的標籤在目前視窗的上方外面
-      else if (linkTop < containerScrollTop + 40) {
-        container.scrollTo({
-          top: linkTop - 40,
-          behavior: 'smooth'
-        });
-      }
+    const top = activeLink.offsetTop;
+    const height = activeLink.offsetHeight;
+
+    animate(highlightRef.current, {
+      top,
+      height,
+      opacity: [1],
+      duration: 320,
+      easing: 'easeOutQuad',
+    });
+
+    const container = containerRef.current;
+    const linkTop = activeLink.offsetTop;
+    const linkHeight = activeLink.offsetHeight;
+    const containerHeight = container.clientHeight;
+    const containerScrollTop = container.scrollTop;
+
+    if (linkTop + linkHeight > containerScrollTop + containerHeight - 40) {
+      container.scrollTo({
+        top: linkTop - containerHeight + 80,
+        behavior: 'smooth'
+      });
+    } else if (linkTop < containerScrollTop + 40) {
+      container.scrollTo({
+        top: linkTop - 40,
+        behavior: 'smooth'
+      });
     }
   }, [activeId, variant]);
 
@@ -152,26 +158,28 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   }
 
   const nav = (
-    <nav className="space-y-2 sm:space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
-      {headings.map(heading => {
-        const isActive = activeId === heading.id;
-        return (
-          <a
-            key={heading.id}
-            href={`#${heading.id}`}
-            onClick={(e) => handleScroll(e, heading.id)}
-            className={`block py-0.5 transition-all duration-200 border-l-2 pl-3 -ml-[2px] break-words
-              ${heading.level === 3 ? 'ml-3 sm:ml-4 text-neutral-500 dark:text-neutral-400' : ''}
-              ${isActive 
-                ? 'text-amber-600 dark:text-amber-500 font-semibold border-amber-500 dark:border-amber-500 bg-amber-500/5' 
-                : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-700'
-              }`}
-          >
-            {heading.title}
-          </a>
-        );
-      })}
-    </nav>
+    <div className="relative">
+      <div
+        ref={highlightRef}
+        className="pointer-events-none absolute left-0 right-0 rounded-full bg-amber-500/10 dark:bg-amber-500/15"
+        style={{ top: 0, height: 0, opacity: 0 }}
+      />
+      <nav className="relative space-y-2 sm:space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
+        {headings.map(heading => {
+          const isActive = activeId === heading.id;
+          return (
+            <a
+              key={heading.id}
+              href={`#${heading.id}`}
+              onClick={(e) => handleScroll(e, heading.id)}
+              className={`relative z-10 block py-0.5 transition-all duration-200 border-l-2 pl-3 -ml-[2px] break-words ${heading.level === 3 ? 'ml-3 sm:ml-4 text-neutral-500 dark:text-neutral-400' : ''} ${isActive ? 'text-amber-600 dark:text-amber-500 font-semibold border-amber-500 dark:border-amber-500' : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-700'}`}
+            >
+              {heading.title}
+            </a>
+          );
+        })}
+      </nav>
+    </div>
   );
 
   if (variant === 'mobile') {

@@ -1,7 +1,5 @@
 import { getAllTags, getPostsByTag } from '@/lib/posts';
-import PostCard from '@/components/PostCard';
-import PostGrid from '@/components/PostGrid';
-import Link from 'next/link';
+import PostsSection from '@/components/PostsSection';
 
 interface TagPageProps {
   params: Promise<{ tag: string }>;
@@ -58,27 +56,16 @@ export default async function TagPage({ params }: TagPageProps) {
   const posts = getPostsByTag(decodedTag);
 
   return (
-    /* 💡 關鍵修改：使用 px-4，讓左右留白與首頁完全對齊一模一樣 */
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl space-y-6">
-        
-        <div>
-          <Link href="/tags" className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors block mb-4">
-            ← 返回所有標籤
-          </Link>
-          
-          <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100">
-            標籤：{decodedTag}
-          </h1>
-          <p className="text-neutral-600 dark:text-neutral-400 mt-2">共有 {posts.length} 篇文章</p>
-        </div>
-
-        {posts.length > 0 ? (
-          <PostGrid posts={posts} itemsPerPage="all" />
-        ) : (
-          <p className="text-neutral-600 dark:text-neutral-400">目前此標籤尚無文章</p>
-        )}
-
+        <PostsSection
+          title={`標籤：${decodedTag}`}
+          subtitle={`共有 ${posts.length} 篇文章`}
+          posts={posts}
+          itemsPerPage="all"
+          backLink={{ href: '/tags', label: '← 返回所有標籤' }}
+          emptyState={<p className="text-neutral-600 dark:text-neutral-400">目前此標籤尚無文章</p>}
+        />
       </div>
     </main>
   );

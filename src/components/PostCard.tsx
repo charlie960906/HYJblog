@@ -1,4 +1,10 @@
+'use client';
+
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
+import { animate } from 'animejs';
 import { formatDate } from '@/lib/types';
 import ReadingTime from './ReadingTime';
 import TagPill from './TagPill';
@@ -20,8 +26,54 @@ export default function PostCard({
   tags,
   readingTime,
 }: PostCardProps) {
+  const cardRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const observer = new IntersectionObserver(
+      (entries, observerInstance) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate(card, {
+              opacity: [0, 1],
+              translateY: [24, 0],
+              scale: [0.98, 1],
+              duration: 650,
+              easing: 'easeOutCubic',
+            });
+            observerInstance.unobserve(card);
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleHover = (entered: boolean) => {
+    if (!cardRef.current) return;
+
+    animate(cardRef.current, {
+      translateY: entered ? -6 : 0,
+      boxShadow: entered
+        ? '0 28px 70px rgba(15, 23, 42, 0.12)'
+        : '0 0 0 rgba(15, 23, 42, 0)',
+      duration: 450,
+      easing: 'easeOutElastic(1, .8)',
+    });
+  };
+
   return (
-    <article className="group animate-list-item interactive-lift mb-8 pb-8 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0">
+    <article
+      ref={cardRef}
+      onMouseEnter={() => handleHover(true)}
+      onMouseLeave={() => handleHover(false)}
+      className="group transform opacity-0 translate-y-6 mb-8 pb-8 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0"
+    >
       <div className="mb-2 flex items-center gap-3 flex-wrap">
         <time className="font-mono text-sm text-neutral-500 dark:text-neutral-500">
           {formatDate(date)}
