@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { animate } from 'animejs';

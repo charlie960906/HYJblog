@@ -1,5 +1,5 @@
 import { Feed } from 'feed';
-import { getSortedPostsData, getPostData, formatDate } from './posts';
+import { getSortedPostsData, getPostData } from './posts';
 
 const SITE_URL = 'https://hyjblog.hyjdevelop.com';
 

@@ -28,15 +28,16 @@ export interface PostMetadata {
 }
 
 /**
- * Format date to readable format (e.g., "Jan 15, 2025")
+ * Format date to readable zh-TW format (e.g., "2025年1月15日")
  */
 export function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.toLocaleString('en-US', { month: 'short' });
-    const day = date.getDate();
-    return `${month} ${day}, ${year}`;
+    return date.toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   } catch {
     return dateString;
   }

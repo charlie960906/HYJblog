@@ -27,18 +27,6 @@ export interface SerializedPost extends Omit<PostData, 'content'> {
 }
 
 /**
- * 格式化日期字串
- */
-export function formatDate(dateString: string): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return new Date(dateString).toLocaleDateString('zh-TW', options);
-}
-
-/**
  * 獲取所有文章的 Slug 列表
  */
 export function getAllPostSlugs(): string[] {

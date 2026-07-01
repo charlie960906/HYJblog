@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { getPostData, getAllPostSlugs, formatDate, getSerializedPost } from '@/lib/posts';
+import { getPostData, getAllPostSlugs, getSerializedPost } from '@/lib/posts';
+import { formatDate } from '@/lib/types';
 import ShareButtons from '@/components/ShareButtons';
 import ReadingTime from '@/components/ReadingTime';
 import LazyGiscus from '@/components/LazyGiscus';

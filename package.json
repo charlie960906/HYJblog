@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/generate-feeds.js",
     "start": "next start",
-    "export": "next build && next export",
+    "export": "npm run build && next export",
     "build:pages": "npm run export && node scripts/export-to-docs.js",
     "lint": "next lint"
   },
@@ -19,11 +19,9 @@
     "lunr": "^2.3.9",
     "marked": "^18.0.5",
     "next": "latest",
-    "next-mdx-remote": "latest",
     "next-themes": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "remark-gfm": "^4.0.1"
+    "react-dom": "latest"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
