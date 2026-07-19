@@ -4,7 +4,7 @@
         <title>HYJBLOG</title>
         <link>https://hyjblog.hyjdevelop.com</link>
         <description>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</description>
-        <lastBuildDate>Sun, 05 Jul 2026 09:58:35 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 19 Jul 2026 09:46:07 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-TW</language>
@@ -831,8 +831,6 @@ window D: 10000
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>進階</category>
-            <category>Class</category>
-            <category>類別</category>
         </item>
         <item>
             <title><![CDATA[C++ 鏈結串列基礎與應用]]></title>
@@ -1391,8 +1389,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>進階</category>
-            <category>Linked List</category>
-            <category>鏈結串列</category>
         </item>
         <item>
             <title><![CDATA[C++ STL 與 Vector 容器]]></title>
@@ -1691,8 +1687,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>STL</category>
-            <category>Vector</category>
         </item>
         <item>
             <title><![CDATA[C++ 結構（Struct）基礎與應用]]></title>
@@ -2052,8 +2046,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>進階</category>
-            <category>Struct</category>
-            <category>結構</category>
         </item>
         <item>
             <title><![CDATA[C++ 陣列基礎與應用]]></title>
@@ -2471,8 +2463,7 @@ int arr[MAX];
 ]]></content:encoded>
             <author>HYJBLOG</author>
             <category>C++</category>
-            <category>Array</category>
-            <category>陣列</category>
+            <category>初學</category>
         </item>
         <item>
             <title><![CDATA[C++ 函數與變數等級]]></title>
@@ -2843,8 +2834,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>函式</category>
-            <category>變數</category>
         </item>
         <item>
             <title><![CDATA[C++ - 簡單介紹]]></title>
@@ -3036,7 +3025,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>簡介</category>
         </item>
         <item>
             <title><![CDATA[C++ 運算式與運算子]]></title>
@@ -3500,7 +3488,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>運算式與運算子</category>
         </item>
         <item>
             <title><![CDATA[C++ 指標與參照]]></title>
@@ -3983,8 +3970,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>Pointers</category>
-            <category>指標</category>
         </item>
         <item>
             <title><![CDATA[C++ 排序方法介紹]]></title>
@@ -4385,8 +4370,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>Sorting</category>
-            <category>排序</category>
         </item>
         <item>
             <title><![CDATA[C++ 堆疊與佇列]]></title>
@@ -4675,10 +4658,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>Stack</category>
-            <category>Queue</category>
-            <category>堆疊</category>
-            <category>佇列</category>
         </item>
         <item>
             <title><![CDATA[C++ 程式結構]]></title>
@@ -4984,7 +4963,6 @@ return 0;
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>程式結構</category>
         </item>
         <item>
             <title><![CDATA[C++ 字串基礎與應用]]></title>
@@ -5559,81 +5537,6 @@ int main() {
             <author>HYJBLOG</author>
             <category>C++</category>
             <category>初學</category>
-            <category>Strings</category>
-            <category>字串</category>
-        </item>
-        <item>
-            <title><![CDATA[圖片功能示例文章]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/example_with_images</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/example_with_images</guid>
-            <pubDate>Wed, 15 Jan 2025 00:00:00 GMT</pubDate>
-            <description><![CDATA[這是一篇展示如何在文章中使用圖片功能的示例文章，包含各種圖片使用方式。]]></description>
-            <content:encoded><![CDATA[<h1>圖片功能示例文章</h1>
-<p>這篇文章展示了如何在 markdown 文章中使用圖片功能。</p>
-<h2>基本圖片插入</h2>
-<p>你可以使用標準的 markdown 語法插入圖片：</p>
-<pre><code class="language-markdown">![圖片描述](圖片URL)
-</code></pre>
-<p>例如：</p>
-<p><img src="/images/icon.jpg" alt="網站圖標"></p>
-<h2>帶標題的圖片</h2>
-<p>你也可以為圖片添加標題，標題會顯示為圖片說明：</p>
-<pre><code class="language-markdown">![圖片描述](圖片URL &quot;圖片標題&quot;)
-</code></pre>
-<p>例如：</p>
-<p><img src="/images/my.jpg" alt="我的照片" title="這是我的照片"></p>
-<h2>網路圖片</h2>
-<p>你也可以使用網路上的圖片：</p>
-<p><img src="https://via.placeholder.com/600x300/4F46E5/FFFFFF?text=%E7%AF%84%E4%BE%8B%E5%9C%96%E7%89%87" alt="範例圖片" title="這是一張範例圖片"></p>
-<h2>圖片功能特色</h2>
-<ol>
-<li><strong>響應式設計</strong>：圖片會自動適應不同螢幕大小</li>
-<li><strong>燈箱效果</strong>：點擊圖片可以放大檢視</li>
-<li><strong>載入動畫</strong>：圖片支援懶載入，提升頁面載入速度</li>
-<li><strong>圖片說明</strong>：支援圖片標題作為說明文字</li>
-<li><strong>美觀樣式</strong>：圖片有圓角、陰影等美化效果</li>
-</ol>
-<h2>使用建議</h2>
-<ul>
-<li>建議將圖片放在 <code>public/images/</code> 資料夾中</li>
-<li>使用相對路徑 <code>/images/檔名.jpg</code> 引用圖片</li>
-<li>為圖片添加有意義的 alt 文字，提升無障礙性</li>
-<li>可以使用圖片標題功能添加說明文字</li>
-<li>在 Frontmatter 中添加 <code>image</code> 欄位，將圖片設為背景圖片</li>
-<li>在 Frontmatter 中添加 <code>category</code> 欄位（如：information、tutorial、技術等），用於分類</li>
-</ul>
-<h2>Frontmatter 範例</h2>
-<pre><code class="language-yaml">---
-title: 文章標題
-date: &quot;2025-01-15&quot;
-description: 文章描述
-tags: [&quot;標籤1&quot;, &quot;標籤2&quot;]
-category: information    # 用於分類歸檔
-image: /images/example.jpg  # 用於首頁焦點和文章詳情背景圖片
-published: true
----
-</code></pre>
-<h2>新功能介紹</h2>
-<h3>首頁佈局</h3>
-<ul>
-<li><strong>焦點推薦</strong>：首頁最新文章會以大卡片形式展示，帶有背景圖片</li>
-<li><strong>文章網格</strong>：其他文章以 3x3 網格展示，支援分頁</li>
-</ul>
-<h3>文章歸檔</h3>
-<ul>
-<li>使用分類抽屜菜單快速篩選不同分類的文章</li>
-<li>每個文章卡片都展示分類標籤、發佈日期和預計閱讀時間</li>
-</ul>
-<h3>文章詳情</h3>
-<ul>
-<li>背景圖片會以半透明形式顯示在文章左側</li>
-<li>圖片為固定位置，不會跟著頁面滾動</li>
-</ul>
-]]></content:encoded>
-            <author>HYJBLOG</author>
-            <category>示例</category>
-            <category>圖片</category>
-            <category>功能展示</category>
         </item>
         <item>
             <title><![CDATA[題解ZJ - a225.明明愛排列]]></title>
@@ -5685,8 +5588,7 @@ return 0;
 ]]></content:encoded>
             <author>HYJBLOG</author>
             <category>C++</category>
-            <category>ZJ題解</category>
-            <category>ZeroJudge</category>
+            <category>Zerojudge</category>
         </item>
     </channel>
 </rss>
