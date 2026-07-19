@@ -4,7 +4,7 @@ date: "2024-02-21"
 description: "ZeroJudge a225 明明愛排列的題解與完整 C++ 程式碼。"
 tags: ["C++", "Zerojudge"]
 category: ZJ解題
-image: /images/c++.jpg
+image: /images/zerojudge.svg
 published: true
 ---
 
