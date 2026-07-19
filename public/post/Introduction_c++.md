@@ -4,6 +4,7 @@ date: "2025-07-08"
 description: "本文介紹 C++ 的歷史、特色、程式結構、流程圖與基本編譯執行方式。"
 tags: ["C++", "初學"]
 category: C++
+image: /images/c++.jpg
 published: true
 ---
 

@@ -4,6 +4,7 @@ date: "2025-07-09"
 description: "本文介紹 C++ 類別的概念，包括宣告、成員存取控制、物件、建構元、靜態成員、友誼函數及物件陣列的應用。"
 tags: ["C++", "進階"]
 category: C++
+image: /images/c++.jpg
 published: true
 ---
 

@@ -4,6 +4,7 @@ date: "2025-07-08"
 description: "本文介紹 C++ 字串的定義、宣告、輸入輸出方式、緩衝區處理、字串長度計算、轉數字以及分割字串的方法。"
 tags: ["C++", "初學"]
 category: C++
+image: /images/c++.jpg
 published: true
 ---
 

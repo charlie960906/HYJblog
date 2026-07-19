@@ -4,6 +4,7 @@ date: "2025-07-09"
 description: "本文介紹 C++ 鏈結串列的概念，包括循序串列與鏈結串列的比較、動態記憶體配置、節點操作（建立、插入、刪除），以及鏈結堆疊與佇列的實現。"
 tags: ["C++", "進階"]
 category: C++
+image: /images/c++.jpg
 published: true
 ---
 
