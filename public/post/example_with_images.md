@@ -1,17 +1,3 @@
----
-title: 圖片功能示例文章
-date: "2025-01-15"
-description: "這是一篇展示如何在文章中使用圖片功能的示例文章，包含各種圖片使用方式。"
-tags: ["示例", "圖片", "功能展示"]
-category: information
-image: /images/example.jpg
-published: true
----
-
-# 圖片功能示例文章
-
-這篇文章展示了如何在 markdown 文章中使用圖片功能。
-
 ## 基本圖片插入
 
 你可以使用標準的 markdown 語法插入圖片：

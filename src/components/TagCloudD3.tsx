@@ -61,8 +61,8 @@ export default function TagCloudD3({ tags }: TagCloudD3Props) {
   return (
     // 💡 優化 2：加入 content-visibility 與 contain-intrinsic-size
     // 這是現代瀏覽器的極致效能優化 CSS，如果標籤雲在首頁下方尚未滾動到時，瀏覽器會跳過它的渲染，大幅減少首次載入的 CPU 損耗
-    <div className="w-full overflow-visible" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 150px', overflow: 'visible' }}>
-      <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-5 sm:gap-x-5 sm:gap-y-6 overflow-visible">
+    <div className="w-full overflow-visible" style={{ position: 'relative', zIndex: 0, contentVisibility: 'auto', containIntrinsicSize: 'auto 150px', overflow: 'visible' }}>
+      <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-5 sm:gap-x-5 sm:gap-y-6 overflow-visible" style={{ position: 'relative', zIndex: 0, overflow: 'visible' }}>
         {sortedTags.map((tag, index) => {
           const styleClass = getTagStyle(tag.value);
           
@@ -71,14 +71,14 @@ export default function TagCloudD3({ tags }: TagCloudD3Props) {
               key={`${tag.text}-${index}`}
               onClick={() => handleTagClick(tag.text)}
               // 💡 優化 3：在 className 中加入 will-change-transform，強制開啟瀏覽器 GPU 硬體加速，讓 hover:scale-105 縮放動畫達到滿幀 60/120fps 的流暢度
-              className="relative z-[9999] inline-block overflow-visible transition-all duration-200 transform hover:z-[10000] hover:scale-105 active:scale-95 focus:outline-none will-change-transform"
-              style={{ overflow: 'visible' }}
+              className="relative z-50 inline-block overflow-visible transition-all duration-200 transform hover:z-50 hover:scale-105 active:scale-95 focus:outline-none will-change-transform"
+              style={{ overflow: 'visible', zIndex: 9999, position: 'relative' }}
             >
               <span 
-                className={`${styleClass} relative z-[10000] text-neutral-950 dark:text-white hover:text-amber-500 dark:hover:text-amber-400 transition-colors duration-150 flex items-baseline`}
-                style={{ overflow: 'visible' }}
+                className={`${styleClass} relative z-50 text-neutral-950 dark:text-white hover:text-amber-500 dark:hover:text-amber-400 transition-colors duration-150 flex items-baseline`}
+                style={{ overflow: 'visible', position: 'relative', zIndex: 10000 }}
               >
-                <span>#{tag.text}</span>
+                <span className="relative z-50 inline-block overflow-visible" style={{ position: 'relative', overflow: 'visible', zIndex: 10001 }}>#{tag.text}</span>
                 <span className="text-[10px] font-mono opacity-35 ml-1 select-none">
                   ({tag.value})
                 </span>
