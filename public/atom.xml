@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hyjblog.hyjdevelop.com</id>
     <title>HYJBLOG</title>
-    <updated>2026-07-01T01:02:36.664Z</updated>
+    <updated>2026-07-05T09:58:35.443Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <author>
         <name>HYJBLOG</name>
@@ -103,7 +103,7 @@
             <uri>https://hyjblog.hyjdevelop.com</uri>
         </author>
         <category label="F1"/>
-        <category label="評測"/>
+        <category label="評論"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[C++ 類別（Class）基礎與應用]]></title>

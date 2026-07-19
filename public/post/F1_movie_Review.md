@@ -2,9 +2,9 @@
 title: F1 Movie 影評
 date: "2025-07-13"
 description: "本文介紹觀賞 F1 Movie 後的劇情、心得感想、拍攝技巧、實際場地、電影中事件與現實。"
-tags: ["F1", "評測"]
+tags: ["F1", "評論"]
 marp: true
-category: reviews
+category: 電影評論
 image: /images/f1_movie_pic3.jpg
 published: true
 ---

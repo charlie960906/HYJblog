@@ -25,10 +25,6 @@ export const metadata: Metadata = {
       'application/atom+xml': '/atom.xml',
     },
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A0A0A' },
-  ],
   openGraph: {
     title: 'HYJBLOG',
     description: '分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。',
@@ -64,7 +60,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0A' },
+  ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,

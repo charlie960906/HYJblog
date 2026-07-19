@@ -12,7 +12,7 @@ export default function TagsPage() {
   if (tags.length === 0) {
     return (
       /* 💡 修正處：無標籤畫面同步對齊首頁與詳情頁 */
-      <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4">
+      <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl w-full">
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
@@ -33,7 +33,7 @@ export default function TagsPage() {
        3. 限制 max-w-4xl mx-auto，讓 D3 標籤雲與全站維持一致的置中視覺比例
     */
     <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl w-full space-y-10">
+      <div className="mx-auto max-w-4xl w-full space-y-10 overflow-visible">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 tracking-tight">
             標籤雲

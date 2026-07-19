@@ -58,7 +58,12 @@ export default function TagCloud({ tags, width = 760, height = 480 }: TagCloudPr
       span.style.fontSize = `${fontSize}px`;
       span.style.whiteSpace = 'nowrap';
       span.style.cursor = 'pointer';
+      span.style.zIndex = '1';
+      span.style.overflow = 'visible';
+      span.style.display = 'inline-block';
       span.className = 'select-none transition-transform hover:scale-110 text-neutral-800 dark:text-neutral-200';
+      span.addEventListener('mouseenter', () => { span.style.zIndex = '10'; });
+      span.addEventListener('mouseleave', () => { span.style.zIndex = '1'; });
 
       // temporarily add to measure
       span.style.visibility = 'hidden';
@@ -151,8 +156,8 @@ export default function TagCloud({ tags, width = 760, height = 480 }: TagCloudPr
   return (
     <div
       ref={containerRef}
-      style={{ width: `${width}px`, height: `${height}px`, position: 'relative' }}
-      className="mx-auto overflow-hidden"
+      style={{ width: `${width}px`, height: `${height}px`, position: 'relative', overflow: 'visible' }}
+      className="mx-auto overflow-visible"
     />
   );
 }

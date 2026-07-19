@@ -4,7 +4,7 @@
         <title>HYJBLOG</title>
         <link>https://hyjblog.hyjdevelop.com</link>
         <description>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</description>
-        <lastBuildDate>Wed, 01 Jul 2026 01:02:36 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 05 Jul 2026 09:58:35 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-TW</language>
@@ -94,7 +94,7 @@
 ]]></content:encoded>
             <author>HYJBLOG</author>
             <category>F1</category>
-            <category>評測</category>
+            <category>評論</category>
         </item>
         <item>
             <title><![CDATA[C++ 類別（Class）基礎與應用]]></title>
