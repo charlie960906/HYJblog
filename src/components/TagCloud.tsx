@@ -157,7 +157,7 @@ export default function TagCloud({ tags, width = 760, height = 480 }: TagCloudPr
     <div
       ref={containerRef}
       style={{ width: `${width}px`, height: `${height}px`, position: 'relative', overflow: 'visible' }}
-      className="mx-auto overflow-visible"
+      className="mx-auto overflow-hidden max-w-full w-full"
     />
   );
 }

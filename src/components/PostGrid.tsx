@@ -27,11 +27,11 @@ export default function PostGrid({ posts, itemsPerPage = 9 }: PostGridProps) {
   return (
     <div className="space-y-8">
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-w-0">
         {paginatedPosts.map((post, index) => (
           <article
             key={post.slug}
-            className="group animate-list-item overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all hover:shadow-lg dark:hover:shadow-lg/20 hover:-translate-y-1 flex flex-col h-full"
+            className="group animate-list-item overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all hover:shadow-lg dark:hover:shadow-lg/20 hover:-translate-y-1 flex flex-col h-full min-w-0"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <Link href={`/blog/${post.slug}`} className="flex flex-col h-full">

@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply scroll-smooth;
+    @apply scroll-smooth overflow-x-hidden;
     /* 💡 新增：設定錨點滾動時的上方緩衝空間，防止標題被固定的 Menu 導覽列遮擋 */
     scroll-padding-top: 6rem;
     -webkit-tap-highlight-color: transparent;
@@ -32,7 +32,10 @@
 
   body {
     /* 將 bg-cream-50 替換成高質感的奶油白 #FDFBF7 */
-    @apply bg-[#FDFBF7] text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300;
+    @apply bg-[#FDFBF7] text-neutral-900 dark:bg-[#0A0A0A] dark:text-neutral-200 transition-colors duration-300 overflow-x-hidden;
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
@@ -143,6 +146,21 @@
 @layer components {
   .prose-custom {
     @apply prose prose-neutral dark:prose-invert max-w-none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .prose-custom :where(p, li, h1, h2, h3, h4, h5, h6, td, th, code, pre, blockquote, a) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+  }
+
+  .prose-custom :where(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .prose-custom :where(h1, h2, h3, h4, h5, h6) {
@@ -155,7 +173,14 @@
   }
 
   .prose-custom :where(pre):not(:where([class~="not-prose"] *)) {
-    @apply bg-[#F5F2EB] dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200/60 dark:border-neutral-800;
+    @apply bg-[#F5F2EB] dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200/60 dark:border-neutral-800 max-w-full;
+  }
+
+  .prose-custom :where(pre code):not(:where([class~="not-prose"] *)) {
+    display: block;
+    overflow-x: auto;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 
   .prose-custom :where(blockquote):not(:where([class~="not-prose"] *)) {
@@ -219,7 +244,13 @@
   }
 
   .pingu-root {
-    @apply fixed inset-0 z-50 pointer-events-none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
     outline: none;
     border: none;
     user-select: none;
@@ -227,9 +258,13 @@
   }
 
   .pingu-entity {
-    @apply absolute flex items-center justify-center rounded-[2rem] pointer-events-auto cursor-pointer;
-    min-width: 110px;
-    min-height: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 96px;
+    pointer-events: auto;
+    cursor: pointer;
     padding: 0;
     border: none !important;
     outline: none !important;
@@ -237,13 +272,14 @@
     box-shadow: none !important;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    transition: left 0.3s ease-out, top 0.3s ease-out;
+    transition: none !important;
   }
 
   .pingu-frame-wrapper {
-    @apply relative flex items-center justify-center overflow-hidden;
+    position: relative;
     width: 80px;
     height: 96px;
+    overflow: hidden;
     transform-origin: center;
     will-change: transform;
     background: transparent;
@@ -265,6 +301,8 @@
 
   .pet-element {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 80px;
     height: 96px;
     background-image: url('/images/spritesheet.webp');
@@ -279,8 +317,7 @@
     user-select: none;
     transform: translateZ(0);
     transition: none !important;
-    will-change: transform, left, top;
-    /* mix-blend-mode: screen; */
+    will-change: transform;
   }
 
   .pingu-bubble {

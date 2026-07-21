@@ -115,12 +115,12 @@ export default async function PostPage({ params }: PostPageProps) {
   );
 
   return (
-    <main className="w-full mx-auto max-w-7xl pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300">
-      <div className="w-full space-y-8 lg:space-y-10">
+    <main className="w-full mx-auto max-w-7xl pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden min-h-screen">
+      <div className="w-full space-y-8 lg:space-y-10 min-w-0">
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_320px] items-start">
-          <article className="space-y-6 sm:space-y-8 min-w-0">
+          <article className="space-y-6 sm:space-y-8 min-w-0 max-w-full overflow-x-hidden">
             <header className="space-y-4 pb-6 sm:pb-8 border-b border-neutral-200 dark:border-neutral-800">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight break-words overflow-wrap-anywhere">
                 {serializedPost.title}
               </h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
@@ -139,7 +139,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 )}
               </div>
 
-              <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed break-words overflow-wrap-anywhere">
                 {serializedPost.description}
               </p>
             </header>
@@ -147,7 +147,7 @@ export default async function PostPage({ params }: PostPageProps) {
             <TableOfContents headings={headings} variant="mobile" />
 
             <div 
-              className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed"
+              className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
               dangerouslySetInnerHTML={{ __html: finalHtmlContent }}
             />
           </article>

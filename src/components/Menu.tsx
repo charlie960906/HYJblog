@@ -36,9 +36,9 @@ export default function Menu() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 bg-neutral-900/0 dark:bg-neutral-950/80 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 bg-neutral-900/0 dark:bg-neutral-950/80 transition-colors duration-300 overflow-x-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex h-16 items-center justify-between min-w-0">
           <div className="flex-shrink-0">
             <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-600 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-transparent">
               HYJBLOG

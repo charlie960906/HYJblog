@@ -75,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-TW" suppressHydrationWarning>
-      <body className={`${inter.className} animate-page-in bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-screen flex flex-col antialiased transition-colors duration-300`}>
+    <html lang="zh-TW" suppressHydrationWarning style={{ overflowX: 'hidden' }}>
+      <body className={`${inter.className} animate-page-in bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-[100svh] flex flex-col antialiased transition-colors duration-300 overflow-x-hidden`}>
         <Providers>
           <Menu />
           {children}

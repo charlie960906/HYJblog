@@ -64,7 +64,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryPosts = getPostsByCategory(decodedCategory);
 
   return (
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-[100svh] pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl w-full">
         <div className="animate-page-in">
           <CategoryPostsClient category={decodedCategory} posts={categoryPosts} />

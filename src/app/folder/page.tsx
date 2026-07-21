@@ -11,8 +11,8 @@ export default function FolderArchive() {
   const categories = getAllCategories();
 
   return (
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl w-full">
+    <main className="min-h-[100svh] pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+      <div className="mx-auto max-w-4xl w-full min-w-0">
         <FolderClient allPosts={allPosts} categories={categories} />
       </div>
     </main>

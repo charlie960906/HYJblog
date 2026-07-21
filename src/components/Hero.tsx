@@ -83,7 +83,7 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
     <section className="py-12 sm:py-20 overflow-hidden w-full">
       <div className="mx-auto max-w-4xl text-center space-y-6 px-6 w-full flex flex-col items-center justify-center">
         
-        <div ref={containerRef} className="w-full max-w-full flex items-center justify-center min-h-[4rem] overflow-visible">
+        <div ref={containerRef} className="w-full max-w-full flex items-center justify-center min-h-[4rem] overflow-hidden">
           <h1 
             ref={textRef}
             style={{ 
@@ -97,7 +97,7 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
             <span className="inline-block w-[3px] h-[1.1em] bg-neutral-900 dark:bg-neutral-100 ml-1 animate-blink shrink-0" />
           </h1>
         </div>
-        <div ref={subContainerRef} className="w-full max-w-full flex items-center justify-center min-h-[4rem] overflow-visible">
+        <div ref={subContainerRef} className="w-full max-w-full flex items-center justify-center min-h-[4rem] overflow-hidden">
           <div 
             ref={subTextRef}
             style={{ 

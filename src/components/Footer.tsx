@@ -46,7 +46,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300 mt-8 sm:mt-16 pb-[env(safe-area-inset-bottom)]">
+      <footer className="border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300 mt-8 sm:mt-16 pb-[env(safe-area-inset-bottom)] overflow-x-hidden">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-sm font-mono text-neutral-500 dark:text-neutral-400 text-center sm:text-left">

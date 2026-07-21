@@ -59,8 +59,8 @@ export default function TagCloudD3({ tags }: TagCloudD3Props) {
   };
 
   return (
-    <div className="w-full overflow-visible">
-      <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-5 sm:gap-x-5 sm:gap-y-6 overflow-visible">
+    <div className="w-full overflow-hidden max-w-full">
+      <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-5 sm:gap-x-5 sm:gap-y-6 overflow-hidden">
         {sortedTags.map((tag, index) => {
           const styleClass = getTagStyle(tag.value);
           
@@ -68,13 +68,13 @@ export default function TagCloudD3({ tags }: TagCloudD3Props) {
             <button
               key={`${tag.text}-${index}`}
               onClick={() => handleTagClick(tag.text)}
-              className="inline-block overflow-visible transition-all duration-200 transform hover:z-50 hover:scale-105 active:scale-95 focus:outline-none will-change-transform"
-              style={{ overflow: 'visible' }}
+              className="inline-block overflow-hidden transition-all duration-200 transform hover:z-50 hover:scale-105 active:scale-95 focus:outline-none will-change-transform"
+              style={{ overflow: 'hidden' }}
             >
               <span 
                 className={`${styleClass} text-neutral-950 dark:text-white hover:text-amber-500 dark:hover:text-amber-400 transition-colors duration-150 flex items-baseline`}
               >
-                <span className="inline-block overflow-visible">#{tag.text}</span>
+                <span className="inline-block overflow-hidden">#{tag.text}</span>
                 <span className="text-[10px] font-mono opacity-35 ml-1 select-none">
                   ({tag.value})
                 </span>

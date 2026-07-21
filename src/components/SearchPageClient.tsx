@@ -39,7 +39,8 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
   }, [query, initialPosts]);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+      <div className="mx-auto max-w-4xl w-full min-w-0">
       <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
         <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
           搜尋文章
@@ -103,6 +104,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </main>
   );
 }
