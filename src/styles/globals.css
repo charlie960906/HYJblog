@@ -201,6 +201,109 @@
     transform-origin: top center;
   }
 
+  .pingu-button {
+    @apply inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-[#111] dark:text-neutral-100 dark:hover:border-neutral-600 dark:hover:bg-neutral-900;
+  }
+
+  .pingu-menu {
+    @apply absolute right-0 z-50 min-w-[11rem] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl shadow-black/5 dark:border-neutral-700 dark:bg-[#111] dark:shadow-white/5;
+  }
+
+  .pingu-menu-up {
+    bottom: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .pingu-menu-button {
+    @apply w-full rounded-none border-0 bg-transparent px-4 py-3 text-left text-sm font-medium text-neutral-900 transition hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-800;
+  }
+
+  .pingu-root {
+    @apply fixed inset-0 z-50 pointer-events-none;
+    outline: none;
+    border: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pingu-entity {
+    @apply absolute flex items-center justify-center rounded-[2rem] pointer-events-auto cursor-pointer;
+    min-width: 110px;
+    min-height: 120px;
+    padding: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: left 0.3s ease-out, top 0.3s ease-out;
+  }
+
+  .pingu-frame-wrapper {
+    @apply relative flex items-center justify-center overflow-hidden;
+    width: 80px;
+    height: 96px;
+    transform-origin: center;
+    will-change: transform;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: none;
+  }
+
+  .pingu-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: -0.85rem;
+    width: 90px;
+    height: 18px;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.22), transparent 65%);
+    transform: translateX(-50%);
+    filter: blur(1.2px);
+  }
+
+  .pet-element {
+    position: absolute;
+    width: 80px;
+    height: 96px;
+    background-image: url('/images/spritesheet.webp');
+    background-size: 640px 864px !important;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transform: translateZ(0);
+    transition: none !important;
+    will-change: transform, left, top;
+    /* mix-blend-mode: screen; */
+  }
+
+  .pingu-bubble {
+    @apply absolute -top-12 left-1/2 inline-flex items-center justify-center rounded-full bg-white px-3 py-1 text-xs font-medium text-neutral-900 shadow-lg shadow-black/15 dark:bg-neutral-950 dark:text-neutral-50;
+    transform: translateX(-50%);
+    animation: pingu-bounce 1.8s ease-in-out infinite;
+  }
+
+  .pingu-bubble.hidden {
+    opacity: 0;
+    visibility: hidden;
+    animation: none;
+  }
+
+  @keyframes pingu-bounce {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-6px);
+    }
+  }
+
   .animate-list-item {
     animation: list-item-in 420ms ease-out both;
   }
