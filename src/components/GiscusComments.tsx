@@ -26,8 +26,8 @@ const GISCUS_THEMES = {
 export default function GiscusComments({
   repo = 'charlie960906/HYJblog',
   repoId = 'R_kgDOS4lN5w',
-  categoryId = 'DIC_kwDOS4lN584C_BF9',
-  category = 'Announcements',
+  categoryId = 'DIC_kwDOS4lN584C_BF-',
+  category = 'General',
   theme = 'preferred_color_scheme',
   mapping = 'pathname',
   strict = '0',
