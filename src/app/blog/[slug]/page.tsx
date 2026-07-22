@@ -161,7 +161,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
             <ShareButtons
               title={serializedPost.title}
-              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${slug}`}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://hyjblog.hyjdevelop.com'}/blog/${slug}`}
               description={serializedPost.description}
             />
           </div>

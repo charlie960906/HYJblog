@@ -25,14 +25,14 @@ const GISCUS_THEMES = {
 
 export default function GiscusComments({
   repo = 'charlie960906/HYJblog',
-  repoId = 'R_kgDOS3lLVQ',
-  categoryId = 'DIC_kwDOS3lLVc4C-9DD',
+  repoId = 'R_kgDOS4lN5w',
+  categoryId = 'DIC_kwDOS4lN584C_BF9',
   category = 'Announcements',
   theme = 'preferred_color_scheme',
   mapping = 'pathname',
   strict = '0',
   reactionsEnabled = '1',
-  emitMetadata = '0',
+  emitMetadata = '1',
   inputPosition = 'top',
   lang = 'zh-TW',
   loading = 'lazy',
