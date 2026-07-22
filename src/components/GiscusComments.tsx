@@ -11,7 +11,7 @@ export default function GiscusComments() {
         data-repo-id="R_kgDOS4lN5w"
         data-category="General"
         data-category-id="DIC_kwDOS4lN584C_BF9"
-        data-mapping="pathname"
+        data-mapping="url"
         data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="1"
