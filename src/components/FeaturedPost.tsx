@@ -97,7 +97,7 @@ export default function FeaturedPost({
             <div className="mb-3 inline-block">
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold">
                 <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
-                Feature
+                Latest
               </span>
             </div>
 
