@@ -1,18 +1,38 @@
 'use client';
 
 import Script from 'next/script';
+import { usePathname } from 'next/navigation';
 
-export default function GiscusComments() {
+interface GiscusCommentsProps {
+  repo?: string;
+  repoId?: string;
+  category?: string;
+  categoryId?: string;
+}
+
+export default function GiscusComments({
+  repo,
+  repoId,
+  category,
+  categoryId,
+}: GiscusCommentsProps) {
+  const pathname = usePathname();
+
+  const repoValue = repo ?? process.env.NEXT_PUBLIC_GISCUS_REPO ?? 'charlie960906/HYJblog';
+  const repoIdValue = repoId ?? process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? 'R_kgDOS4lN5w';
+  const categoryValue = category ?? process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'General';
+  const categoryIdValue = categoryId ?? process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? 'DIC_kwDOS4lN584C_BF9';
+
   return (
-    <section className="mt-10 w-full">
+    <section key={pathname} className="mt-10 w-full">
       <Script
         src="https://giscus.app/client.js"
-        data-repo="charlie960906/HYJblog"
-        data-repo-id="R_kgDOS4lN5w"
-        data-category="General"
-        data-category-id="DIC_kwDOS4lN584C_BF9"
+        data-repo={repoValue}
+        data-repo-id={repoIdValue}
+        data-category={categoryValue}
+        data-category-id={categoryIdValue}
         data-mapping="pathname"
-        data-strict="0"
+        data-strict="1"
         data-reactions-enabled="1"
         data-emit-metadata="1"
         data-input-position="top"
