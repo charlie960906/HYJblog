@@ -20,7 +20,7 @@ export default function GiscusComments({
 
   const repoValue = repo ?? process.env.NEXT_PUBLIC_GISCUS_REPO ?? 'charlie960906/HYJblog';
   const repoIdValue = repoId ?? process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? 'R_kgDOS4lN5w';
-  const categoryValue = category ?? process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'General';
+  const categoryValue = category ?? process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'Announcements';
   const categoryIdValue = categoryId ?? process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? 'DIC_kwDOS4lN584C_BF9';
 
   return (
@@ -32,7 +32,7 @@ export default function GiscusComments({
         data-category={categoryValue}
         data-category-id={categoryIdValue}
         data-mapping="pathname"
-        data-strict="1"
+        data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="1"
         data-input-position="top"
