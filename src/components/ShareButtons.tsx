@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 interface ShareProps {
   title: string;
   url: string;
@@ -7,6 +9,7 @@ interface ShareProps {
 }
 
 export default function ShareButtons({ title, url, description }: ShareProps) {
+  const [copyMessage, setCopyMessage] = useState('');
   const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(url);
   const encodedDescription = encodeURIComponent(description || title);
@@ -35,37 +38,49 @@ export default function ShareButtons({ title, url, description }: ShareProps) {
       icon: '🔗',
       url: '#',
       color: 'hover:text-neutral-600 dark:hover:text-neutral-300',
-      onClick: async () => {
+      onClick: async (event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
         try {
           await navigator.clipboard.writeText(url);
-          alert('連結已複製到剪貼簿！');
+          setCopyMessage('已複製連結');
         } catch {
-          alert('無法複製連結');
+          setCopyMessage('無法複製連結');
         }
+
+        window.setTimeout(() => {
+          setCopyMessage('');
+        }, 2000);
       },
     },
   ];
 
   return (
-    <div className="flex items-center gap-3 py-4">
-      <span className="font-mono text-sm text-neutral-500 dark:text-neutral-500">分享：</span>
-      <div className="flex gap-2">
-        {shareLinks.map(link => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={link.onClick}
-            title={link.name}
-            className={`inline-block w-8 h-8 rounded-full flex items-center justify-center transition-smooth
-              bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400
-              ${link.color}`}
-          >
-            <span className="text-xs font-mono font-bold">{link.icon}</span>
-          </a>
-        ))}
+    <div className="flex flex-col gap-2 py-4">
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-500">分享：</span>
+        <div className="flex gap-2">
+          {shareLinks.map(link => (
+            <a
+              key={link.name}
+              href={link.url}
+              target={link.name === 'Copy Link' ? undefined : '_blank'}
+              rel={link.name === 'Copy Link' ? undefined : 'noopener noreferrer'}
+              onClick={link.onClick}
+              title={link.name}
+              className={`inline-block w-8 h-8 rounded-full flex items-center justify-center transition-smooth
+                bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400
+                ${link.color}`}
+            >
+              <span className="text-xs font-mono font-bold">{link.icon}</span>
+            </a>
+          ))}
+        </div>
       </div>
+      {copyMessage ? (
+        <div className="text-sm text-neutral-700 dark:text-neutral-300" aria-live="polite">
+          {copyMessage}
+        </div>
+      ) : null}
     </div>
   );
 }
