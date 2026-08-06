@@ -36,9 +36,9 @@ export default function Menu() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 bg-neutral-900/0 dark:bg-neutral-950/80 transition-colors duration-300 overflow-x-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex h-16 items-center justify-between min-w-0">
+    <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex h-16 items-center justify-between min-w-0 overflow-x-hidden">
           <div className="flex-shrink-0">
             <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-600 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-transparent">
               HYJBLOG
@@ -101,11 +101,14 @@ export default function Menu() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* 行動版展開選單 */}
-      {isOpen && (
-        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+        {/* 行動版展開選單 — 浮層覆蓋，不推擠頁面內容 */}
+        <div
+          className={`md:hidden absolute top-full left-0 right-0 border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg origin-top transition-all duration-300 ease-out ${
+            isOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-95 pointer-events-none'
+          }`}
+          aria-hidden={!isOpen}
+        >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -115,7 +118,7 @@ export default function Menu() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
+                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     isActive
                       ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white'
                       : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white'
@@ -128,7 +131,7 @@ export default function Menu() {
             })}
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

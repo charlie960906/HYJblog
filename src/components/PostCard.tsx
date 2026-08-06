@@ -25,6 +25,8 @@ export default function PostCard({
   readingTime,
 }: PostCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
+  const revealAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const hoverAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -34,7 +36,7 @@ export default function PostCard({
       (entries, observerInstance) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            animate(card, {
+            revealAnimationRef.current = animate(card, {
               opacity: [0, 1],
               translateY: [24, 0],
               scale: [0.98, 1],
@@ -49,13 +51,18 @@ export default function PostCard({
     );
 
     observer.observe(card);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      revealAnimationRef.current?.pause();
+      hoverAnimationRef.current?.pause();
+    };
   }, []);
 
   const handleHover = (entered: boolean) => {
     if (!cardRef.current) return;
 
-    animate(cardRef.current, {
+    hoverAnimationRef.current?.pause();
+    hoverAnimationRef.current = animate(cardRef.current, {
       translateY: entered ? -6 : 0,
       boxShadow: entered
         ? '0 28px 70px rgba(15, 23, 42, 0.12)'

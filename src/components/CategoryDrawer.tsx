@@ -20,6 +20,9 @@ export default function CategoryDrawer({
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<HTMLButtonElement[]>([]);
+  const drawerAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const overlayAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const itemsAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   itemRefs.current = [];
   const setItemRef = (el: HTMLButtonElement | null) => {
@@ -48,11 +51,15 @@ export default function CategoryDrawer({
     if (!isVisible || !drawerRef.current) return;
 
     if (isOpen) {
+      if (drawerAnimationRef.current) drawerAnimationRef.current.pause();
+      if (overlayAnimationRef.current) overlayAnimationRef.current.pause();
+      if (itemsAnimationRef.current) itemsAnimationRef.current.pause();
+
       set(drawerRef.current, {
         translateX: '100%',
         opacity: 0,
       });
-      animate(drawerRef.current, {
+      drawerAnimationRef.current = animate(drawerRef.current, {
         translateX: ['100%', '0%'],
         opacity: [0, 1],
         duration: 450,
@@ -60,8 +67,9 @@ export default function CategoryDrawer({
       });
 
       if (overlayRef.current) {
+        overlayRef.current.style.display = 'block';
         set(overlayRef.current, { opacity: 0 });
-        animate(overlayRef.current, {
+        overlayAnimationRef.current = animate(overlayRef.current, {
           opacity: [0, 1],
           duration: 260,
           easing: 'easeOutQuad',
@@ -73,7 +81,7 @@ export default function CategoryDrawer({
           opacity: 0,
           translateY: 16,
         });
-        animate(itemRefs.current, {
+        itemsAnimationRef.current = animate(itemRefs.current, {
           opacity: [0, 1],
           translateY: [16, 0],
           delay: stagger(40),
@@ -82,7 +90,11 @@ export default function CategoryDrawer({
         });
       }
     } else {
-      animate(drawerRef.current, {
+      if (drawerAnimationRef.current) drawerAnimationRef.current.pause();
+      if (overlayAnimationRef.current) overlayAnimationRef.current.pause();
+      if (itemsAnimationRef.current) itemsAnimationRef.current.pause();
+
+      drawerAnimationRef.current = animate(drawerRef.current, {
         translateX: ['0%', '100%'],
         opacity: [1, 0],
         duration: 280,
@@ -90,10 +102,15 @@ export default function CategoryDrawer({
         complete: () => setIsVisible(false),
       });
       if (overlayRef.current) {
-        animate(overlayRef.current, {
+        overlayAnimationRef.current = animate(overlayRef.current, {
           opacity: [1, 0],
           duration: 220,
           easing: 'easeInQuad',
+          complete: () => {
+            if (overlayRef.current) {
+              overlayRef.current.style.display = 'none';
+            }
+          },
         });
       }
     }
