@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { formatDate, PostMetadata } from '@/lib/types';
 import ReadingTime from './ReadingTime';
@@ -23,6 +23,12 @@ export default function PostGrid({ posts, itemsPerPage = 9 }: PostGridProps) {
   }, [posts, currentPage, itemsPerPage]);
 
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(posts.length / (itemsPerPage as number));
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentPage]);
 
   return (
     <div className="space-y-8">

@@ -187,6 +187,16 @@ export default async function PostPage({ params }: PostPageProps) {
               className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
               dangerouslySetInnerHTML={{ __html: finalHtmlContent }}
             />
+
+            {serializedPost.update && (
+              <section className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-6">
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Update</h2>
+                <div
+                  className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
+                  dangerouslySetInnerHTML={{ __html: marked.parse(serializedPost.update) }}
+                />
+              </section>
+            )}
           </article>
           <aside className="hidden lg:block self-start z-30">
             <TableOfContents headings={headings} variant="sidebar" />

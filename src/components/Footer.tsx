@@ -53,7 +53,7 @@ export default function Footer() {
               <p>© {new Date().getFullYear()} Powered by HYJdevelop</p>
             </div>
 
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-sm">
               <Link href="/rss.xml" className="link-subtle">
                 RSS
               </Link>
@@ -63,6 +63,9 @@ export default function Footer() {
               <a href="https://github.com/charlie960906/HYJblog" target="_blank" rel="noreferrer" className="link-subtle">
                 GitHub
               </a>
+              <Link href="/update" className="link-subtle">
+                Update
+              </Link>
               <div className="relative" ref={wrapperRef}>
                 <button type="button" onClick={handleFooterButton} className="pingu-button">
                   {isPinguVisible ? '❌ 收起寵物' : '🐾 Pets'}

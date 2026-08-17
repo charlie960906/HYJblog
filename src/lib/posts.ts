@@ -16,6 +16,7 @@ export interface PostData {
   published: boolean;
   content: string;
   readingTime: number;
+  update?: string;
 }
 
 export interface SerializedPost extends Omit<PostData, 'content'> {
@@ -81,6 +82,7 @@ export function getPostData(slug: string): PostData {
     published: data.published !== false,
     content,
     readingTime,
+    update: typeof data.update === 'string' ? data.update : data.update ? String(data.update) : undefined,
   };
 }
 
@@ -121,6 +123,7 @@ export async function getSerializedPost(slug: string): Promise<SerializedPost> {
     image: post.image,
     published: post.published,
     readingTime: post.readingTime,
+    update: post.update,
     mdxSource: {
       compiledSource: htmlContent,
       frontmatter: {},
