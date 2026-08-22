@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Providers } from "./providers";
 import Menu from "@/components/Menu";
 import Footer from "@/components/Footer";
+import { getSortedPostsData } from "@/lib/posts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -74,13 +75,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const posts = getSortedPostsData();
+  const characterCount = posts.reduce(
+    (total, post) => total + post.content.replace(/\s/g, '').length,
+    0,
+  );
+
   return (
     <html lang="zh-TW" suppressHydrationWarning style={{ overflowX: 'clip' }}>
       <body className={`${inter.className} bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-[100svh] flex flex-col antialiased transition-colors duration-300 overflow-x-clip`}>
         <Providers>
           <Menu />
           {children}
-          <Footer />
+          <Footer articleCount={posts.length} characterCount={characterCount} />
         </Providers>
       </body>
     </html>

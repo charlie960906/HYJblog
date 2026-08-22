@@ -7,6 +7,17 @@ const updates: {
 }[] = [
   {
     datetime: '2026-08-22 09:53',
+    title: 'MENU排版更新、頁尾整理與個人About頁面新增',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>MENU排版更新 把Home Folder Tags 改到左邊，右邊search剩Icon並增加GITHUB連結跟加上外框</li>
+        <li>頁尾加上連結，統計數據</li>
+        <li>新增個人About頁面，介紹個人頁面</li>
+      </ul>
+    ),
+  },
+  {
+    datetime: '2026-08-22 09:53',
     title: '寵物系統優化、目錄元件更新與程式碼警告修正',
     content: (
       <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">

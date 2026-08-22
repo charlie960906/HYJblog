@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu as MenuIcon, X, Home, Folder, Tag, Search, Sun, Moon, Monitor } from 'lucide-react';
+import { Menu as MenuIcon, X, Home, Folder, Tag, UserRound, Search, Sun, Moon, Monitor } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
 import { useTheme } from 'next-themes';
 
 export default function Menu() {
@@ -17,11 +19,14 @@ export default function Menu() {
   }, []);
 
   const menuItems = [
-    { href: '/', label: '首頁', icon: Home },
-    { href: '/folder', label: '分類目錄', icon: Folder },
-    { href: '/tags', label: '標籤雲', icon: Tag },
-    { href: '/search', label: '搜尋', icon: Search },
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/folder', label: 'Folder', icon: Folder },
+    { href: '/tags', label: 'Tags', icon: Tag },
+    { href: '/about', label: 'About', icon: UserRound },
+    { href: '/search', label: 'Search', icon: Search },
   ];
+  const primaryMenuItems = menuItems.slice(0, 4);
+  const searchMenuItem = menuItems[4];
 
   const toggleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -39,16 +44,18 @@ export default function Menu() {
     <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex h-16 items-center justify-between min-w-0 overflow-x-hidden">
-          <div className="flex-shrink-0">
-            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-600 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-transparent">
-              HYJBLOG
-            </Link>
-          </div>
+          <div className="flex min-w-0 items-center gap-6">
+            <div className="flex flex-shrink-0 items-center gap-2">
+              <Link href="/" className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-600 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-transparent">
+                <Image src="/images/icon.jpg" alt="HYJBLOG" width={32} height={32} className="rounded-md object-cover" />
+                HYJBLOG
+              </Link>
+            </div>
 
-          {/* 桌面版選單 */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-4">
-              {menuItems.map((item) => {
+            {/* 桌面版主要選單 */}
+            <div className="hidden md:block">
+              <div className="flex items-center space-x-4">
+                {primaryMenuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 return (
@@ -65,20 +72,45 @@ export default function Menu() {
                     {item.label}
                   </Link>
                 );
-              })}
-              
-              {/* 修改後的主題切換按鈕：外框、間距、圓角與 Hover 顏色完全同步上方導覽按鈕 */}
-              {mounted && (
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center justify-center p-2 rounded-md text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white transition-colors duration-200"
-                  aria-label="Toggle theme"
-                  style={{ height: '38px', width: '38px' }} // 精準對齊導覽連結 py-2 撐開後的 38px 總高度
-                >
-                  {React.cloneElement(renderThemeIcon(), { className: 'w-4 h-4' })}
-                </button>
-              )}
+                })}
+              </div>
             </div>
+          </div>
+
+          {/* 桌面版右側工具 */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link
+              href={searchMenuItem.href}
+              title="Search"
+              aria-label="Search"
+              className={`flex h-[38px] w-[38px] items-center justify-center rounded-md border text-sm font-medium transition-colors ${
+                pathname === searchMenuItem.href
+                  ? 'border-neutral-400 bg-neutral-100 text-neutral-900 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white'
+                  : 'border-neutral-300 text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white'
+              }`}
+            >
+              <Search className="h-4 w-4" />
+            </Link>
+            <a
+              href="https://github.com/charlie960906"
+              target="_blank"
+              rel="noreferrer"
+              title="GitHub"
+              aria-label="GitHub"
+              className="flex h-[38px] w-[38px] items-center justify-center rounded-md border border-neutral-300 text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
+            >
+              <SiGithub className="h-4 w-4" aria-hidden="true" />
+            </a>
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="flex h-[38px] w-[38px] items-center justify-center rounded-md border border-neutral-300 text-neutral-600 transition-colors duration-200 hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
+                aria-label="Toggle theme"
+                title="Toggle theme"
+              >
+                {React.cloneElement(renderThemeIcon(), { className: 'w-4 h-4' })}
+              </button>
+            )}
           </div>
 
           {/* 行動版右側控制區：主題按鈕與漢堡選單並排 */}
