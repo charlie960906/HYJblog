@@ -8,11 +8,10 @@ interface ShareProps {
   description?: string;
 }
 
-export default function ShareButtons({ title, url, description }: ShareProps) {
+export default function ShareButtons({ title, url }: ShareProps) {
   const [copyMessage, setCopyMessage] = useState('');
   const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(url);
-  const encodedDescription = encodeURIComponent(description || title);
 
   const shareLinks = [
     {

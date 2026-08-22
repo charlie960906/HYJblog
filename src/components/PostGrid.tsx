@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { formatDate, PostMetadata } from '@/lib/types';
-import ReadingTime from './ReadingTime';
 import Image from 'next/image';
 import TagPill from './TagPill';
 

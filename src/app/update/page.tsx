@@ -6,6 +6,16 @@ const updates: {
   content: ReactNode;
 }[] = [
   {
+    datetime: '2026-08-22 09:18',
+    title: '網頁程式碼警告和網站寵物按鈕遮蓋問題修正',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>修正網頁程式碼警告</li>
+        <li>修正網站寵物按鈕遮蓋問題</li>
+      </ul>
+    ),
+  },
+  {
     datetime: '2026-08-06 22:34',
     title: '網站內容與頁面功能更新',
     content: (

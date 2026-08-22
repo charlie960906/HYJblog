@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { marked } from 'marked';
 import { getPostData, getAllPostSlugs, getSerializedPost } from '@/lib/posts';
 import { formatDate } from '@/lib/types';

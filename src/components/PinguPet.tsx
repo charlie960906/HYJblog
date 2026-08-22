@@ -34,7 +34,6 @@ const DIRECTIONS: Direction[] = [
 ];
 const SPRITE_FRAME_WIDTH = 80;
 const SPRITE_FRAME_HEIGHT = 96;
-const SPRITE_COLUMNS = 8;
 let destroyPinguFn: (() => void) | null = null;
 
 export function destroy() {

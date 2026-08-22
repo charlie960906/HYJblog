@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { animate, set, stagger } from 'animejs';
-import Link from 'next/link';
 
 interface CategoryDrawerProps {
   categories: string[];

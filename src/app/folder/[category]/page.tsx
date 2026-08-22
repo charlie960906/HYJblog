@@ -53,10 +53,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   let decodedCategory = category;
   try {
     decodedCategory = decodeURIComponent(decodeURIComponent(category));
-  } catch (e) {
+  } catch {
     try {
       decodedCategory = decodeURIComponent(category);
-    } catch (err) {
+    } catch {
       decodedCategory = category;
     }
   }

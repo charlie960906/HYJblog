@@ -45,10 +45,10 @@ export default async function TagPage({ params }: TagPageProps) {
   let decodedTag = tag;
   try {
     decodedTag = decodeURIComponent(decodeURIComponent(tag));
-  } catch (e) {
+  } catch {
     try {
       decodedTag = decodeURIComponent(tag);
-    } catch (err) {
+    } catch {
       decodedTag = tag;
     }
   }
