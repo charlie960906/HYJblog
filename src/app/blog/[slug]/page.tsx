@@ -152,7 +152,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const finalHtmlContent = injectIdsToHtml(renderedContent, headings);
 
   return (
-    <main className="w-full mx-auto max-w-7xl pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden min-h-screen">
+    <main className="w-full mx-auto max-w-7xl pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-clip min-h-screen">
       <TableOfContents headings={headings} variant="mobile" />
       <div className="w-full space-y-8 lg:space-y-10 min-w-0">
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_320px] items-start">
@@ -197,7 +197,7 @@ export default async function PostPage({ params }: PostPageProps) {
               </section>
             )}
           </article>
-          <aside className="hidden lg:block self-start z-30">
+          <aside className="hidden lg:block sticky top-20 self-start z-30">
             <TableOfContents headings={headings} variant="sidebar" />
           </aside>
         </div>

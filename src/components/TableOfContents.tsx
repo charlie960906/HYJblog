@@ -21,6 +21,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   
   // 用於控制目錄內部滾動與點擊鎖定
   const containerRef = useRef<HTMLDivElement>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
   const mobilePanelRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
   const isClickScrolling = useRef<boolean>(false);
@@ -101,9 +102,10 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   }, [headings]);
 
   useEffect(() => {
-    if (variant === 'mobile' || !activeId || !containerRef.current || !highlightRef.current) return;
+    const container = variant === 'mobile' ? mobileScrollRef.current : containerRef.current;
+    if (!activeId || !container || !highlightRef.current) return;
 
-    const activeLink = containerRef.current.querySelector(`a[href="#${activeId}"]`) as HTMLElement | null;
+    const activeLink = container.querySelector(`a[href="#${activeId}"]`) as HTMLElement | null;
     if (!activeLink) return;
 
     const top = activeLink.offsetTop;
@@ -117,7 +119,6 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
       easing: 'easeOutQuad',
     });
 
-    const container = containerRef.current;
     const linkTop = activeLink.offsetTop;
     const linkHeight = activeLink.offsetHeight;
     const containerHeight = container.clientHeight;
@@ -134,7 +135,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
         behavior: 'smooth'
       });
     }
-  }, [activeId, variant]);
+  }, [activeId, mobileOpen, variant]);
 
   useEffect(() => {
     if (variant !== 'mobile' || !mobilePanelRef.current) return;
@@ -239,7 +240,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     const activeHeading = headings.find(h => h.id === activeId);
 
     return (
-      <div className="lg:hidden fixed top-16 inset-x-0 z-40 w-full px-4 sm:px-6 pointer-events-none">
+      <div className="lg:hidden fixed top-20 inset-x-0 z-40 w-full px-4 sm:px-6 pointer-events-none">
         <div className="mx-auto max-w-7xl pointer-events-auto">
           <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/95 dark:bg-neutral-950/95 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.35)] backdrop-blur-md overflow-hidden">
             <button
@@ -268,7 +269,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
               className="overflow-hidden border-t border-neutral-200 dark:border-neutral-800"
               style={{ display: 'none', height: 0, opacity: 0 }}
             >
-              <div className="px-4 pb-4 pt-3 max-h-[min(50vh,320px)] overflow-y-auto">
+              <div ref={mobileScrollRef} className="px-4 pb-4 pt-3 max-h-[min(50vh,320px)] overflow-y-auto">
                 {nav}
               </div>
             </div>
@@ -280,10 +281,9 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
 
   return (
     <div
-      ref={containerRef}
-      className="sticky top-24 xl:top-28 w-full rounded-3xl border border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/80 dark:bg-neutral-950/90 p-6 shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-all duration-300 overflow-hidden"
+      className="relative w-full rounded-3xl border border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/80 dark:bg-neutral-950/90 p-6 shadow-[0_12px_35px_-18px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-all duration-300 overflow-hidden"
     >
-      <div className="max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-none">
+      <div ref={containerRef} className="max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-none">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
           目錄
         </p>

@@ -6,6 +6,17 @@ const updates: {
   content: ReactNode;
 }[] = [
   {
+    datetime: '2026-08-22 09:53',
+    title: '寵物系統優化、目錄元件更新與程式碼警告修正',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>寵物現在會跟著視窗移動，不會跑出視窗外</li>
+        <li>目錄現在會跟著視窗移動，尬這個找了一段時間才修好，才發現有其他地放把它黏住了</li>
+        <li>修正程式碼警告</li>
+      </ul>
+    ),
+  },
+  {
     datetime: '2026-08-22 09:18',
     title: '網頁程式碼警告和網站寵物按鈕遮蓋問題修正',
     content: (

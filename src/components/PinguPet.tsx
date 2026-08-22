@@ -34,6 +34,7 @@ const DIRECTIONS: Direction[] = [
 ];
 const SPRITE_FRAME_WIDTH = 80;
 const SPRITE_FRAME_HEIGHT = 96;
+const MOVEMENT_SPEED = 0.65;
 let destroyPinguFn: (() => void) | null = null;
 
 export function destroy() {
@@ -55,7 +56,6 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
   const [viewportWidth, setViewportWidth] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
-  const [facing, setFacing] = useState<"right" | "left">("right");
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const petNodeRef = useRef<HTMLDivElement | null>(null);
@@ -63,6 +63,7 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
   const stateTimerRef = useRef<number | null>(null);
   const inactivityTimerRef = useRef<number | null>(null);
   const specialTimerRef = useRef<number | null>(null);
+  const edgePauseTimerRef = useRef<number | null>(null);
   const movementLastFrameTimeRef = useRef(0);
   const animationLastFrameTimeRef = useRef(0);
   const destroyed = useRef(false);
@@ -102,6 +103,10 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
       clearTimeout(introTimerRef.current);
       introTimerRef.current = null;
     }
+    if (edgePauseTimerRef.current !== null) {
+      clearTimeout(edgePauseTimerRef.current);
+      edgePauseTimerRef.current = null;
+    }
 
     stopMovement();
   }, [stopMovement]);
@@ -134,6 +139,18 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
       petNodeRef.current.style.top = `${safeY}px`;
     }
   }, []);
+
+  const keepPetInViewport = useCallback(() => {
+    const viewportTop = window.scrollY;
+    const viewportBottom = viewportTop + Math.max(0, window.innerHeight - 120);
+    const currentY = positionYRef.current;
+
+    if (currentY < viewportTop) {
+      syncPetPosition(positionXRef.current, viewportTop);
+    } else if (currentY > viewportBottom) {
+      syncPetPosition(positionXRef.current, viewportBottom);
+    }
+  }, [syncPetPosition]);
 
   const transitionToState = useCallback(
     (nextState: PetState, nextAction: PinguAction, options: { bubbleVisible?: boolean } = {}) => {
@@ -199,16 +216,15 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
 
       const delta = timestamp - movementLastFrameTimeRef.current;
       movementLastFrameTimeRef.current = timestamp;
-      const step = Math.max(1, delta / 16.67) * 0.95;
+      const step = Math.max(1, delta / 16.67) * MOVEMENT_SPEED;
       const direction = directionRef.current;
 
       let nextX = positionXRef.current + direction.vx * step;
       let nextY = positionYRef.current + direction.vy * step;
-      const pageHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, window.innerHeight);
       const minX = 0;
       const maxX = Math.max(0, window.innerWidth - 80);
-      const minY = 0;
-      const maxY = Math.max(0, pageHeight - 120);
+      const minY = window.scrollY;
+      const maxY = window.scrollY + Math.max(0, window.innerHeight - 120);
 
       let bounced = false;
 
@@ -234,9 +250,19 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
 
       syncPetPosition(nextX, nextY);
       const nextFacing = directionRef.current.facing;
-      setFacing(nextFacing);
       if (bounced || action !== (nextFacing === "right" ? "walkRight" : "walkLeft")) {
         setAction(nextFacing === "right" ? "walkRight" : "walkLeft");
+      }
+
+      if (bounced) {
+        stopMovement();
+        edgePauseTimerRef.current = window.setTimeout(() => {
+          edgePauseTimerRef.current = null;
+          if (!destroyed.current && stateRef.current === "walk" && !interactionRef.current) {
+            startMovement();
+          }
+        }, 300);
+        return;
       }
 
       if (destroyed.current || stateRef.current !== "walk" || interactionRef.current) {
@@ -274,7 +300,6 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
 
     const nextDirection = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
     directionRef.current = nextDirection;
-    setFacing(nextDirection.facing);
     const nextAction: PinguAction = nextDirection.facing === "right" ? "walkRight" : "walkLeft";
     transitionToState("walk", nextAction);
 
@@ -397,18 +422,22 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
       const initialX = 50;
       const initialY = Math.max(24, pageHeight - 180);
       syncPetPosition(initialX, initialY);
-      setFacing("right");
     };
 
     updateViewport();
     const handleResize = () => {
       updateViewport();
     };
+    const handleScroll = () => {
+      keepPetInViewport();
+    };
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [syncPetPosition]);
+  }, [keepPetInViewport, syncPetPosition]);
 
   useEffect(() => {
     if (viewportWidth === 0 || viewportHeight === 0) {
@@ -497,7 +526,7 @@ export default function PinguPet({ onDestroyed }: PinguPetProps) {
     >
       <div ref={petNodeRef} className="pingu-entity" style={{ left: positionX, top: positionY }}>
         <div className={bubbleVisible ? "pingu-bubble" : "pingu-bubble hidden"}>按我</div>
-        <div className="pingu-frame-wrapper" style={{ transform: facing === "left" ? "scaleX(-1)" : "scaleX(1)" }}>
+        <div className="pingu-frame-wrapper">
           <div className="pet-element" style={petStyle} />
         </div>
         <div className="pingu-shadow" />
