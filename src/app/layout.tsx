@@ -82,7 +82,7 @@ export default function RootLayout({
   );
 
   return (
-    <html lang="zh-TW" suppressHydrationWarning style={{ overflowX: 'clip' }}>
+    <html lang="zh-TW" data-scroll-behavior="smooth" suppressHydrationWarning style={{ overflowX: 'clip' }}>
       <body className={`${inter.className} bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-[100svh] flex flex-col antialiased transition-colors duration-300 overflow-x-clip`}>
         <Providers>
           <Menu />

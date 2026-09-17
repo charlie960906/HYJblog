@@ -40,6 +40,36 @@
     padding-right: env(safe-area-inset-right);
   }
 
+  @keyframes theme-view-transition-reveal {
+    0% {
+      clip-path: circle(0 at var(--theme-toggle-x) var(--theme-toggle-y));
+    }
+    78% {
+      clip-path: circle(115vmax at var(--theme-toggle-x) var(--theme-toggle-y));
+    }
+    94% {
+      clip-path: circle(145vmax at var(--theme-toggle-x) var(--theme-toggle-y));
+    }
+    100% {
+      clip-path: circle(160vmax at var(--theme-toggle-x) var(--theme-toggle-y));
+    }
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(0.22, 0.85, 0.32, 1);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: none;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: theme-view-transition-reveal;
+    z-index: 1;
+  }
+
   /* Theme wave animation overlay */
   .theme-wave {
     position: fixed;

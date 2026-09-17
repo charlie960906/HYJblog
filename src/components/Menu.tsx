@@ -8,6 +8,12 @@ import { Menu as MenuIcon, X, Home, Folder, Tag, UserRound, Search, Sun, Moon, M
 import { SiGithub } from 'react-icons/si';
 import { useTheme } from 'next-themes';
 
+type ThemeViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void | Promise<void>) => {
+    finished: Promise<void>;
+  };
+};
+
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -28,10 +34,27 @@ export default function Menu() {
   const primaryMenuItems = menuItems.slice(0, 4);
   const searchMenuItem = menuItems[4];
 
-  const toggleTheme = () => {
-    if (theme === 'light') setTheme('dark');
-    else if (theme === 'dark') setTheme('system');
-    else setTheme('light');
+  const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+    const root = document.documentElement;
+    root.style.setProperty('--theme-toggle-x', `${event.clientX}px`);
+    root.style.setProperty('--theme-toggle-y', `${event.clientY}px`);
+
+    const clearOrigin = () => {
+      root.style.removeProperty('--theme-toggle-x');
+      root.style.removeProperty('--theme-toggle-y');
+    };
+    const viewTransitionDocument = document as ThemeViewTransitionDocument;
+
+    if (viewTransitionDocument.startViewTransition) {
+      const transition = viewTransitionDocument.startViewTransition(() => {
+        setTheme(nextTheme);
+      });
+      transition.finished.then(clearOrigin, clearOrigin);
+    } else {
+      setTheme(nextTheme);
+      clearOrigin();
+    }
   };
 
   const renderThemeIcon = () => {
@@ -41,7 +64,8 @@ export default function Menu() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
+    <>
+      <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex h-16 items-center justify-between min-w-0 overflow-x-hidden">
           <div className="flex min-w-0 items-center gap-6">
@@ -164,6 +188,7 @@ export default function Menu() {
           </div>
         </div>
       </div>
-    </nav>
+      </nav>
+    </>
   );
 }
