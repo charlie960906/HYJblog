@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/generate-feeds.js",
+    "build": "node scripts/optimize-images.js && next build && node scripts/generate-feeds.js",
     "start": "next start",
     "export": "npm run build && next export",
     "build:pages": "npm run export && node scripts/export-to-docs.js",

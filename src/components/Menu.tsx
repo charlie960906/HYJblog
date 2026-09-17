@@ -47,7 +47,7 @@ export default function Menu() {
           <div className="flex min-w-0 items-center gap-6">
             <div className="flex flex-shrink-0 items-center gap-2">
               <Link href="/" className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-600 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-transparent">
-                <Image src="/images/icon.jpg" alt="HYJBLOG" width={32} height={32} className="rounded-md object-cover" />
+                <Image src="/images/icon.webp" alt="HYJBLOG" width={32} height={32} className="rounded-md object-cover" />
                 HYJBLOG
               </Link>
             </div>

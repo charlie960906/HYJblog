@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   description: '分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。',
   manifest: '/manifest.json',
   icons: {
-    icon: '/images/icon.jpg',
-    apple: '/images/icon.jpg',
+    icon: '/images/icon.webp',
+    apple: '/images/icon.webp',
   },
   alternates: {
     types: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: 'HYJBLOG',
     images: [
       {
-        url: '/images/icon.jpg',
+        url: '/images/icon.webp',
         width: 1200,
         height: 630,
         alt: 'HYJBLOG - 技術與生活隨筆',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'HYJBLOG',
     description: '分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。',
-    images: ['/images/icon.jpg'],
+    images: ['/images/icon.webp'],
   },
   robots: {
     index: true,

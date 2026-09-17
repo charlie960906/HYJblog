@@ -15,7 +15,7 @@ export default function AboutPage() {
           <aside className="flex flex-col items-center text-center lg:sticky lg:top-28 lg:h-fit">
             <div className="rounded-full border-8 border-white bg-white shadow-xl dark:border-neutral-900 dark:bg-neutral-900">
               <Image
-                src="/images/me.jpg"
+                src="/images/me.webp"
                 alt="HYJBLOG 頭像"
                 width={192}
                 height={192}

@@ -5,6 +5,37 @@ import { marked } from 'marked';
 
 const postsDirectory = path.join(process.cwd(), 'public/post');
 
+function getOptimizedImagePath(imagePath: string | undefined) {
+  if (!imagePath || !imagePath.startsWith('/images/') || /\.(svg|gif|webp|avif)$/i.test(imagePath)) {
+    return imagePath;
+  }
+
+  const extensionlessPath = imagePath.replace(/\.[^.]+$/, '');
+  const optimizedPath = path.join(process.cwd(), 'public', `${extensionlessPath.slice(1)}.webp`);
+  return fs.existsSync(optimizedPath) ? `${extensionlessPath}.webp` : imagePath;
+}
+
+const markdownRenderer = new marked.Renderer();
+markdownRenderer.image = ({ href, title, text }) => {
+  const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+  const optimizedHref = getOptimizedImagePath(href) ?? href;
+  return `<img src="${escapeHtml(optimizedHref)}" alt="${escapeHtml(text)}"${titleAttribute} loading="lazy" decoding="async" fetchpriority="low" />`;
+};
+
+marked.use({ renderer: markdownRenderer });
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function optimizeMediaLoading(html: string) {
+  return html.replace(/<video(?![^>]*\bpreload=)([^>]*)>/gi, '<video preload="metadata"$1>');
+}
+
 export interface PostData {
   slug: string;
   title: string;
@@ -78,7 +109,7 @@ export function getPostData(slug: string): PostData {
     description: data.description || '',
     tags: data.tags || [],
     category: data.category || '未分類',
-    image: data.image !== undefined && data.image !== null ? data.image : undefined,
+    image: getOptimizedImagePath(data.image !== undefined && data.image !== null ? data.image : undefined),
     published: data.published !== false,
     content,
     readingTime,
@@ -111,7 +142,9 @@ export function getSortedPostsData(): PostData[] {
  */
 export async function getSerializedPost(slug: string): Promise<SerializedPost> {
   const post = getPostData(slug);
-  const htmlContent = marked.parse(post.content) as string;
+  const htmlContent = optimizeMediaLoading(
+    marked.parse(post.content, { renderer: markdownRenderer }) as string,
+  );
 
   return {
     slug: post.slug,

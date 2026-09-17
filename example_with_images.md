@@ -8,7 +8,7 @@
 
 例如：
 
-![網站圖標](/images/icon.jpg)
+![網站圖標](/images/icon.webp)
 
 ## 帶標題的圖片
 
@@ -20,7 +20,7 @@
 
 例如：
 
-![我的照片](/images/my.jpg "這是我的照片")
+![我的照片](/images/my.webp "這是我的照片")
 
 ## 網路圖片
 
@@ -39,7 +39,7 @@
 ## 使用建議
 
 - 建議將圖片放在 `public/images/` 資料夾中
-- 使用相對路徑 `/images/檔名.jpg` 引用圖片
+- 使用相對路徑 `/images/檔名.webp` 引用圖片
 - 為圖片添加有意義的 alt 文字，提升無障礙性
 - 可以使用圖片標題功能添加說明文字
 - 在 Frontmatter 中添加 `image` 欄位，將圖片設為背景圖片
@@ -54,7 +54,7 @@ date: "2025-01-15"
 description: 文章描述
 tags: ["標籤1", "標籤2"]
 category: information    # 用於分類歸檔
-image: /images/example.jpg  # 用於首頁焦點和文章詳情背景圖片
+image: /images/example.webp  # 用於首頁焦點和文章詳情背景圖片
 published: true
 ---
 ```

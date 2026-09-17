@@ -1,8 +1,7 @@
 ﻿"use client";
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import PinguPet, { destroy as destroyPingu } from './PinguPet';
+import { useEffect, useState } from 'react';
 
 interface FooterProps {
   articleCount: number;
@@ -12,10 +11,7 @@ interface FooterProps {
 const blogStartTime = new Date('2026-06-12T19:57:00+08:00').getTime();
 
 export default function Footer({ articleCount, characterCount }: FooterProps) {
-  const [isPinguVisible, setIsPinguVisible] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [uptime, setUptime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setUptime(getUptime());
@@ -23,44 +19,8 @@ export default function Footer({ articleCount, characterCount }: FooterProps) {
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (!isMenuOpen) {
-      return undefined;
-    }
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMenuOpen]);
-
-  const handleFooterButton = () => {
-    if (isPinguVisible) {
-      destroyPingu();
-      setIsPinguVisible(false);
-      setIsMenuOpen(false);
-      return;
-    }
-
-    setIsMenuOpen((current) => !current);
-  };
-
-  const summonPingu = () => {
-    setIsPinguVisible(true);
-    setIsMenuOpen(false);
-  };
-
-  const onPinguDestroyed = () => {
-    setIsPinguVisible(false);
-  };
-
   return (
-    <>
-      <footer className="border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300 mt-8 sm:mt-16 pb-[env(safe-area-inset-bottom)]">
+    <footer className="border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300 mt-8 sm:mt-16 pb-[env(safe-area-inset-bottom)]">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="grid grid-cols-1 items-start gap-4 text-sm font-mono text-neutral-500 dark:text-neutral-400 sm:grid-cols-3">
             <div className="flex flex-col gap-2 text-center sm:text-left">
@@ -99,24 +59,10 @@ export default function Footer({ articleCount, characterCount }: FooterProps) {
                 <Link href="/update" className="link-subtle">
                   Update
                 </Link>
-                <div className="relative" ref={wrapperRef}>
-                  <button type="button" onClick={handleFooterButton} className="pingu-button">
-                    {isPinguVisible ? '❌ 收起寵物' : '🐾 Pets'}
-                  </button>
-                  {isMenuOpen && !isPinguVisible ? (
-                    <div className="pingu-menu pingu-menu-up">
-                      <button type="button" className="pingu-menu-button" onClick={summonPingu}>
-                        🐧 Pingu
-                      </button>
-                    </div>
-                  ) : null}
-              </div>
             </div>
           </div>
         </div>
-      </footer>
-      {isPinguVisible ? <PinguPet onDestroyed={onPinguDestroyed} /> : null}
-    </>
+    </footer>
   );
 }
 

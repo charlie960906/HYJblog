@@ -182,7 +182,7 @@ export default async function PostPage({ params }: PostPageProps) {
               </p>
             </header>
 
-            <div 
+              <div 
               className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
               dangerouslySetInnerHTML={{ __html: finalHtmlContent }}
             />
