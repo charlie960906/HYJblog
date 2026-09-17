@@ -43,7 +43,7 @@ export default function Footer({ articleCount, characterCount }: FooterProps) {
               </p>
             </div>
             <div className="flex flex-col gap-2 items-center  text-center">
-              <p>共 {articleCount} 篇文章 共 {characterCount.toLocaleString()} 字</p>
+              <p>共 {articleCount} 篇文章 共 {characterCount.toLocaleString('en-US')} 字</p>
               <p>新BLOG已運行 {uptime.days} 天 {uptime.hours} 小時 {uptime.minutes} 分鐘 {uptime.seconds} 秒</p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-self-end">

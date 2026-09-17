@@ -31,14 +31,9 @@ export interface PostMetadata {
  * Format date to readable zh-TW format (e.g., "2025年1月15日")
  */
 export function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('zh-TW', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  } catch {
-    return dateString;
-  }
+  const match = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(dateString);
+  if (!match) return dateString;
+
+  const [, year, month, day] = match;
+  return `${year}年${Number(month)}月${Number(day)}日`;
 }
