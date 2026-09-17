@@ -4,11 +4,80 @@
         <title>HYJBLOG</title>
         <link>https://hyjblog.hyjdevelop.com</link>
         <description>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</description>
-        <lastBuildDate>Thu, 17 Sep 2026 02:50:34 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 17 Sep 2026 15:50:08 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-TW</language>
         <copyright>© 2026 HYJBLOG. All rights reserved.</copyright>
+        <item>
+            <title><![CDATA[HTML5 WEB APP程式設計第一周心得]]></title>
+            <link>https://hyjblog.hyjdevelop.com/blog/2026_09_17HTMLclass1</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/2026_09_17HTMLclass1</guid>
+            <pubDate>Thu, 17 Sep 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>前端後端比較</h2>
+<h2>作業</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;第一堂課作業&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- 1. HTML 結構：將圖片包裹在超連結裡面 --&gt;
+    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+
+    &lt;!-- 2. HTML 結構：觸發切換的按鈕 --&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;button onclick=&quot;changeImage(1)&quot;&gt;圖片 1&lt;/button&gt;
+    &lt;button onclick=&quot;changeImage(2)&quot;&gt;圖片 2&lt;/button&gt;
+    &lt;button onclick=&quot;changeImage(3)&quot;&gt;圖片 3&lt;/button&gt;
+
+    &lt;!-- 3. JavaScript 腳本：控制切換邏輯 --&gt;
+    &lt;script&gt;
+        // 取得 HTML 元素
+        const photoLink = document.getElementById(&#39;photoLink&#39;);
+        const photo = document.getElementById(&#39;photo&#39;);
+
+        // 定義資料庫：管理圖片路徑與點擊後的跳轉網址
+        const imageData = {
+            1: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            },
+            2: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            },
+            3: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            }
+        };
+
+        // 切換圖片與連結的函式
+        function changeImage(imageNumber) {
+            // 從 imageData 中取出對應數字的資料，若不存在則預設顯示第 1 組
+            const currentData = imageData[imageNumber] || imageData[1];
+
+            // 更改 &lt;img&gt; 標籤的 src 屬性（更換圖片）
+            photo.src = currentData.imgSrc;
+
+            // 更改 &lt;a&gt; 標籤的 href 屬性（更換點擊跳轉網址）
+            photoLink.href = currentData.linkUrl;
+        }
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+]]></content:encoded>
+            <author>HYJBLOG</author>
+            <category>課程心得</category>
+        </item>
         <item>
             <title><![CDATA[8月review]]></title>
             <link>https://hyjblog.hyjdevelop.com/blog/2026_09_10</link>

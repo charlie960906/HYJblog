@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
+import hljs from 'highlight.js/lib/common';
 
 const postsDirectory = path.join(process.cwd(), 'public/post');
 
@@ -16,6 +17,15 @@ function getOptimizedImagePath(imagePath: string | undefined) {
 }
 
 const markdownRenderer = new marked.Renderer();
+markdownRenderer.code = ({ text, lang }) => {
+  const language = lang?.trim().toLowerCase();
+  const highlighted = language && hljs.getLanguage(language)
+    ? hljs.highlight(text, { language }).value
+    : hljs.highlightAuto(text).value;
+  const languageClass = language && hljs.getLanguage(language) ? ` language-${language}` : '';
+
+  return `<div class="code-block"><button type="button" class="code-copy-button" data-code-copy aria-label="複製程式碼">複製</button><pre><code class="hljs${languageClass}">${highlighted}</code></pre></div>`;
+};
 markdownRenderer.image = ({ href, title, text }) => {
   const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
   const optimizedHref = getOptimizedImagePath(href) ?? href;
@@ -23,6 +33,51 @@ markdownRenderer.image = ({ href, title, text }) => {
 };
 
 marked.use({ renderer: markdownRenderer });
+
+function replaceSpoilersOutsideCode(content: string, onSpoiler: (innerContent: string) => string) {
+  const lines = content.split('\n');
+  let fenceCharacter: string | null = null;
+
+  return lines.map((line) => {
+    const fenceMatch = line.match(/^\s{0,3}(`{3,}|~{3,})/);
+    if (fenceMatch) {
+      const currentFenceCharacter = fenceMatch[1][0];
+      if (fenceCharacter === currentFenceCharacter) {
+        fenceCharacter = null;
+      } else if (!fenceCharacter) {
+        fenceCharacter = currentFenceCharacter;
+      }
+      return line;
+    }
+
+    if (fenceCharacter) return line;
+    return line.replace(/\|\|([\s\S]+?)\|\|/g, (_, innerContent: string) => onSpoiler(innerContent));
+  }).join('\n');
+}
+
+export function renderMarkdown(content: string) {
+  const spoilers: string[] = [];
+  const contentWithPlaceholders = replaceSpoilersOutsideCode(content, (innerContent) => {
+    const spoilerIndex = spoilers.push(
+      marked.parseInline(innerContent, {
+        renderer: markdownRenderer,
+        gfm: true,
+        breaks: true,
+      }) as string,
+    ) - 1;
+    return `MD_SPOILER_PLACEHOLDER_${spoilerIndex}`;
+  });
+
+  const renderedHtml = marked.parse(contentWithPlaceholders, {
+    renderer: markdownRenderer,
+    gfm: true,
+    breaks: true,
+  }) as string;
+
+  return renderedHtml.replace(/MD_SPOILER_PLACEHOLDER_(\d+)/g, (_, index: string) => (
+    `<button type="button" class="spoiler" data-spoiler aria-expanded="false" aria-label="顯示隱藏內容"><span class="spoiler-content">${spoilers[Number(index)]}</span><span class="sr-only">點擊顯示隱藏內容</span></button>`
+  ));
+}
 
 function escapeHtml(value: string) {
   return value
@@ -143,7 +198,7 @@ export function getSortedPostsData(): PostData[] {
 export async function getSerializedPost(slug: string): Promise<SerializedPost> {
   const post = getPostData(slug);
   const htmlContent = optimizeMediaLoading(
-    marked.parse(post.content, { renderer: markdownRenderer }) as string,
+    renderMarkdown(post.content),
   );
 
   return {

@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
-import { marked } from 'marked';
-import { getPostData, getAllPostSlugs, getSerializedPost } from '@/lib/posts';
+import { getPostData, getAllPostSlugs, getSerializedPost, renderMarkdown } from '@/lib/posts';
 import { formatDate } from '@/lib/types';
 import ShareButtons from '@/components/ShareButtons';
 import ReadingTime from '@/components/ReadingTime';
 import LazyGiscus from '@/components/LazyGiscus';
 import TableOfContents from '@/components/TableOfContents';
 import TagPill from '@/components/TagPill';
+import CodeBlockContent from '@/components/CodeBlockContent';
 
 interface PostPageProps {
   params: Promise<{
@@ -94,38 +94,37 @@ function escapeRegExp(string: string) {
 }
 
 function wrapGlossarySections(content: string) {
-  const lines = content.split('\n');
-  let result = '';
-  let i = 0;
+  const sections: string[] = [];
+  let currentSection: string[] = [];
+  let fenceMarker: string | null = null;
 
-  while (i < lines.length) {
-    const line = lines[i];
-
-    if (/^###\s+/.test(line)) {
-      // 收集整个 ### 块（直到下一个 ## 或 ###）
-      const cardLines: string[] = [line];
-      i++;
-      while (i < lines.length && !/^##\s+/.test(lines[i]) && !/^###\s+/.test(lines[i])) {
-        cardLines.push(lines[i]);
-        i++;
-      }
-      // 解析 ### 块并包装到 section 中
-      const cardHtml = marked.parse(cardLines.join('\n')) as string;
-      result += `<section class="glossary-card">${cardHtml}</section>`;
-    } else if (/^##\s+/.test(line)) {
-      // ## 标题直接解析，不包装
-      result += (marked.parse(line) as string);
-      i++;
-    } else {
-      // 其他内容直接解析
-      if (line.trim()) {
-        result += (marked.parse(line) as string);
-      }
-      i++;
+  for (const line of content.split('\n')) {
+    const fenceMatch = line.match(/^\s{0,3}(`{3,}|~{3,})/);
+    if (fenceMatch && !fenceMarker) {
+      fenceMarker = fenceMatch[1][0];
+    } else if (fenceMatch && fenceMarker === fenceMatch[1][0]) {
+      fenceMarker = null;
     }
+
+    if (!fenceMarker && /^#{2,3}\s+/.test(line) && currentSection.length > 0) {
+      sections.push(currentSection.join('\n'));
+      currentSection = [];
+    }
+
+    currentSection.push(line);
   }
 
-  return result;
+  if (currentSection.length > 0) {
+    sections.push(currentSection.join('\n'));
+  }
+
+  return sections.map((section) => {
+    if (/^###\s+/.test(section)) {
+      return `<section class="glossary-card">${renderMarkdown(section)}</section>`;
+    }
+
+    return renderMarkdown(section);
+  }).join('');
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -182,17 +181,14 @@ export default async function PostPage({ params }: PostPageProps) {
               </p>
             </header>
 
-              <div 
-              className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
-              dangerouslySetInnerHTML={{ __html: finalHtmlContent }}
-            />
+              <CodeBlockContent html={finalHtmlContent} />
 
             {serializedPost.update && (
               <section className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-6">
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Update</h2>
                 <div
                   className="prose-custom space-y-4 text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-full overflow-x-hidden break-words overflow-wrap-anywhere"
-                  dangerouslySetInnerHTML={{ __html: marked.parse(serializedPost.update) }}
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(serializedPost.update) }}
                 />
               </section>
             )}

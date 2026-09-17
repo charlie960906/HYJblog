@@ -195,6 +195,44 @@
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-collapse: collapse;
+    white-space: nowrap;
+  }
+
+  .prose-custom :where(th, td) {
+    @apply border border-neutral-200 px-4 py-2 text-left dark:border-neutral-700;
+  }
+
+  .prose-custom :where(thead) {
+    @apply bg-neutral-100 dark:bg-neutral-800;
+  }
+
+  .prose-custom :where(ul, ol) {
+    @apply pl-6;
+  }
+
+  .prose-custom :where(.task-list) {
+    @apply list-none pl-0;
+  }
+
+  .prose-custom :where(.task-list-item) {
+    @apply flex items-start gap-2;
+  }
+
+  .prose-custom :where(.task-list-item input[type='checkbox']) {
+    @apply mt-1.5 h-4 w-4 accent-neutral-700 dark:accent-neutral-300;
+  }
+
+  .prose-custom :where(hr) {
+    @apply my-8 border-neutral-200 dark:border-neutral-800;
+  }
+
+  .prose-custom :where(img) {
+    @apply my-6 h-auto max-w-full rounded-lg;
+  }
+
+  .prose-custom :where(strong) {
+    @apply font-semibold text-neutral-950 dark:text-white;
   }
 
   .prose-custom :where(h1, h2, h3, h4, h5, h6) {
@@ -212,6 +250,54 @@
 
   .prose-custom :where(pre):not(:where([class~="not-prose"] *)) {
     @apply bg-[#F5F2EB] dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200/60 dark:border-neutral-800 max-w-full;
+  }
+
+  .prose-custom :where(.code-block) {
+    @apply relative max-w-full;
+  }
+
+  .prose-custom :where(.code-block pre) {
+    @apply pt-12;
+  }
+
+  .prose-custom :where(.code-copy-button) {
+    @apply absolute right-3 top-3 z-10 rounded-md border border-neutral-300 bg-white/80 px-2.5 py-1 text-xs font-medium text-neutral-700 shadow-sm transition-colors hover:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-800;
+  }
+
+  .prose-custom :where(.hljs) {
+    @apply bg-transparent text-neutral-800 dark:text-neutral-200;
+  }
+
+  .prose-custom :where(.hljs-comment, .hljs-quote) {
+    @apply text-neutral-500 dark:text-neutral-400;
+  }
+
+  .prose-custom :where(.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-type) {
+    @apply text-rose-700 dark:text-rose-300;
+  }
+
+  .prose-custom :where(.hljs-string, .hljs-doctag, .hljs-regexp) {
+    @apply text-emerald-700 dark:text-emerald-300;
+  }
+
+  .prose-custom :where(.hljs-number, .hljs-symbol, .hljs-bullet) {
+    @apply text-blue-700 dark:text-blue-300;
+  }
+
+  .prose-custom :where(.hljs-title, .hljs-section, .hljs-built_in, .hljs-variable) {
+    @apply text-amber-700 dark:text-amber-300;
+  }
+
+  .prose-custom :where(.spoiler) {
+    @apply inline cursor-pointer rounded bg-neutral-800 px-1.5 py-0.5 text-transparent align-baseline transition-colors hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600;
+  }
+
+  .prose-custom :where(.spoiler.is-revealed) {
+    @apply bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200;
+  }
+
+  .prose-custom :where(.spoiler-content) {
+    @apply text-inherit;
   }
 
   .prose-custom :where(pre code):not(:where([class~="not-prose"] *)) {
