@@ -158,7 +158,7 @@ export default function CategoryDrawer({
               </h3>
             </div>
 
-            <nav className="py-2">
+            <nav aria-label="文章分類" className="py-2">
               <button
                 ref={setItemRef}
                 onClick={() => handleCategorySelect('all')}

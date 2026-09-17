@@ -39,7 +39,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
   }, [query, initialPosts]);
 
   return (
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+    <main id="main-content" className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
       <div className="mx-auto max-w-4xl w-full min-w-0">
       <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
         <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
@@ -55,6 +55,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
             <Search className="h-5 w-5 text-neutral-400" aria-hidden="true" />
           </div>
+          <label htmlFor="search" className="sr-only">搜尋文章</label>
           <input
             type="text"
             name="search"

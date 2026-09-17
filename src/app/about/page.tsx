@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="flex-1 bg-neutral-50 dark:bg-neutral-950">
+    <main id="main-content" className="flex-1 bg-neutral-50 dark:bg-neutral-950">
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[260px_1fr] lg:gap-20">
           <aside className="flex flex-col items-center text-center lg:sticky lg:top-28 lg:h-fit">

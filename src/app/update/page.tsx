@@ -225,7 +225,7 @@ export const metadata = {
 
 export default function UpdatePage() {
   return (
-    <main className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden">
+    <main id="main-content" className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden">
       <div className="mx-auto max-w-6xl w-full space-y-8">
         <section className="space-y-4">
           <div className="max-w-3xl">

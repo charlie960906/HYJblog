@@ -67,7 +67,6 @@ export const viewport: Viewport = {
   ],
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -85,6 +84,9 @@ export default function RootLayout({
     <html lang="zh-TW" data-scroll-behavior="smooth" suppressHydrationWarning style={{ overflowX: 'clip' }}>
       <body className={`${inter.className} bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-[100svh] flex flex-col antialiased transition-colors duration-300 overflow-x-clip`}>
         <Providers>
+          <a className="skip-link" href="#main-content">
+            跳至主要內容
+          </a>
           <Menu />
           {children}
           <Footer articleCount={posts.length} characterCount={characterCount} />

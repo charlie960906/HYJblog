@@ -77,6 +77,7 @@ export default function SearchBar({ mode = 'inline' }: SearchBarProps) {
   const searchField = (
     <>
       <div className="relative">
+        <label htmlFor="site-search" className="sr-only">搜尋文章</label>
         <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
             <path fillRule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clipRule="evenodd" />
@@ -84,6 +85,7 @@ export default function SearchBar({ mode = 'inline' }: SearchBarProps) {
         </span>
         <input
           ref={inputRef}
+          id="site-search"
           type="text"
           placeholder="搜尋文章..."
           value={query}

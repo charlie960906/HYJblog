@@ -65,7 +65,7 @@ export default function Menu() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
+      <nav aria-label="主要導覽" className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 transition-colors duration-300">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex h-16 items-center justify-between min-w-0 overflow-x-hidden">
           <div className="flex min-w-0 items-center gap-6">
@@ -150,6 +150,8 @@ export default function Menu() {
             )}
             <button
               onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              aria-controls="mobile-navigation"
               className="inline-flex items-center justify-center p-2 rounded-md text-neutral-400 hover:text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-white focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
@@ -160,10 +162,11 @@ export default function Menu() {
 
         {/* 行動版展開選單 — 浮層覆蓋，不推擠頁面內容 */}
         <div
+          id="mobile-navigation"
           className={`md:hidden absolute top-full left-0 right-0 border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg origin-top transition-all duration-300 ease-out ${
             isOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-95 pointer-events-none'
           }`}
-          aria-hidden={!isOpen}
+          inert={!isOpen ? true : undefined}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {menuItems.map((item) => {

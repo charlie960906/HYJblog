@@ -107,10 +107,10 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
             }}
             className="space-y-2 inline-flex flex-col items-center justify-center origin-center shrink-0"
           >
-            <p className="text-neutral-600 dark:text-neutral-400 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
+            <p className="text-neutral-700 dark:text-neutral-300 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
               聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度
             </p>
-            <p className="text-neutral-600 dark:text-neutral-400 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
+            <p className="text-neutral-700 dark:text-neutral-300 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
               BUT 感謝你發現了我的BLOG 期待我會努力寫它也會努力創業
             </p>
           </div>

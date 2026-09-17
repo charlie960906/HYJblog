@@ -218,7 +218,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
         className="pointer-events-none absolute left-0 right-0 rounded-full bg-amber-500/10 dark:bg-amber-500/15 shadow-[0_0_0_1px_rgba(245,158,11,0.08)] transition-all duration-300"
         style={{ top: 0, height: 0, opacity: 0 }}
       />
-      <nav className="relative space-y-2 sm:space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
+      <nav aria-label="文章目錄" className="relative space-y-2 sm:space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
         {headings.map(heading => {
           const isActive = activeId === heading.id;
           return (
@@ -248,6 +248,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
               onClick={() => setMobileOpen(prev => !prev)}
               className="w-full cursor-pointer select-none px-4 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-neutral-600 dark:text-neutral-400 flex items-center justify-between gap-3 transition-colors hover:bg-neutral-50/80 dark:hover:bg-neutral-900/50"
               aria-expanded={mobileOpen}
+              aria-controls="mobile-table-of-contents"
             >
               <span className="flex items-center gap-2 min-w-0">
                 <span>目錄</span>
@@ -265,6 +266,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
               </span>
             </button>
             <div
+              id="mobile-table-of-contents"
               ref={mobilePanelRef}
               className="overflow-hidden border-t border-neutral-200 dark:border-neutral-800"
               style={{ display: 'none', height: 0, opacity: 0 }}
