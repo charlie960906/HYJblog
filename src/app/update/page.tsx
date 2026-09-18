@@ -5,6 +5,50 @@ const updates: {
   title: string;
   content: ReactNode;
 }[] = [
+    {
+    datetime: '2026-09-18 22:41',
+    title: '完善markdawn解析的内容，增加了程式高亮和複製按鈕',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>字體大小正確顯示</li>
+        <li>增加程式碼高亮功能</li>
+        <li>新增程式碼複製按鈕</li>
+      </ul>
+    ),
+  },
+  {
+    datetime: '2026-09-17 10:56',
+    title: '優化網站 優化無障礙功能，改善使用者體驗，提升網站效能與可訪問性',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>優化網站的無障礙功能，改善使用者體驗</li>
+        <li>提升網站效能與可訪問性，讓更多人能夠順利使用網站</li>
+        <li>改善網站的整體設計與互動性</li>
+      </ul>
+    ),
+  },
+  {
+    datetime: '2026-09-17 10:12',
+    title: '將圖片從.jpg轉為.webp格式，以此減少網站流量與加快載入速度',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>將網站內的圖片從.jpg格式轉為.webp格式</li>
+        <li>減少網站流量，提升載入速度</li>
+        <li>改善使用者體驗，讓網站更快更流暢</li>
+      </ul>
+    ),
+  },
+  {
+    datetime: '2026-09-13 22:03',
+    title: '完成8月Review文章與更新網站內容',
+    content: (
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 dark:text-neutral-300">
+        <li>完成8月Review文章</li>
+        <li>更新網站內容與功能</li>
+        <li>修正程式碼警告</li>
+      </ul>
+    ),
+  },
   {
     datetime: '2026-08-22 09:53',
     title: 'MENU排版更新、頁尾整理與個人About頁面新增',
