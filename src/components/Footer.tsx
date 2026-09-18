@@ -33,7 +33,7 @@ export default function Footer({ articleCount, characterCount }: FooterProps) {
               <p>
                 網站出錯了嗎？{' '}
                 <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSerFnsVrPAU37D-WwJUDNVZlsvzZoqaFp4t_uIdt-_8btUPQA/viewform?usp=sharing&ouid=113387093467568493291"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSerFnsVrPAU37D-WwJUDNVZlsvzZoqaFp4t_uIdt-_8btUPQA/viewform?usp=dialog"
                   target="_blank"
                   rel="noreferrer"
                   className="link-subtle"
