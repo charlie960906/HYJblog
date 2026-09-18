@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hyjblog.hyjdevelop.com</id>
     <title>HYJBLOG</title>
-    <updated>2026-09-17T15:50:08.654Z</updated>
+    <updated>2026-09-18T14:56:41.353Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <author>
         <name>HYJBLOG</name>
@@ -18,28 +18,165 @@
         <link href="https://hyjblog.hyjdevelop.com/blog/2026_09_17HTMLclass1"/>
         <updated>2026-09-17T00:00:00.000Z</updated>
         <content type="html"><![CDATA[<h2>前端後端比較</h2>
+<table>
+<thead>
+<tr>
+<th>比較項目</th>
+<th>前端</th>
+<th>後端</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>面向</td>
+<td>用戶端：打造介面與視覺體驗</td>
+<td>伺服器端：處理邏輯與資料庫儲存</td>
+</tr>
+<tr>
+<td>核心任務</td>
+<td>畫面佈局、動態效果、表單驗證、使用者體驗(UX)</td>
+<td>API 開發、資料庫操作、身份驗證、系統效能與安全</td>
+</tr>
+<tr>
+<td>常用程式語言</td>
+<td>HTML, CSS, JavaScript</td>
+<td>Node.js, Python, Java, Go, C#, PHP 等</td>
+</tr>
+<tr>
+<td>常用框架/工具</td>
+<td>React, Vue.js, Angular, Tailwind CSS</td>
+<td>Express, Django, FastAPI, ASP.NET</td>
+</tr>
+<tr>
+<td>關注焦點</td>
+<td>介面美觀、響應式設計(RWD)、流暢度</td>
+<td>資料正確性、高併發處理、安全性、架構擴充性</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>高併發處理:能夠同時處理大量請求的能力</p>
+</blockquote>
 <h2>作業</h2>
+<h3>課後學習內容</h3>
+<pre><code class="language-html">&lt;html lang=&quot;zh-Hant&quot;&gt;
+</code></pre>
+<p>設定這行的用意:</p>
+<ol>
+<li>搜尋引擎優化(SEO)：告訴搜尋引擎這個網頁是給看「繁體中文」的使用者看的，有助於精準投放搜尋結果。</li>
+<li>無障礙螢幕閱讀器(Screen Readers)：幫助視障人士使用的朗讀軟體切換成正確的「繁體中文發音與語調」來讀出網頁內容。</li>
+<li>瀏覽器自動翻譯：瀏覽器（如 Chrome）會依據這個設定判斷是否需要跳出「翻譯網頁」的提示。</li>
+<li>字體渲染：幫助瀏覽器選擇正確的繁體中文字型顯示，避免出現簡繁混用或部分文字字型不齊的問題。</li>
+</ol>
+<p>參考連結:
+<a href="https://www.w3schools.com/tags/att_lang.asp">att_lang_w3shool教學</a>
+<a href="https://www.google.com/search?q=%3Chtml%20lang=%22zh-Hant%22%3E%20%E8%A7%A3%E9%87%8B">html lang=&quot;zh-Hant&quot; 解釋</a></p>
+<hr>
+<pre><code class="language-html">    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+</code></pre>
+<p>這個是使用超連結把圖片包起來，實現點選圖片可以跳轉連結的功能</p>
+<p>參考連結:
+<a href="https://www.google.com/search?q=%E5%A6%82%E4%BD%95%E5%9C%A8%E5%9C%96%E7%89%87%E4%B8%8A%E5%86%8D%E5%8A%A0%E4%B8%8A%E8%B6%85%E9%80%A3%E7%B5%90html">在圖片上再加上超連結方法</a>
+<a href="https://www.w3schools.com/html/html_links.asp">html_links_w3shool教學</a>
+<a href="https://www.w3schools.com/html/html_images.asp">html_images_w3shool教學</a></p>
+<hr>
+<p>程式碼2中的</p>
+<pre><code class="language-JavaScript"> const imageData = {
+            1: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            },
+            2: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            },
+            3: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            }
+        };
+</code></pre>
+<p>是物件屬性與巢狀物件(JavaScript Object Properties)<br>這樣子寫可以避免重複寫函式<br>在添加第4第5個的時候可以直接加上去  </p>
+<p>參考連結:
+<a href="https://www.w3schools.com/js/js_object_properties.asp">W3Schools - JS Object Properties</a></p>
+<hr>
+<p>程式碼2中的函式</p>
+<pre><code class="language-JavaScript">        function changeImage(imageNumber) {
+            const currentData = imageData[imageNumber] || imageData[1];
+            photo.src = currentData.imgSrc;
+            photoLink.href = currentData.linkUrl;
+        }
+</code></pre>
+<p>這裡使用了中括號存取、OR 邏輯運算子以及 DOM 屬性修改<br>OR 運算子:可以防止程式因為找不到資料而報錯崩潰<br>photo.src = currentData.imgSrc;
+修改圖片來源：photo 是前面取得的 <img> 元素。這行把圖片的 src 屬性（圖片位址），換成從 currentData 物件裡拿到的 imgSrc 網址。</p>
+<ol start="4">
+<li>photoLink.href = currentData.linkUrl;
+修改超連結網址：photoLink 是外層包住圖片的 <a> 標籤。這行把超連結的 href 屬性（點擊跳轉網址），換成 currentData 裡的 linkUrl 網址。</li>
+</ol>
+<p>相關連結:
+<a href="https://www.w3schools.com/js/js_object_properties.asp">W3Schools - JS Object Properties</a>
+<a href="https://www.w3schools.com/js/js_comparisons.asp">W3Schools - JS Comparison and Logical Operators</a></p>
+<hr>
+<h3>程式碼1(根據上課內容完成)</h3>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-Hant&quot;&gt;
 &lt;head&gt;
     &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-    &lt;title&gt;第一堂課作業&lt;/title&gt;
+    &lt;title&gt;HTML5 第一周作業&lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
 
-    &lt;!-- 1. HTML 結構：將圖片包裹在超連結裡面 --&gt;
+    &lt;!-- 1. 畫面呈現：圖片包在超連結裡面 --&gt;
     &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
         &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
     &lt;/a&gt;
 
-    &lt;!-- 2. HTML 結構：觸發切換的按鈕 --&gt;
+    &lt;br&gt;&lt;br&gt;
+
+    &lt;!-- 2. 按鈕區：點擊後分別執行不同的 JavaScript 動作 --&gt;
+    &lt;button onclick=&quot;changeToPic1()&quot;&gt;圖片 1&lt;/button&gt;
+    &lt;button onclick=&quot;changeToPic2()&quot;&gt;圖片 2&lt;/button&gt;
+    &lt;button onclick=&quot;changeToPic3()&quot;&gt;圖片 3&lt;/button&gt;
+
+    &lt;!-- 3. 控制邏輯：各自獨立的切換功能 --&gt;
+    &lt;script&gt;
+        function changeToPic1() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+
+        function changeToPic2() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+
+        function changeToPic3() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3>程式碼2(詢問AI更好的做法)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;第一堂課作業&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+
     &lt;br&gt;&lt;br&gt;
     &lt;button onclick=&quot;changeImage(1)&quot;&gt;圖片 1&lt;/button&gt;
     &lt;button onclick=&quot;changeImage(2)&quot;&gt;圖片 2&lt;/button&gt;
     &lt;button onclick=&quot;changeImage(3)&quot;&gt;圖片 3&lt;/button&gt;
 
-    &lt;!-- 3. JavaScript 腳本：控制切換邏輯 --&gt;
     &lt;script&gt;
         // 取得 HTML 元素
         const photoLink = document.getElementById(&#39;photoLink&#39;);
