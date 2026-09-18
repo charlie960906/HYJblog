@@ -7,6 +7,7 @@
 所有文章皆透過 Markdown / MDX 管理與撰寫。
 
 > "聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度。"
+> 
 > "BUT 感謝你發現了我的 BLOG 期待我會努力寫它也會努力創業"
 
 ## 部落格特點
@@ -93,7 +94,7 @@ category:
 
 ## 📄 開源授權條款
 
-本專案採用 **[MIT License](https://www.google.com/search?q=LICENSE)** 授權條款。你可以自由地複製、修改或轉發此專案的原始碼，但請務必保留原作者的版權聲明。
+本專案採用 **[MIT License](https://zh.wikipedia.org/zh-tw/MIT%E8%A8%B1%E5%8F%AF%E8%AD%89)** 授權條款。你可以自由地複製、修改或轉發此專案的原始碼，但請務必保留原作者的版權聲明。
 
 ---
 

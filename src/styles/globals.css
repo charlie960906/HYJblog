@@ -240,7 +240,7 @@
   }
 
   .prose-custom :where(h2) {
-    @apply mt-8 mb-4 text-xl text-neutral-900 dark:text-neutral-100;
+    @apply mt-8 mb-4 text-2xl text-neutral-900 dark:text-neutral-100;
   }
 
   /* 為了搭配全域奶油白，將行內程式碼與代碼區塊的淺色背景微調為淡米杏色 #F5F2EB */
