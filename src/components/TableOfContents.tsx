@@ -30,6 +30,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   const activeIdRef = useRef<string>('');
   const scrollRafRef = useRef<number | null>(null);
   const panelAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const highlightAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   useEffect(() => {
     activeIdRef.current = activeId;
@@ -111,7 +112,8 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     const top = activeLink.offsetTop;
     const height = activeLink.offsetHeight;
 
-    animate(highlightRef.current, {
+    highlightAnimationRef.current?.pause();
+    highlightAnimationRef.current = animate(highlightRef.current, {
       top,
       height,
       opacity: [1],
@@ -135,7 +137,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
         behavior: 'smooth'
       });
     }
-  }, [activeId, mobileOpen, variant]);
+  }, [activeId, variant]);
 
   useEffect(() => {
     if (variant !== 'mobile' || !mobilePanelRef.current) return;
@@ -152,6 +154,16 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
       panel.style.display = 'block';
       panel.style.height = '0px';
       panel.style.opacity = '0';
+      panel.style.willChange = 'height, opacity';
+
+      const activeLink = mobileScrollRef.current?.querySelector(`a[href="#${activeIdRef.current}"]`) as HTMLElement | null;
+      if (activeLink && highlightRef.current) {
+        highlightAnimationRef.current?.pause();
+        highlightRef.current.style.top = `${activeLink.offsetTop}px`;
+        highlightRef.current.style.height = `${activeLink.offsetHeight}px`;
+        highlightRef.current.style.opacity = '1';
+      }
+
       panelAnimationRef.current = animate(panel, {
         height: [0, panel.scrollHeight],
         opacity: [0, 1],
@@ -159,13 +171,21 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
         easing: 'easeOutCubic',
       });
     } else {
+      const currentHeight = panel.offsetHeight;
+      panel.style.display = 'block';
+      panel.style.height = `${currentHeight}px`;
+      panel.style.opacity = '1';
+      panel.style.willChange = 'height, opacity';
       panelAnimationRef.current = animate(panel, {
-        height: [panel.offsetHeight, 0],
+        height: [currentHeight, 0],
         opacity: [1, 0],
-        duration: 220,
-        easing: 'easeInCubic',
+        duration: 400,
+        easing: 'easeInOutCubic',
         complete: () => {
           panel.style.display = 'none';
+          panel.style.height = '0px';
+          panel.style.opacity = '0';
+          panel.style.willChange = 'auto';
         },
       });
     }

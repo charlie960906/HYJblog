@@ -118,19 +118,19 @@ published: true
 </head>
 <body>
 
-    <!-- 1. 畫面呈現：圖片包在超連結裡面 -->
+    <!-- 畫面呈現：圖片包在超連結裡面 -->
     <a id="photoLink" href="https://hyjblog.hyjdevelop.com" target="_blank">
         <img id="photo" src="https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp" alt="f1圖片" width="500" height="300">
     </a>
 
     <br><br>
 
-    <!-- 2. 按鈕區：點擊後分別執行不同的 JavaScript 動作 -->
+    <!-- 按鈕 -->
     <button onclick="changeToPic1()">圖片 1</button>
     <button onclick="changeToPic2()">圖片 2</button>
     <button onclick="changeToPic3()">圖片 3</button>
 
-    <!-- 3. 控制邏輯：各自獨立的切換功能 -->
+    <!-- 控制函數，按鈕的各自切換功能 -->
     <script>
         function changeToPic1() {
             document.getElementById('photo').src = 'https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp';

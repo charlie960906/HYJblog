@@ -224,7 +224,9 @@
   }
 
   .prose-custom :where(hr) {
-    @apply my-8 border-neutral-200 dark:border-neutral-800;
+    @apply my-8 border-0 border-t-2 border-neutral-300 dark:border-neutral-700;
+    height: 0;
+    opacity: 1;
   }
 
   .prose-custom :where(img) {
