@@ -117,7 +117,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
       top,
       height,
       opacity: [1],
-      duration: 320,
+      duration: 160,
       easing: 'easeOutQuad',
     });
 
@@ -235,7 +235,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     <div className="relative">
       <div
         ref={highlightRef}
-        className="pointer-events-none absolute left-0 right-0 rounded-full bg-amber-500/10 dark:bg-amber-500/15 shadow-[0_0_0_1px_rgba(245,158,11,0.08)] transition-all duration-300"
+        className="pointer-events-none absolute left-0 right-0 rounded-full bg-amber-500/10 dark:bg-amber-500/15 shadow-[0_0_0_1px_rgba(245,158,11,0.08)]"
         style={{ top: 0, height: 0, opacity: 0 }}
       />
       <nav aria-label="文章目錄" className="relative space-y-2 sm:space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
@@ -246,7 +246,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
               key={heading.id}
               href={`#${heading.id}`}
               onClick={(e) => handleScroll(e, heading.id)}
-              className={`relative z-10 block w-full py-0.5 transition-all duration-300 border-l-2 pl-3 -ml-[2px] break-words overflow-hidden text-left whitespace-normal transform-gpu ${heading.level === 3 ? 'ml-3 sm:ml-4 text-neutral-500 dark:text-neutral-400' : ''} ${isActive ? 'text-amber-600 dark:text-amber-500 font-semibold border-amber-500 dark:border-amber-500 scale-[1.02]' : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-700 hover:translate-x-1 hover:scale-[1.01]'}`}
+              className={`relative z-10 block w-full py-0.5 transition-all duration-[160ms] border-l-2 pl-3 -ml-[2px] break-words overflow-hidden text-left whitespace-normal transform-gpu ${heading.level === 3 ? 'ml-3 sm:ml-4 text-neutral-500 dark:text-neutral-400' : ''} ${isActive ? 'text-amber-600 dark:text-amber-500 font-semibold border-amber-500 dark:border-amber-500 scale-[1.02]' : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-700 hover:translate-x-1 hover:scale-[1.01]'}`}
             >
               {heading.title}
             </a>
