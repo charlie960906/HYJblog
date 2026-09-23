@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { animate, set, stagger } from 'animejs';
+import { useLanguage } from '@/app/providers';
 
 interface CategoryDrawerProps {
   categories: string[];
@@ -14,6 +15,8 @@ export default function CategoryDrawer({
   currentCategory = 'all',
   onCategoryChange,
 }: CategoryDrawerProps) {
+  const { language } = useLanguage();
+  const en = language === 'en';
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -121,7 +124,7 @@ export default function CategoryDrawer({
       <button
         onClick={openDrawer}
         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
-        aria-label="Open category drawer"
+        aria-label={en ? 'Open category drawer' : '開啟分類選單'}
       >
         <svg
           className="w-5 h-5"
@@ -136,7 +139,7 @@ export default function CategoryDrawer({
             d="M4 6h16M4 12h16M4 18h16"
           />
         </svg>
-        <span className="text-sm font-medium">分類</span>
+        <span className="text-sm font-medium">{en ? 'Categories' : '分類'}</span>
       </button>
 
       {isVisible && (
@@ -154,11 +157,11 @@ export default function CategoryDrawer({
           >
             <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
               <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                按分類瀏覽
+                {en ? 'Browse by category' : '按分類瀏覽'}
               </h3>
             </div>
 
-            <nav aria-label="文章分類" className="py-2">
+            <nav aria-label={en ? 'Categories' : '文章分類'} className="py-2">
               <button
                 ref={setItemRef}
                 onClick={() => handleCategorySelect('all')}
@@ -170,7 +173,7 @@ export default function CategoryDrawer({
               >
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-current" />
-                  全部文章
+                  {en ? 'All articles' : '全部文章'}
                 </span>
               </button>
 

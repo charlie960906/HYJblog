@@ -16,6 +16,7 @@
     "feed": "^5.2.1",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
+    "liquid-gooey": "^0.2.2",
     "lucide-react": "^1.18.0",
     "lunr": "^2.3.9",
     "marked": "^18.0.5",

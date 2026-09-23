@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLanguage } from '@/app/providers';
 
 interface ShareProps {
   title: string;
@@ -10,6 +11,8 @@ interface ShareProps {
 
 export default function ShareButtons({ title, url }: ShareProps) {
   const [copyMessage, setCopyMessage] = useState('');
+  const { language } = useLanguage();
+  const en = language === 'en';
   const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(url);
 
@@ -41,9 +44,9 @@ export default function ShareButtons({ title, url }: ShareProps) {
         event.preventDefault();
         try {
           await navigator.clipboard.writeText(url);
-          setCopyMessage('已複製連結');
+          setCopyMessage(en ? 'Link copied' : '已複製連結');
         } catch {
-          setCopyMessage('無法複製連結');
+          setCopyMessage(en ? 'Unable to copy link' : '無法複製連結');
         }
 
         window.setTimeout(() => {
@@ -56,7 +59,7 @@ export default function ShareButtons({ title, url }: ShareProps) {
   return (
     <div className="flex flex-col gap-2 py-4">
       <div className="flex items-center gap-3">
-        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-500">分享：</span>
+        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-500">{en ? 'Share:' : '分享：'}</span>
         <div className="flex gap-2">
           {shareLinks.map(link => (
             <a

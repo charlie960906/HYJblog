@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useLanguage } from '@/app/providers';
 
 interface FooterProps {
   articleCount: number;
@@ -12,6 +13,8 @@ const blogStartTime = new Date('2026-06-12T19:57:00+08:00').getTime();
 
 export default function Footer({ articleCount, characterCount }: FooterProps) {
   const [uptime, setUptime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const { language } = useLanguage();
+  const en = language === 'en';
 
   useEffect(() => {
     setUptime(getUptime());
@@ -31,20 +34,20 @@ export default function Footer({ articleCount, characterCount }: FooterProps) {
                 </a>
               </p>
               <p>
-                網站出錯了嗎？{' '}
+                {en ? 'Found a problem? ' : '網站出錯了嗎？ '}
                 <a
                   href="https://docs.google.com/forms/d/e/1FAIpQLSerFnsVrPAU37D-WwJUDNVZlsvzZoqaFp4t_uIdt-_8btUPQA/viewform?usp=dialog"
                   target="_blank"
                   rel="noreferrer"
                   className="link-subtle"
                 >
-                點此告訴我們
+                {en ? 'Let us know' : '點此告訴我們'}
                 </a>
               </p>
             </div>
             <div className="flex flex-col gap-2 items-center  text-center">
-              <p>共 {articleCount} 篇文章 共 {characterCount.toLocaleString('en-US')} 字</p>
-              <p>新BLOG已運行 {uptime.days} 天 {uptime.hours} 小時 {uptime.minutes} 分鐘 {uptime.seconds} 秒</p>
+              <p>{en ? `${articleCount} articles · ${characterCount.toLocaleString('en-US')} characters` : `共 ${articleCount} 篇文章 共 ${characterCount.toLocaleString('en-US')} 字`}</p>
+              <p>{en ? `Blog uptime: ${uptime.days}D, ${uptime.hours}H, ${uptime.minutes}min, ${uptime.seconds}sec` : `新BLOG已運行 ${uptime.days} 天 ${uptime.hours} 小時 ${uptime.minutes} 分鐘 ${uptime.seconds} 秒`}</p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-self-end">
                 <Link href="/rss.xml" className="link-subtle">

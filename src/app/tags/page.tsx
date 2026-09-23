@@ -1,5 +1,5 @@
 import { getAllTagsWithCount } from '@/lib/posts';
-import TagCloudD3 from '@/components/TagCloudD3';
+import TagsPageClient from './TagsPageClient';
 
 export const metadata = {
   title: '標籤雲 - HYJBLOG',
@@ -8,42 +8,5 @@ export const metadata = {
 
 export default function TagsPage() {
   const tags = getAllTagsWithCount();
-
-  if (tags.length === 0) {
-    return (
-      /* 💡 修正處：無標籤畫面同步對齊首頁與詳情頁 */
-      <main id="main-content" className="min-h-[100svh] pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl w-full min-w-0">
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
-              標籤雲
-            </h1>
-            <p className="text-neutral-600 dark:text-neutral-400">共有 0 個標籤</p>
-          </div>
-          <p className="text-center text-neutral-600 dark:text-neutral-400 py-12">還沒有標籤</p>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <main id="main-content" className="min-h-[100svh] pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl w-full space-y-10 min-w-0 overflow-visible">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 tracking-tight">
-            標籤雲
-          </h1>
-          <p className="text-neutral-500 dark:text-neutral-400 font-mono text-sm">
-            共有 {tags.length} 個標籤
-          </p>
-        </div>
-
-        {/* 漸顯平滑上升動畫 */}
-        <div className="animate-page-in w-full">
-          {/* D3 標籤雲元件會自動適應我們新給予的 max-w-4xl 寬度縮放 */}
-          <TagCloudD3 tags={tags} />
-        </div>
-      </div>
-    </main>
-  );
+  return <TagsPageClient tags={tags} />;
 }

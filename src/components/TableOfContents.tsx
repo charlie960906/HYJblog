@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { animate } from 'animejs';
 import { ChevronDown } from 'lucide-react';
+import { useLanguage } from '@/app/providers';
 
 export interface Heading {
   id: string;
@@ -16,6 +17,8 @@ interface TableOfContentsProps {
 }
 
 export default function TableOfContents({ headings, variant = 'sidebar' }: TableOfContentsProps) {
+  const { language } = useLanguage();
+  const en = language === 'en';
   const [activeId, setActiveId] = useState<string>('');
   const [mobileOpen, setMobileOpen] = useState(false);
   
@@ -226,7 +229,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     if (variant === 'mobile') return null;
     return (
       <p className="text-sm text-neutral-500 dark:text-neutral-400">
-        本文尚無二級或三級標題。
+        {en ? 'This article has no level 2 or 3 headings.' : '本文尚無二級或三級標題。'}
       </p>
     );
   }
@@ -307,7 +310,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     >
       <div ref={containerRef} className="max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-none">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
-          目錄
+          {en ? 'Contents' : '目錄'}
         </p>
         {nav}
       </div>

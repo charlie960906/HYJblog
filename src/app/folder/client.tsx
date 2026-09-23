@@ -2,6 +2,7 @@
 
 import CategoryCard from '@/components/CategoryCard';
 import { PostMetadata } from '@/lib/types';
+import { useLanguage } from '@/app/providers';
 
 interface FolderClientProps {
   allPosts: PostMetadata[];
@@ -21,6 +22,8 @@ const categoryIcons: Record<string, string> = {
 };
 
 export default function FolderClient({ allPosts, categories }: FolderClientProps) {
+  const { language } = useLanguage();
+  const en = language === 'en';
   const getCategoryIcon = (category: string): string => {
     return categoryIcons[category] || '📁';
   };
@@ -36,10 +39,10 @@ export default function FolderClient({ allPosts, categories }: FolderClientProps
         <div>
           {/* 標題套用追隨規範：日間純黑 (text-neutral-900 / dark:text-neutral-100) 與緊密字距 tracking-tight */}
           <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 tracking-tight">
-            文章分類
+            {en ? 'Categories' : '文章分類'}
           </h1>
           <p className="text-neutral-500 dark:text-neutral-400 font-mono text-sm">
-            共有 {categories.length} 個分類，{allPosts.length} 篇文章
+            {en ? `${categories.length} categories · ${allPosts.length} articles` : `共有 ${categories.length} 個分類，${allPosts.length} 篇文章`}
           </p>
         </div>
       </div>

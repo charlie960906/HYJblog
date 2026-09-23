@@ -1,7 +1,10 @@
 'use client';
 
+'use client';
+
 import Link from 'next/link';
 import { PostMetadata } from '@/lib/types';
+import { useLanguage } from '@/app/providers';
 
 interface CategoryCardProps {
   category: string;
@@ -10,6 +13,7 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category, posts, icon }: CategoryCardProps) {
+  const { language } = useLanguage();
   return (
     <Link href={`/folder/${encodeURIComponent(category)}`}>
       <div className="group relative h-full rounded-lg border border-neutral-200 dark:border-neutral-800 p-6 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800 hover:from-neutral-100 hover:to-neutral-200 dark:hover:from-neutral-800 dark:hover:to-neutral-700 transition-all duration-300 hover:shadow-lg hover:shadow-neutral-300 dark:hover:shadow-neutral-900 cursor-pointer">
@@ -31,7 +35,7 @@ export default function CategoryCard({ category, posts, icon }: CategoryCardProp
         {/* Footer with count and arrow */}
         <div className="flex items-center justify-between pt-4 border-t border-neutral-200 dark:border-neutral-700">
           <p className="text-sm font-mono text-neutral-600 dark:text-neutral-400">
-            {posts.length} 篇文章
+            {language === 'en' ? `${posts.length} articles` : `${posts.length} 篇文章`}
           </p>
           <div className="text-lg text-neutral-400 dark:text-neutral-600 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transform group-hover:translate-x-2 transition-all duration-300">
             →

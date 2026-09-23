@@ -1,12 +1,16 @@
 "use client";
-import { useEffect, useState, useRef } from 'react';
-import { HERO_SENTENCES } from '@/lib/hero';
+import { useEffect, useState, useRef, useMemo } from 'react';
+import { HERO_SENTENCES, HERO_SENTENCES_EN } from '@/lib/hero';
+import { useLanguage } from '@/app/providers';
 
 interface HeroProps {
   sentences?: string[];
 }
 
 export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
+  const { language } = useLanguage();
+  const isEnglish = language === 'en';
+  const activeSentences = useMemo(() => isEnglish ? HERO_SENTENCES_EN : sentences, [isEnglish, sentences]);
   const [index, setIndex] = useState(0);
   const [display, setDisplay] = useState('');
   const [typing, setTyping] = useState(true);
@@ -19,7 +23,7 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
 
   useEffect(() => {
     let timeout: number;
-    const current = sentences[index];
+    const current = activeSentences[index];
 
     if (!current) return;
 
@@ -34,12 +38,13 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
         timeout = window.setTimeout(() => setDisplay(current.slice(0, display.length - 1)), 40);
       } else {
         setTyping(true);
-        setIndex((i) => (i + 1) % sentences.length);
+        setIndex((i) => (i + 1) % activeSentences.length);
       }
     }
 
     return () => clearTimeout(timeout);
-  }, [display, typing, index, sentences]);
+  }, [display, typing, index, activeSentences]);
+  useEffect(() => { setIndex(0); setDisplay(''); setTyping(true); }, [language]);
 
   useEffect(() => {
     if (!containerRef.current || !textRef.current) return;
@@ -108,10 +113,14 @@ export default function Hero({ sentences = HERO_SENTENCES }: HeroProps) {
             className="space-y-2 inline-flex flex-col items-center justify-center origin-center shrink-0"
           >
             <p className="text-neutral-700 dark:text-neutral-300 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
-              聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度
+              {isEnglish
+                ? 'I keep learning and building, one project at a time.'
+                : '聽說斜咖程度和⚡度成正比，所以我努力提升我的斜咖程度'}
             </p>
             <p className="text-neutral-700 dark:text-neutral-300 text-base sm:text-lg leading-relaxed whitespace-nowrap text-center break-keep">
-              BUT 感謝你發現了我的BLOG 期待我會努力寫它也會努力創業
+              {isEnglish
+                ? 'Thanks for finding my blog. I hope to keep writing and building.'
+                : 'BUT 感謝你發現了我的BLOG 期待我會努力寫它也會努力創業'}
             </p>
           </div>
         </div>

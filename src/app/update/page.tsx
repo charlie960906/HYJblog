@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import UpdateClient from './UpdateClient';
 
 const updates: {
   datetime: string;
@@ -268,40 +269,5 @@ export const metadata = {
 };
 
 export default function UpdatePage() {
-  return (
-    <main id="main-content" className="min-h-screen pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden">
-      <div className="mx-auto max-w-6xl w-full space-y-8">
-        <section className="space-y-4">
-          <div className="max-w-3xl">
-            <p className="text-sm font-mono text-neutral-500 dark:text-neutral-400">更新紀錄</p>
-            <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 dark:text-neutral-100">
-             老黃修修補補打造了這個部落格
-            </h1>
-          </div>
-        </section>
-
-        <section className="grid gap-6 grid-cols-1">
-          {updates.map((update) => (
-            <article
-              key={update.datetime + update.title}
-              className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex min-h-36 flex-col gap-3">
-                <div>
-                  <h2 className="mt-2 text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-                    {update.title}
-                  </h2>
-                </div>
-
-                <div>{update.content}</div>
-                <p className="mt-auto self-end text-xs uppercase tracking-[0.24em] text-neutral-500 dark:text-neutral-400">
-                  {update.datetime}
-                </p>
-              </div>
-            </article>
-          ))}
-        </section>
-      </div>
-    </main>
-  );
+  return <UpdateClient updates={updates} />;
 }

@@ -14,3 +14,10 @@ export const HERO_SENTENCES = [
   '我沒有把握推翻牛頓和愛因斯坦',
   '但我有信心可以推翻霍金',
 ];
+
+// Edit this list to change the rotating headline shown when English is selected.
+export const HERO_SENTENCES_EN = [
+  'Hi, I’m HYJ. Welcome to my blog.',
+  'Learning, building, and sharing.',
+  'Thanks for stopping by!',
+];

@@ -13,6 +13,26 @@ export default function CodeBlockContent({ html }: CodeBlockContentProps) {
     const container = containerRef.current;
     if (!container) return;
 
+    const videos = container.querySelectorAll<HTMLVideoElement>('video[preload="none"]');
+    const videoObserver = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const video = entry.target as HTMLVideoElement;
+            video.preload = 'metadata';
+            observer.unobserve(video);
+          });
+        }, { rootMargin: '200px 0px' })
+      : null;
+
+    videos.forEach((video) => {
+      if (videoObserver) {
+        videoObserver.observe(video);
+      } else {
+        video.preload = 'metadata';
+      }
+    });
+
     const handleCopy = async (event: Event) => {
       const target = event.target as HTMLElement;
       const copyButton = target.closest<HTMLButtonElement>('[data-code-copy]');
@@ -57,6 +77,7 @@ export default function CodeBlockContent({ html }: CodeBlockContentProps) {
     container.addEventListener('click', handleCopy);
     container.addEventListener('keydown', handleKeyDown);
     return () => {
+      videoObserver?.disconnect();
       container.removeEventListener('click', handleCopy);
       container.removeEventListener('keydown', handleKeyDown);
     };

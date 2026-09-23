@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatDate, PostMetadata } from '@/lib/types';
 import Image from 'next/image';
 import TagPill from './TagPill';
+import { useLanguage } from '@/app/providers';
 
 interface PostGridProps {
   posts: PostMetadata[];
@@ -13,6 +14,8 @@ interface PostGridProps {
 }
 
 export default function PostGrid({ posts, itemsPerPage = 9 }: PostGridProps) {
+  const { language } = useLanguage();
+  const en = language === 'en';
   const [currentPage, setCurrentPage] = useState(1);
 
   const paginatedPosts = useMemo(() => {
@@ -109,11 +112,11 @@ export default function PostGrid({ posts, itemsPerPage = 9 }: PostGridProps) {
                   {/* Date and Reading Time */}
                   <div className="flex items-center gap-3 text-xs justify-between">
                     <time className="font-mono text-neutral-500 dark:text-neutral-500">
-                      {formatDate(post.date)}
+                      {en ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) : formatDate(post.date)}
                     </time>
                     {post.readingTime && (
                       <span className="text-neutral-500 dark:text-neutral-500">
-                        {post.readingTime} 分鐘
+                        {en ? `${post.readingTime} min` : `${post.readingTime} 分鐘`}
                       </span>
                     )}
                   </div>

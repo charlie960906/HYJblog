@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu as MenuIcon, X, Home, Folder, Tag, UserRound, Search, Sun, Moon, Monitor } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
 import { useTheme } from 'next-themes';
+import { useLanguage } from '@/app/providers';
 
 type ThemeViewTransitionDocument = Document & {
   startViewTransition?: (update: () => void | Promise<void>) => {
@@ -19,6 +20,8 @@ export default function Menu() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { language } = useLanguage();
+  const en = language === 'en';
 
   useEffect(() => {
     setMounted(true);

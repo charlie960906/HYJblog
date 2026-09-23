@@ -1,8 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { formatDate } from '@/lib/types';
 import ReadingTime from './ReadingTime';
 import TagPill from './TagPill';
 import Image from 'next/image';
+import { useLanguage } from '@/app/providers';
 
 interface FeaturedPostProps {
   slug: string;
@@ -23,6 +26,7 @@ export default function FeaturedPost({
   image,
   readingTime,
 }: FeaturedPostProps) {
+  const { language } = useLanguage();
   return (
     <article
       className="group animate-featured-in overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 transition-all hover:border-neutral-400 dark:hover:border-neutral-600"
@@ -49,7 +53,7 @@ export default function FeaturedPost({
             <div className="mb-3 inline-block">
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold">
                 <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
-                Latest
+                {language === 'en' ? 'Featured' : '最新文章'}
               </span>
             </div>
 
@@ -78,7 +82,7 @@ export default function FeaturedPost({
 
             <div className="flex items-center gap-4 text-sm">
               <time className="font-mono text-neutral-500 dark:text-neutral-500">
-                {formatDate(date)}
+                {language === 'en' ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) : formatDate(date)}
               </time>
               {readingTime && <ReadingTime minutes={readingTime} />}
             </div>

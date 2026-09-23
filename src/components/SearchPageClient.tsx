@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/app/providers';
 
 interface SearchItem {
   slug: string;
@@ -16,6 +17,8 @@ interface SearchPageClientProps {
 }
 
 export default function SearchPageClient({ initialPosts = [] }: SearchPageClientProps) {
+  const { language } = useLanguage();
+  const en = language === 'en';
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchItem[]>([]);
 
@@ -43,10 +46,10 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
       <div className="mx-auto max-w-4xl w-full min-w-0">
       <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
         <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-          搜尋文章
+          {en ? 'Search' : '搜尋文章'}
         </h1>
         <p className="mt-3 text-lg text-neutral-500 dark:text-neutral-400">
-          輸入關鍵字，尋找您感興趣的技術內容與心得分享。
+          {en ? 'Search articles for topics, ideas, and notes that interest you.' : '輸入關鍵字，尋找您感興趣的技術內容與心得分享。'}
         </p>
       </div>
 
@@ -55,7 +58,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
             <Search className="h-5 w-5 text-neutral-400" aria-hidden="true" />
           </div>
-          <label htmlFor="search" className="sr-only">搜尋文章</label>
+          <label htmlFor="search" className="sr-only">{en ? 'Search articles' : '搜尋文章'}</label>
           <input
             type="text"
             name="search"
@@ -63,7 +66,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="block w-full rounded-2xl border-0 py-4 pl-12 pr-4 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-500 dark:bg-neutral-900 dark:text-white dark:ring-neutral-800 dark:focus:ring-neutral-400 transition-all text-base sm:text-lg bg-neutral-50/50"
-            placeholder="輸入關鍵字，例如：C++、陣列、指標..."
+            placeholder={en ? 'Enter keywords, e.g. C++, arrays, pointers...' : '輸入關鍵字，例如：C++、陣列、指標...'}
           />
         </div>
       </div>
@@ -71,7 +74,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
       <div className="max-w-2xl mx-auto">
         {query.trim() && (
           <div className="mb-4 text-sm text-neutral-500 dark:text-neutral-400 font-mono">
-            找到 {results.length} 筆符合「{query}」的結果
+            {en ? `${results.length} results for “${query}”` : `找到 ${results.length} 筆符合「${query}」的結果`}
           </div>
         )}
 
@@ -88,7 +91,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
                     {post.title}
                   </h2>
                   <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                    {post.description || "點擊閱讀完整文章內容。"}
+                    {post.description || (en ? 'Open to read the full article.' : '點擊閱讀完整文章內容。')}
                   </p>
                 </div>
                 <ChevronRight className="w-5 h-5 text-neutral-300 group-hover:text-neutral-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
@@ -99,7 +102,7 @@ export default function SearchPageClient({ initialPosts = [] }: SearchPageClient
           {query.trim() && results.length === 0 && (
             <div className="text-center py-12 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800">
               <p className="text-neutral-400 dark:text-neutral-500 text-base">
-                沒有找到符合的相關文章，換個關鍵字試試看吧！
+                {en ? 'No matching articles. Try another keyword.' : '沒有找到符合的相關文章，換個關鍵字試試看吧！'}
               </p>
             </div>
           )}

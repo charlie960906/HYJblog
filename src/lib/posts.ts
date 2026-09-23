@@ -5,6 +5,7 @@ import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
 
 const postsDirectory = path.join(process.cwd(), 'public/post');
+let sortedPostsCache: PostData[] | undefined;
 
 function getOptimizedImagePath(imagePath: string | undefined) {
   if (!imagePath || !imagePath.startsWith('/images/') || /\.(svg|gif|webp|avif)$/i.test(imagePath)) {
@@ -88,7 +89,9 @@ function escapeHtml(value: string) {
 }
 
 function optimizeMediaLoading(html: string) {
-  return html.replace(/<video(?![^>]*\bpreload=)([^>]*)>/gi, '<video preload="metadata"$1>');
+  // Articles can contain many large clips. Defer every video request until the
+  // reader chooses to play it instead of requesting metadata for all clips on load.
+  return html.replace(/<video(?![^>]*\bpreload=)([^>]*)>/gi, '<video preload="none"$1>');
 }
 
 export interface PostData {
@@ -176,6 +179,10 @@ export function getPostData(slug: string): PostData {
  * 獲取所有已發布的文章，並按日期排序
  */
 export function getSortedPostsData(): PostData[] {
+  if (sortedPostsCache) {
+    return [...sortedPostsCache];
+  }
+
   if (!fs.existsSync(postsDirectory)) {
     return [];
   }
@@ -189,7 +196,8 @@ export function getSortedPostsData(): PostData[] {
     })
     .filter((post) => post.published);
 
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  sortedPostsCache = allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return [...sortedPostsCache];
 }
 
 /**

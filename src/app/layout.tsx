@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Providers } from "./providers";
 import Menu from "@/components/Menu";
 import Footer from "@/components/Footer";
+import FloatingActions from "@/components/FloatingActions";
 import { getSortedPostsData } from "@/lib/posts";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -88,6 +89,7 @@ export default function RootLayout({
             跳至主要內容
           </a>
           <Menu />
+          <FloatingActions />
           {children}
           <Footer articleCount={posts.length} characterCount={characterCount} />
         </Providers>

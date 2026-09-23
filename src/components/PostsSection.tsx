@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import PostGrid from './PostGrid';
 import type { PostMetadata } from '@/lib/types';
+import { useLanguage } from '@/app/providers';
 
 interface PostsSectionProps {
   title: string;
@@ -27,6 +30,7 @@ export default function PostsSection({
   backLink,
   emptyState,
 }: PostsSectionProps) {
+  const { language } = useLanguage();
   return (
     <div className="space-y-8">
       {backLink && (
@@ -35,7 +39,7 @@ export default function PostsSection({
             href={backLink.href}
             className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
-            {backLink.label ?? '← 返回'}
+            {backLink.label ?? (language === 'en' ? '← Back' : '← 返回')}
           </Link>
         </div>
       )}
@@ -65,7 +69,7 @@ export default function PostsSection({
         <PostGrid posts={posts} itemsPerPage={itemsPerPage} />
       ) : (
         <div className="text-center text-neutral-600 dark:text-neutral-400 py-12 animate-list-item">
-          {emptyState ?? <p>目前此分類尚無文章</p>}
+          {emptyState ?? <p>{language === 'en' ? 'There are no articles in this category yet.' : '目前此分類尚無文章'}</p>}
         </div>
       )}
     </div>
