@@ -2,7 +2,7 @@
 title: 先進封裝產業全解析
 date: "2026-09-20"
 description: "從 SoC 到 Chiplet，看懂晶片背後的封裝戰爭"
-tags: ["產業分析,股票,投資"]
+tags: ["產業分析", "股票", "投資"]
 marp: true
 category: 產業分析
 image: /images/Analysis_Advanced_Packaging_Industry/01-iceberg.webp
