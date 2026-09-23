@@ -92,7 +92,7 @@ export default function AboutPage() {
                 嗨，我是老黃。
               </p>
               <p className="max-w-3xl text-lg leading-8 text-neutral-600 dark:text-neutral-300">
-                這是我的個人部落格，目前正在寫區塊鏈相關研究文章、股票研究文章等，然後也會在這分享我的生活!!!
+                這是我的個人部落格，我熱愛網頁開發、投資、參與社群，正在寫區塊鏈相關研究文章、股票研究文章等，然後也會在這分享我的生活!!!
               </p>
             </section>
 
