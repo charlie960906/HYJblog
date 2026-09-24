@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --icon-swap-dur: 250ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+}
+
 @layer base {
   html {
     @apply scroll-smooth overflow-x-clip;
@@ -22,6 +29,11 @@
   :root {
     --tag-box-fill: rgba(255,255,255,0.72);
     --tag-box-stroke: rgba(0,0,0,0.06);
+    --dropdown-open-dur: 250ms;
+    --dropdown-close-dur: 150ms;
+    --dropdown-pre-scale: 0.97;
+    --dropdown-closing-scale: 0.99;
+    --dropdown-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   html.dark :root,
@@ -178,6 +190,52 @@
 }
 
 @layer components {
+  .t-dropdown {
+    transform-origin: top left;
+    transform: scale(var(--dropdown-pre-scale));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--dropdown-open-dur) var(--dropdown-ease),
+      opacity var(--dropdown-open-dur) var(--dropdown-ease);
+    will-change: transform, opacity;
+  }
+
+  .t-dropdown[data-origin="top-right"] { transform-origin: top right; }
+  .t-dropdown[data-origin="top-center"] { transform-origin: top center; }
+  .t-dropdown[data-origin="bottom-left"] { transform-origin: bottom left; }
+  .t-dropdown[data-origin="bottom-center"] { transform-origin: bottom center; }
+  .t-dropdown[data-origin="bottom-right"] { transform-origin: bottom right; }
+
+  .t-dropdown.is-open {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .t-dropdown.is-closing {
+    transform: scale(var(--dropdown-closing-scale));
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: var(--dropdown-close-dur);
+  }
+
+  .t-toc-dropdown {
+    max-height: 0;
+    transition-property: transform, opacity, max-height;
+  }
+
+  .t-toc-dropdown.is-open,
+  .t-toc-dropdown.is-closing {
+    max-height: min(50vh, 360px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .t-dropdown {
+      transition: none !important;
+    }
+  }
+
   .prose-custom {
     @apply prose prose-neutral dark:prose-invert max-w-none;
     overflow-wrap: anywhere;
@@ -277,7 +335,37 @@
   }
 
   .prose-custom :where(.code-copy-button) {
-    @apply absolute right-3 top-3 z-10 rounded-md border border-neutral-300 bg-white/80 px-2.5 py-1 text-xs font-medium text-neutral-700 shadow-sm transition-colors hover:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-800;
+    @apply absolute right-3 top-3 z-10 inline-grid h-7 w-16 rounded-md border border-neutral-300 bg-white/80 px-2.5 py-1 text-xs font-medium text-neutral-700 shadow-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-800;
+  }
+
+  .prose-custom :where(.code-copy-button .t-icon) {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity var(--icon-swap-dur) var(--icon-swap-ease),
+      filter var(--icon-swap-dur) var(--icon-swap-ease),
+      transform var(--icon-swap-dur) var(--icon-swap-ease);
+    will-change: opacity, filter, transform;
+  }
+
+  .prose-custom :where(.code-copy-button[data-state="a"] .t-icon[data-icon="a"], .code-copy-button[data-state="b"] .t-icon[data-icon="b"]) {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  .prose-custom :where(.code-copy-button[data-state="a"] .t-icon[data-icon="b"], .code-copy-button[data-state="b"] .t-icon[data-icon="a"]) {
+    opacity: 0;
+    filter: blur(var(--icon-swap-blur));
+    transform: scale(var(--icon-swap-start-scale));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prose-custom :where(.code-copy-button .t-icon) {
+      transition: none !important;
+    }
   }
 
   .prose-custom :where(.hljs) {

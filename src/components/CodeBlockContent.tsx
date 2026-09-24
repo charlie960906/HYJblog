@@ -1,17 +1,44 @@
 'use client';
 
+import { useLanguage } from '@/app/providers';
 import { useEffect, useRef } from 'react';
 
 interface CodeBlockContentProps {
   html: string;
 }
 
+function updateCodeButtonState(button: HTMLButtonElement, isEnglish: boolean, state: 'a' | 'b') {
+  const copyText = button.querySelector('[data-icon="a"]');
+  const copiedText = button.querySelector('[data-icon="b"]');
+  const copyLabel = isEnglish ? 'Copy code' : '複製程式碼';
+  const copiedLabel = isEnglish ? 'Copied code' : '已複製程式碼';
+
+  if (copyText) {
+    copyText.textContent = isEnglish ? 'Copy' : '複製';
+  }
+
+  if (copiedText) {
+    copiedText.textContent = isEnglish ? 'Copied' : '已複製';
+  }
+
+  button.dataset.state = state;
+  button.setAttribute('aria-label', state === 'b' ? copiedLabel : copyLabel);
+}
+
 export default function CodeBlockContent({ html }: CodeBlockContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { language } = useLanguage();
+  const isEnglish = language === 'en';
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const buttons = container.querySelectorAll<HTMLButtonElement>('[data-code-copy]');
+    buttons.forEach((button) => {
+      const nextState = button.dataset.state === 'b' ? 'b' : 'a';
+      updateCodeButtonState(button, isEnglish, nextState);
+    });
 
     const videos = container.querySelectorAll<HTMLVideoElement>('video[preload="none"]');
     const videoObserver = 'IntersectionObserver' in window
@@ -60,9 +87,9 @@ export default function CodeBlockContent({ html }: CodeBlockContentProps) {
         document.execCommand('copy');
         textArea.remove();
       }
-      copyButton.textContent = '已複製';
+      updateCodeButtonState(copyButton, language === 'en', 'b');
       window.setTimeout(() => {
-        copyButton.textContent = '複製';
+        updateCodeButtonState(copyButton, language === 'en', 'a');
       }, 1600);
     };
 
@@ -81,7 +108,7 @@ export default function CodeBlockContent({ html }: CodeBlockContentProps) {
       container.removeEventListener('click', handleCopy);
       container.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isEnglish]);
 
   return (
     <div

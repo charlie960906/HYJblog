@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu as MenuIcon, X, Home, Folder, Tag, UserRound, Search, Sun, Moon, Monitor } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
 import { useTheme } from 'next-themes';
-import { useLanguage } from '@/app/providers';
 
 type ThemeViewTransitionDocument = Document & {
   startViewTransition?: (update: () => void | Promise<void>) => {
@@ -17,15 +16,39 @@ type ThemeViewTransitionDocument = Document & {
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const { language } = useLanguage();
-  const en = language === 'en';
 
   useEffect(() => {
     setMounted(true);
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    };
   }, []);
+
+  const toggleMobileMenu = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+
+    if (isOpen) {
+      setIsOpen(false);
+      setIsClosing(true);
+      closeTimeoutRef.current = setTimeout(() => setIsClosing(false), 150);
+      return;
+    }
+
+    setIsClosing(false);
+    setIsOpen(true);
+  };
+
+  const closeMobileMenu = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setIsOpen(false);
+    setIsClosing(true);
+    closeTimeoutRef.current = setTimeout(() => setIsClosing(false), 150);
+  };
 
   const menuItems = [
     { href: '/', label: 'Home', icon: Home },
@@ -152,7 +175,7 @@ export default function Menu() {
               </button>
             )}
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={toggleMobileMenu}
               aria-expanded={isOpen}
               aria-controls="mobile-navigation"
               className="inline-flex items-center justify-center p-2 rounded-md text-neutral-400 hover:text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-white focus:outline-none"
@@ -166,9 +189,8 @@ export default function Menu() {
         {/* 行動版展開選單 — 浮層覆蓋，不推擠頁面內容 */}
         <div
           id="mobile-navigation"
-          className={`md:hidden absolute top-full left-0 right-0 border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg origin-top transition-all duration-300 ease-out ${
-            isOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-95 pointer-events-none'
-          }`}
+          data-origin="top-center"
+          className={`t-dropdown md:hidden absolute top-full left-0 right-0 border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg ${isOpen ? 'is-open' : isClosing ? 'is-closing' : ''}`}
           inert={!isOpen ? true : undefined}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -179,7 +201,7 @@ export default function Menu() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={closeMobileMenu}
                   className={`flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     isActive
                       ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white'

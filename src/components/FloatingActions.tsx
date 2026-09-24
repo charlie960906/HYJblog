@@ -27,7 +27,7 @@ export default function FloatingActions() {
     : 'opacity-0 scale-90 pointer-events-none z-0';
 
   return (
-    <div className="fixed bottom-5 right-5 z-[60] h-28 w-28 sm:bottom-7 sm:right-7">
+    <div className={`fixed bottom-5 right-5 z-[60] h-28 w-28 sm:bottom-7 sm:right-7 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       <Liquid blur={6} contrast={18} fill="#202020" className="relative h-full w-full">
         <Liquid.Item
           className="absolute bottom-0 right-0"
@@ -73,7 +73,7 @@ export default function FloatingActions() {
             aria-expanded={isOpen}
             aria-label={isOpen ? (isEnglish ? 'Close floating tools' : '關閉浮動工具') : (isEnglish ? 'Open floating tools' : '開啟浮動工具')}
             title={isOpen ? (isEnglish ? 'Close floating tools' : '關閉浮動工具') : (isEnglish ? 'Open floating tools' : '開啟浮動工具')}
-            className="relative z-20 flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 text-white shadow-xl transition-transform duration-200 dark:bg-white dark:text-neutral-900"
+            className="relative z-20 flex h-12 w-12 pointer-events-auto items-center justify-center rounded-full bg-neutral-900 text-white shadow-xl transition-transform duration-200 dark:bg-white dark:text-neutral-900"
           >
             {isOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Plus className="h-5 w-5" aria-hidden="true" />}
           </button>

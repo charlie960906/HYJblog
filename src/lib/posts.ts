@@ -25,7 +25,7 @@ markdownRenderer.code = ({ text, lang }) => {
     : hljs.highlightAuto(text).value;
   const languageClass = language && hljs.getLanguage(language) ? ` language-${language}` : '';
 
-  return `<div class="code-block"><button type="button" class="code-copy-button" data-code-copy aria-label="複製程式碼">複製</button><pre><code class="hljs${languageClass}">${highlighted}</code></pre></div>`;
+  return `<div class="code-block"><button type="button" class="code-copy-button t-icon-swap" data-code-copy data-state="a" aria-label="複製程式碼"><span class="t-icon" data-icon="a" aria-hidden="true">複製</span><span class="t-icon" data-icon="b" aria-hidden="true">已複製</span></button><pre><code class="hljs${languageClass}">${highlighted}</code></pre></div>`;
 };
 markdownRenderer.image = ({ href, title, text }) => {
   const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';

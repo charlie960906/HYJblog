@@ -21,18 +21,17 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
   const en = language === 'en';
   const [activeId, setActiveId] = useState<string>('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileClosing, setMobileClosing] = useState(false);
   
   // 用於控制目錄內部滾動與點擊鎖定
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
-  const mobilePanelRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
   const isClickScrolling = useRef<boolean>(false);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const mobilePanelReadyRef = useRef(false);
   const activeIdRef = useRef<string>('');
   const scrollRafRef = useRef<number | null>(null);
-  const panelAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const mobileCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const highlightAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   useEffect(() => {
@@ -142,57 +141,30 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     }
   }, [activeId, variant]);
 
-  useEffect(() => {
-    if (variant !== 'mobile' || !mobilePanelRef.current) return;
+  useEffect(() => () => {
+    if (mobileCloseTimeoutRef.current) clearTimeout(mobileCloseTimeoutRef.current);
+  }, []);
 
-    const panel = mobilePanelRef.current;
-    panelAnimationRef.current?.pause();
-
-    if (!mobilePanelReadyRef.current) {
-      mobilePanelReadyRef.current = true;
-      if (!mobileOpen) return;
-    }
+  const toggleMobileContents = () => {
+    if (mobileCloseTimeoutRef.current) clearTimeout(mobileCloseTimeoutRef.current);
 
     if (mobileOpen) {
-      panel.style.display = 'block';
-      panel.style.height = '0px';
-      panel.style.opacity = '0';
-      panel.style.willChange = 'height, opacity';
-
-      const activeLink = mobileScrollRef.current?.querySelector(`a[href="#${activeIdRef.current}"]`) as HTMLElement | null;
-      if (activeLink && highlightRef.current) {
-        highlightAnimationRef.current?.pause();
-        highlightRef.current.style.top = `${activeLink.offsetTop}px`;
-        highlightRef.current.style.height = `${activeLink.offsetHeight}px`;
-        highlightRef.current.style.opacity = '1';
-      }
-
-      panelAnimationRef.current = animate(panel, {
-        height: [0, panel.scrollHeight],
-        opacity: [0, 1],
-        duration: 280,
-        easing: 'easeOutCubic',
-      });
-    } else {
-      const currentHeight = panel.offsetHeight;
-      panel.style.display = 'block';
-      panel.style.height = `${currentHeight}px`;
-      panel.style.opacity = '1';
-      panel.style.willChange = 'height, opacity';
-      panelAnimationRef.current = animate(panel, {
-        height: [currentHeight, 0],
-        opacity: [1, 0],
-        duration: 400,
-        easing: 'easeInOutCubic',
-        complete: () => {
-          panel.style.display = 'none';
-          panel.style.height = '0px';
-          panel.style.opacity = '0';
-          panel.style.willChange = 'auto';
-        },
-      });
+      setMobileOpen(false);
+      setMobileClosing(true);
+      mobileCloseTimeoutRef.current = setTimeout(() => setMobileClosing(false), 150);
+      return;
     }
-  }, [mobileOpen, variant]);
+
+    setMobileClosing(false);
+    setMobileOpen(true);
+  };
+
+  const closeMobileContents = () => {
+    if (mobileCloseTimeoutRef.current) clearTimeout(mobileCloseTimeoutRef.current);
+    setMobileOpen(false);
+    setMobileClosing(true);
+    mobileCloseTimeoutRef.current = setTimeout(() => setMobileClosing(false), 150);
+  };
 
   // 處理點選目錄平滑移動
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -202,7 +174,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
     if (element) {
       isClickScrolling.current = true;
       setActiveId(id);
-      setMobileOpen(false);
+      closeMobileContents();
 
       const menuElement = document.querySelector('nav') || document.querySelector('header');
       const tocBarHeight = variant === 'mobile' ? 52 : 0;
@@ -268,7 +240,7 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
           <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/95 dark:bg-neutral-950/95 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.35)] backdrop-blur-md overflow-hidden">
             <button
               type="button"
-              onClick={() => setMobileOpen(prev => !prev)}
+              onClick={toggleMobileContents}
               className="w-full cursor-pointer select-none px-4 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-neutral-600 dark:text-neutral-400 flex items-center justify-between gap-3 transition-colors hover:bg-neutral-50/80 dark:hover:bg-neutral-900/50"
               aria-expanded={mobileOpen}
               aria-controls="mobile-table-of-contents"
@@ -290,9 +262,8 @@ export default function TableOfContents({ headings, variant = 'sidebar' }: Table
             </button>
             <div
               id="mobile-table-of-contents"
-              ref={mobilePanelRef}
-              className="overflow-hidden border-t border-neutral-200 dark:border-neutral-800"
-              style={{ display: 'none', height: 0, opacity: 0 }}
+              data-origin="top-center"
+              className={`t-dropdown t-toc-dropdown overflow-hidden border-t border-neutral-200 dark:border-neutral-800 ${mobileOpen ? 'is-open' : mobileClosing ? 'is-closing' : ''}`}
             >
               <div ref={mobileScrollRef} className="px-4 pb-4 pt-3 max-h-[min(50vh,320px)] overflow-y-auto">
                 {nav}
