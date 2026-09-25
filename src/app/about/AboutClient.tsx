@@ -3,11 +3,41 @@
 import Image from 'next/image';
 import { ArrowUpRight, Mail } from 'lucide-react';
 import { SiDiscord, SiGithub, SiInstagram, SiTelegram, SiX } from 'react-icons/si';
+import { useRef } from 'react';
 import { useLanguage } from '@/app/providers';
 
 export default function AboutClient() {
+  const portraitRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   const isEnglish = language === 'en';
+
+  const handlePortraitPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
+
+    const wrapper = portraitRef.current;
+    const card = wrapper?.querySelector<HTMLElement>('.t-tilt-card');
+    if (!wrapper || !card) return;
+
+    const bounds = wrapper.getBoundingClientRect();
+    const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
+    const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
+
+    wrapper.classList.add('is-hover');
+    card.classList.add('is-tilting');
+    card.style.setProperty('--tilt-ry', `${((x - 0.5) * 18).toFixed(2)}deg`);
+    card.style.setProperty('--tilt-rx', `${((0.5 - y) * 18).toFixed(2)}deg`);
+    card.style.setProperty('--tilt-gx', `${(x * 100).toFixed(1)}%`);
+    card.style.setProperty('--tilt-gy', `${(y * 100).toFixed(1)}%`);
+  };
+
+  const handlePortraitPointerLeave = () => {
+    const wrapper = portraitRef.current;
+    const card = wrapper?.querySelector<HTMLElement>('.t-tilt-card');
+    wrapper?.classList.remove('is-hover');
+    card?.classList.remove('is-tilting');
+    card?.style.setProperty('--tilt-rx', '0deg');
+    card?.style.setProperty('--tilt-ry', '0deg');
+  };
 
   const socialLinks = [
     { label: 'Email', href: 'mailto:charie960906@gmail.com', icon: Mail },
@@ -125,14 +155,22 @@ export default function AboutClient() {
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[260px_1fr] lg:gap-20">
           <aside className="flex flex-col items-center text-center lg:sticky lg:top-28 lg:h-fit">
-            <div className="rounded-full border-8 border-white bg-white shadow-xl dark:border-neutral-900 dark:bg-neutral-900">
-              <Image
-                src="/images/me.webp"
-                alt={isEnglish ? 'HYJBLOG portrait' : 'HYJBLOG 頭像'}
-                width={192}
-                height={192}
-                className="h-44 w-44 rounded-full object-cover sm:h-48 sm:w-48"
-              />
+            <div
+              ref={portraitRef}
+              className="t-tilt rounded-full"
+              onPointerMove={handlePortraitPointerMove}
+              onPointerLeave={handlePortraitPointerLeave}
+            >
+              <div className="t-tilt-card rounded-full border-8 border-white bg-white shadow-xl dark:border-neutral-900 dark:bg-neutral-900">
+                <Image
+                  src="/images/me.webp"
+                  alt={isEnglish ? 'HYJBLOG portrait' : 'HYJBLOG 頭像'}
+                  width={192}
+                  height={192}
+                  className="h-44 w-44 rounded-full object-cover sm:h-48 sm:w-48"
+                />
+                <div className="t-tilt-glare rounded-full" aria-hidden="true" />
+              </div>
             </div>
             <h1 className="mt-6 text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
               HYJ

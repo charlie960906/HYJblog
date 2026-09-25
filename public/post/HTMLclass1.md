@@ -1,7 +1,7 @@
 ---
 title: HTML5 WEB APP程式設計第一周心得
 date: "2026-09-17"
-description: ""
+description: "前端後端比較、按鈕切換圖片及超連結實作"
 tags: ["課程心得"]
 marp: true
 category: HTML5課程心得
