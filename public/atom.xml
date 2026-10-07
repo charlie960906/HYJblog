@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hyjblog.hyjdevelop.com</id>
     <title>HYJBLOG</title>
-    <updated>2026-09-23T16:18:41.309Z</updated>
+    <updated>2026-10-07T05:49:39.432Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <author>
         <name>HYJBLOG</name>
@@ -13,10 +13,284 @@
     <icon>https://hyjblog.hyjdevelop.com/favicon.ico</icon>
     <rights>© 2026 HYJBLOG. All rights reserved.</rights>
     <entry>
+        <title type="html"><![CDATA[HTML5 WEB APP程式設計第二周心得]]></title>
+        <id>https://hyjblog.hyjdevelop.com/blog/HTMLclass2</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/HTMLclass2"/>
+        <updated>2026-09-24T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Math.random()、switch case、陣列操作、字串拼接，使用CSS & JavaScript 實作轉盤抽獎效果。]]></summary>
+        <content type="html"><![CDATA[<h2>上課內容心得</h2>
+<h3>Math.random</h3>
+<pre><code class="language-JavaScript">Math.random()
+</code></pre>
+<p>這個函式可以隨機抽取一個數字介於0 ~ 1之間<br>如果想要抽出 0 ~ 10 的數字可以使用  </p>
+<pre><code class="language-JavaScript">Math.random() * 10
+</code></pre>
+<p>參考連結:
+<a href="https://www.w3schools.com/jsref/jsref_random.asp">W3Schools - JS Math.random</a></p>
+<hr>
+<h3>Switch Statement</h3>
+<pre><code class="language-JavaScript">  switch(rand) {
+    case 0:
+      document.getElementById(&quot;result&quot;).innerText = &quot;便當&quot;;
+      break;
+    case 1:
+      document.getElementById(&quot;result&quot;).innerText = &quot;炒飯&quot;;
+      break;
+    case 2:
+      document.getElementById(&quot;result&quot;).innerText = &quot;牛肉麵&quot;;
+      break;
+    case 3:
+      document.getElementById(&quot;result&quot;).innerText = &quot;壽司&quot;;
+      break;
+  }
+</code></pre>
+<ol>
+<li>單次執行：Switch 僅會被執行一次。</li>
+<li>數值比對：將計算出的數值，依序與每個 case 區塊的值進行比對。</li>
+<li>程式執行：
+ 若比對成功（有匹配）：執行該 case 所對應的程式區塊。
+ 若比對失敗（無匹配）：則不執行任何程式碼（若未撰寫預設的 default 區塊）。</li>
+</ol>
+<p>參考連結:
+<a href="https://www.w3schools.com/js/js_switch.asp">W3Schools - JS Switch Statement</a></p>
+<hr>
+<h3>Arrays</h3>
+<pre><code class="language-Javascript">let foods = [&quot;便當&quot;, &quot;炒飯&quot;, &quot;牛肉麵&quot;, &quot;壽司&quot;, &quot;漢堡&quot;];
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>名稱</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Elements</td>
+<td>陣列是一組數值的清單，清單中的每個數值稱為「元素」</td>
+</tr>
+<tr>
+<td>Ordered</td>
+<td>陣列中的元素會根據其**索引值（Index）**進行有序排列</td>
+</tr>
+<tr>
+<td>Zero indexed</td>
+<td>第一個元素的索引值為 0，第二個為 1，以此類推</td>
+</tr>
+<tr>
+<td>Dynamic size</td>
+<td>陣列長度可動態變更，隨著元素的增減自動調整大</td>
+</tr>
+<tr>
+<td>Heterogeneous</td>
+<td>允許在同一個陣列中混合儲存不同型態的資料(如數字、字串、物件或其他陣列)</td>
+</tr>
+</tbody></table>
+<p><img src="https://media.geeksforgeeks.org/wp-content/uploads/20231130121654/Find-the-array-index-with-a-value-in-JavaScript.png" alt="Array圖示"></p>
+<p>參考連結:
+<a href="https://www.geeksforgeeks.org/javascript/how-to-find-the-array-index-with-a-value-in-javascript/?utm_source=gemini">JavaScript Arrays - GeeksforGeeks</a>
+<a href="https://www.w3schools.com/js/js_arrays.asp">W3Schools - JS Arrays</a></p>
+<hr>
+<h3>字串相加</h3>
+<pre><code class="language-Javascript">choice.name + &quot;&lt;br&gt;&lt;img src=&#39;&quot; + choice.img + &quot;&#39; width=&#39;150&#39;&gt;&quot;;
+</code></pre>
+<p>字串是可以透過相加的方式組合的</p>
+<p>參考連結:
+<a href="https://developer.mozilla.org/zh-TW/docs/Learn_web_development/Core/Scripting/Strings">處理文字 - JavaScript中的字串</a></p>
+<hr>
+<h3>CSS conic-gradient 畫圓盤</h3>
+<pre><code class="language-css">&lt;style&gt;
+  body { font-family: sans-serif; text-align: center; padding-top: 40px; }
+  h2 { margin-bottom: 20px; }
+  .wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 20px auto;
+  }
+  .wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #333;
+    background: conic-gradient(
+      #FF9A9E 0deg 90deg,
+      #FAD0C4 90deg 180deg,
+      #A1C4FD 180deg 270deg,
+      #C2E9FB 270deg 360deg
+    );
+    transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  /* 指針 */
+  .pointer {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid #e74c3c;
+  }
+  button {
+    padding: 10px 25px;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+&lt;/style&gt;
+</code></pre>
+<p>參考連結:
+<a href="https://www.w3schools.com/css/css3_gradients_conic.asp">W3Schools - CSS Conic Gradients</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/conic-gradient">conic-gradient () CSS function - CSS | MDN - MDN Web Docs</a>
+<a href="https://juejin.cn/post/7547761892509843508">稀土掘金 - html轉盤抽獎,conic-gradient+transform</a></p>
+<hr>
+<h3>完整轉盤抽籤實做</h3>
+<p>加上音效、機率、指針</p>
+<pre><code class="language-Javascript">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;版本9 - 簡易圓盤轉動&lt;/title&gt;
+&lt;style&gt;
+  body { font-family: sans-serif; text-align: center; padding-top: 40px; }
+  h2 { margin-bottom: 20px; }
+  .wheel-container { position: relative; width: 300px; height: 300px; margin: 0 auto 20px auto; }
+  .wheel { width: 100%; height: 100%; display: block; border-radius: 50%; transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1); }
+  .pointer { position: absolute; z-index: 1; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #e74c3c; }
+  button { padding: 10px 25px; font-size: 1.2em; cursor: pointer; }
+  #result { margin: 20px 0 0; font-size: 1.2em; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;幸運轉盤&lt;/h2&gt;
+&lt;div class=&quot;wheel-container&quot;&gt;
+  &lt;div class=&quot;pointer&quot;&gt;&lt;/div&gt;
+  &lt;canvas class=&quot;wheel&quot; id=&quot;wheel&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+&lt;button id=&quot;spinButton&quot; onclick=&quot;spin()&quot;&gt;轉動&lt;/button&gt;
+&lt;p id=&quot;result&quot;&gt;中獎結果：尚未抽獎&lt;/p&gt;
+&lt;script&gt;
+// 目前轉盤的旋轉角度，累積角度可以讓每次都順時針旋轉
+let currentRotation = 0;
+// 抽獎進行中時，禁止重複按下按鈕
+let isSpinning = false;
+let audioContext;
+
+// 獎項設定：probability 是中獎機率，所有 probability 加總必須是 100
+// 想調整機率時，只需要修改這裡的數字即可
+const prizes = [
+  { name: &quot;大獎&quot;, probability: 10, color: &quot;#FF9A9E&quot; },
+  { name: &quot;二獎&quot;, probability: 20, color: &quot;#FAD0C4&quot; },
+  { name: &quot;三獎&quot;, probability: 30, color: &quot;#A1C4FD&quot; },
+  { name: &quot;四獎&quot;, probability: 40, color: &quot;#C2E9FB&quot; }
+];
+
+const wheel = document.getElementById(&quot;wheel&quot;);
+const context = wheel.getContext(&quot;2d&quot;);
+
+// 依照每個獎項的機率比例，動態畫出不同大小的扇形
+function drawWheel() {
+  const center = wheel.width / 2;
+  const radius = center - 5;
+  let currentAngle = -Math.PI / 2;
+
+  context.clearRect(0, 0, wheel.width, wheel.height);
+  prizes.forEach((prize, index) =&gt; {
+    const sliceAngle = (prize.probability / 100) * Math.PI * 2;
+    const startAngle = currentAngle;
+    const endAngle = startAngle + sliceAngle;
+    currentAngle = endAngle;
+
+    context.beginPath();
+    context.moveTo(center, center);
+    context.arc(center, center, radius, startAngle, endAngle);
+    context.closePath();
+    context.fillStyle = prize.color;
+    context.fill();
+    context.strokeStyle = &quot;#333&quot;;
+    context.lineWidth = 2;
+    context.stroke();
+
+    context.save();
+    context.translate(center, center);
+    context.rotate(startAngle + sliceAngle / 2);
+    context.fillStyle = &quot;#333&quot;;
+    context.font = &quot;16px sans-serif&quot;;
+    context.textAlign = &quot;right&quot;;
+    context.fillText(prize.name, radius - 12, 5);
+    context.restore();
+  });
+}
+
+// 使用 Web Audio 播放簡單的提示音
+function playSound(frequency, duration) {
+  audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+  oscillator.connect(gain).connect(audioContext.destination);
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + duration);
+}
+
+function spin() {
+  if (isSpinning) return;
+
+  // 依照 probability 加權抽獎，而不是每個獎項平均機率
+  const randomNumber = Math.random() * 100;
+  let accumulatedProbability = 0;
+  let prizeIndex = 0;
+  prizes.some((prize, index) =&gt; {
+    accumulatedProbability += prize.probability;
+    if (randomNumber &lt; accumulatedProbability) {
+      prizeIndex = index;
+      return true;
+    }
+    return false;
+  });
+
+  // 計算中獎扇形的中心角，讓它最後停在指針位置
+  const angleBeforePrize = prizes
+    .slice(0, prizeIndex)
+    .reduce((total, prize) =&gt; total + prize.probability, 0) * 3.6;
+  const prizeAngle = angleBeforePrize + prizes[prizeIndex].probability * 1.8;
+  const targetAngle = (360 - prizeAngle - (currentRotation % 360) + 360) % 360;
+  const randomDeg = 720 + targetAngle;
+  currentRotation += randomDeg;
+  isSpinning = true;
+  document.getElementById(&quot;spinButton&quot;).disabled = true;
+  document.getElementById(&quot;result&quot;).textContent = &quot;中獎結果：轉動中...&quot;;
+  wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+  playSound(520, 0.15);
+  setTimeout(() =&gt; {
+    document.getElementById(&quot;result&quot;).textContent = `中獎結果：${prizes[prizeIndex].name}`;
+    playSound(880, 0.3);
+    document.getElementById(&quot;spinButton&quot;).disabled = false;
+    isSpinning = false;
+  }, 4000);
+}
+
+drawWheel();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+]]></content>
+        <author>
+            <name>HYJBLOG</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
+        </author>
+        <category label="課程心得"/>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[HTML5 WEB APP程式設計第一周心得]]></title>
         <id>https://hyjblog.hyjdevelop.com/blog/HTMLclass1</id>
         <link href="https://hyjblog.hyjdevelop.com/blog/HTMLclass1"/>
         <updated>2026-09-17T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[前端後端比較、按鈕切換圖片及超連結實作]]></summary>
         <content type="html"><![CDATA[<h2>前端後端比較</h2>
 <table>
 <thead>
@@ -234,126 +508,6 @@
         <link href="https://hyjblog.hyjdevelop.com/blog/2026_09_10"/>
         <updated>2026-09-10T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[好欸好欸 又到了每個月review的時候了 這篇好多 歐買尬]]></summary>
-        <content type="html"><![CDATA[<h2>7/31 蝦皮雙(11) ㄔ飯</h2>
-<p>這是一個非常瘋狂的一天
-9個人出遊超猛der</p>
-<h3>監理站</h3>
-<p>幹超好笑 高士鈞機車沒過 因為他煞車燈一直亮 哈哈哈哈哈<br>還無照跟我們出去玩 真的很好笑  </p>
-<h3>日嘗好食·早午餐</h3>
-<p>早餐局<br>我們去吃<a href="https://maps.app.goo.gl/f71abbwGs4V62xpL6">日嘗好食·早午餐</a>
-我給4顆星<br>有特色餐點 九層塔蛋餅/蔥油餅<br>蠻好吃的  價錢也正常  </p>
-<h3>許多門密室逃脫X嘉義館</h3>
-<p>我們今天的第一個行程就是<a href="https://maps.app.goo.gl/7gvuRb6kkTAkTzQk6">許多門密室逃脫X嘉義館</a><br>我們玩的主題是絕命地鐵<br>我覺得難度頗高 比較偏向 國文方面的解題<br>和上次去台中的密室逃脫解謎方向比較不一樣<br>比起來的話我比較喜歡台中的密室逃脫解密方式<br>這裡的有點需要通靈QQ<br>劇情跟內容就不能透漏了<br>個位還是去親自體驗吧<br><img src="/images/202608/20260731good.webp" alt="合照">
-超好笑 那個字真害羞</p>
-<h3>午餐</h3>
-<p>接下來就是前往午餐<br>我們去秀泰的<a href="https://maps.app.goo.gl/6Qqr9dQxhBt1tg9B8">貳樓</a>吃午餐<br>等了大概20分鐘左右<br>所以我們跑去湯姆熊打了籃球<br><img src="/images/202608/20260731ball.webp" alt="籃球">
-在來就去吃貳樓了<br>我們續了三次麵包 三次飲料<br>幹真的是有夠飽的<br>我自己是蠻推黑松露野菇奶油細扁麵<br>但貳樓的吃法推薦是朋友一起分享<br>這道義大利麵偏重口味 自己吃一盤會有點膩<br><img src="/images/202608/20260731_2F.webp" alt="貳樓"></p>
-<h3>大林賽車場</h3>
-<p>對的 我們直接吃飽就去開卡丁車<br>我載劉宥萱 她看起來快被我晃吐了 開的有點太猛哈哈哈
-幹高士鈞超爛 撞了兩次牆超好笑 有夠爛 超好笑<br>總之就是非常好玩!!!  </p>
-<p>價錢的部分<br>|  項目  - 時間 - 價錢 | 
-| 單人座 - 8min - 500 |<br>| 雙人座 - 8min - 400 |  </p>
-<p><img src="/images/202608/20260731car.webp" alt="賽車"></p>
-<h3>夜衝</h3>
-<p>沒錯我們就是說走就走 直接前往華山看夜景 超級瘋狂<br>我們到<a href="https://maps.app.goo.gl/EgEYRdeoJHrZDTfW7">華南天空之夜養生泡腳咖啡</a>去看夜景<br>但是我們沒泡腳 我們是窮苦大學生 沒有錢錢哈哈哈
-<img src="/images/202608/20260731M1.webp" alt="食物">
-<img src="/images/202608/20260731M2.webp" alt="夜景1">
-<img src="/images/202608/20260731M3.webp" alt="夜景2">
-<img src="/images/202608/20260731M4.webp" alt="夜景3"></p>
-<h3>回家</h3>
-<p>對的 最後我們回到了青蛙公園聊聊天就各自回家了<br>非常充實好玩有趣又好累的一天</p>
-<h2>大林賽車場&amp;陪練機車</h2>
-<p>今天(8/12)早上跟@鯊魚YY一起陪Pinky一起去練習騎機車還有跑了卡丁車!!!  </p>
-<h3>大林賽車場</h3>
-<p>最開始我們先跑去了<a href="https://maps.app.goo.gl/Ga1Mqmqc7aUezr118">大林賽車場</a>開卡丁車<br>我只載到了Pinky下去跑了好幾圈 還第一次體驗跑到一半加油<br>遺憾的最後@鯊魚YY遇到了爆雨 直接沒辦法玩<br>好接下來放影片哈哈哈 就是非常好玩<br>身為大林人已經跑非常多次<br><video src="/images/202608/20260812drive1.mp4" controls = "controls" width="1080" height="1920"> </video> 
-<video src="/images/202608/20260812drive2.mp4" controls = "controls" width="1080" height="1920"> </video> 
-<video src="/images/202608/20260812drive3.mp4" controls = "controls" width="1080" height="1920"> </video>
-<video src="/images/202608/20260812drive4.mp4" controls = "controls" width="1080" height="1920"> </video>
-<video src="/images/202608/20260812drive5.mp4" controls = "controls" width="1080" height="1920"> </video> </p>
-<p>我自己覺得單人座你8分鐘開完還能繼續開<br>那你的手臂一定💪💪💪
-價格的話 久久玩一次<br>或是帶朋友一起 是還能接受的    </p>
-<h3>機車練習場</h3>
-<p>跑完之後我們直接從大林騎車去<a href="https://maps.app.goo.gl/LyMu56zb2KqbdHsV6">虎尾鎮普通機車考照練習場</a>練習<br>小遠 但場地不錯<br>很好笑後面都忘記拍照了<br>但是中間騎去一下毛毛雨一下暴雨一下小水霧超爛</p>
-<h3>賴桑麵食館&amp;徠徠永和豆漿</h3>
-<p>後來去吃<a href="https://maps.app.goo.gl/NfC7ickWPuFKmQc2Ahttps://maps.app.goo.gl/NfC7ickWPuFKmQc2A">賴桑麵食館</a>給到夯
-CP值很高 這個是我在嘉義高中 中午會用uber叫還覺得很便宜的店家
-最酷的是它是和<a href="https://maps.app.goo.gl/FoPq87MfvR2bLJE16">徠徠永和豆漿(文化店)</a> 是一起的<br>你可以兩間都點<br>我覺得蔥抓餅➕蛋 超超超好ㄔ<br>(BUT 只是吃完很有罪惡感哈哈哈</p>
-<h2>社區營隊助教8/10 ~ 8/14</h2>
-<p>這個是一個小朋友和長者一起上課做活動的社區營隊<br>由政府補助 整個活動都是免費的<br>But 助教是有鐘點費ㄉ<br>主要是蠻好玩的 照顧小朋友是蠻需要鬥智的<br>他們非常非常會耍嘴皮子 超好笑<br>有時候會問出你難以回答的問題<br>或是動手動腳比較不知道輕重<br>但是我覺得大部分時候是蠻可愛的<br>然後他們叫我西瓜哥哥(ㄎㄎ可能是因為我真的很容易臉紅)<br>在這個活動當中 他們是做蠻多手作小物<br>可是哈哈哈哈身為助教的我<br>主要負責工作是重新設定社區的平板、拍照、開車去拿午餐之類的<br>這個禮拜我還拉來ㄉ羊隻魚、郭➕ㄐㄧㄣˋ(去識別化)好朋友!!!<br>非常感謝他們來幫忙我 也順利的吃到午餐<br>還和我跑去嘉義市哈哈哈 成為第一匹給我載的朋友<br>這是目前的心得<br>因為我在過了快一個月後才寫哈哈哈<br><img src="/images/202608/20260810.webp" alt="社區活動照片">
-Q：猜猜我在哪　A：超好笑我是攝影師  </p>
-<h2>Pinky小飛象的吉他社成發</h2>
-<p>好的 畢業老屁股回去表演<br>真的好聽!!!
-<img src="/images/202608/20260816song1.webp" alt="唱歌"></p>
-<h2>劍湖山之旅!!!</h2>
-<p>好欸好欸到了一個我特別印象深刻的一天了  </p>
-<blockquote>
-<p>前情提要一下<br>我原本是一個貪生怕死 去遊樂園最多接受到海盜船<br>除此之外其他更刺激的都不敢玩的人<br>但是在經過這趟劍湖山之旅 我已經脫胎換骨了<br>我覺得我現在強的可怕💪💪💪  </p>
-</blockquote>
-<h3>早8 許胖胖家</h3>
-<p>好我很早很早就出發大概是7:20<br>因為這天的我是一位專車司機<br>他們家的路我給到夯爆了<br>前面還有一個大水溝<br>我開的時候 超怕後輪沒算好掉進去
-但是在高速公路出口附近 算是很近很好開的地方<br>正常的路很大條 人很少 但是危停和三寶超多🤬🤬🤬    </p>
-<h3>嘉義火車站</h3>
-<p>下一站就是嘉義火車站<br>去接笑笑和Pinky<br>這個部分就是這樣哈哈哈</p>
-<h3>日嘗好食·早午餐</h3>
-<p>接下來是早餐局<br>我們去吃<a href="https://maps.app.goo.gl/f71abbwGs4V62xpL6">日嘗好食·早午餐</a>
-這間已經去吃兩次
-第一次吃就是上面所說哈哈哈  </p>
-<h3>劍湖山世界主題樂園</h3>
-<p>接下來我們前往<a href="https://maps.app.goo.gl/3JGPGYJrfEPZjEek9">劍湖山世界主題樂園</a>
-一張票是NT$ 599<br>我們去的時間是禮拜三<br>人偏少 補習班團只有一團  </p>
-<h4>第一個設施<a href="https://maps.app.goo.gl/CnN8VJqDYJ9oByRw9">飛天潛艇G5</a></h4>
-<p>這個就是劍湖山的當家招牌<br>進去第一個會看的遊樂設施就是這項
-Pinky&amp;笑笑&amp;許胖胖直接上去玩<br>我在下方思考許久後 還是決定暫緩<br><del>非常遺憾的沒有玩到 真是好想玩</del><br>幹 這個心理壓力頗大 下次我會克服上去玩的
-好接下來的遊樂設施我都有鼓起勇氣上去了
-<img src="/images/202608/20260819fun1.webp" alt="G5"></p>
-<h4><a href="https://maps.app.goo.gl/NFPahyzdeHizdmMW8">天女散花</a></h4>
-<p>這個應該不用多做介紹<br>吹吹風很適合<br><img src="/images/202608/20260819fun2.webp" alt="天女散花合照"></p>
-<h4><a href="https://maps.app.goo.gl/7k4E2XGG1eb1L8a39">VR Dino 飛越恐龍谷</a></h4>
-<p>我覺得很好玩 這個是預約制 
-比電影院的4D影院 在體驗上爽很多 很有沉浸感<br>劇情就不說了 需要親自體驗🙂‍↕️🙂‍↕️🙂‍↕️</p>
-<h4><a href="https://maps.app.goo.gl/qmQdwFM7FhV3zpcy7">擎天飛梭</a></h4>
-<p>我們去的時候只開放一飛沖天<br>以80km的時速急升至65公尺的高空然後再掉下來彈阿彈這樣<br>好 這是我第一次玩<br>我們總共玩了三次<br>因為園區人真的不多<br>下來繞一圈又可以上去  </p>
-<h4><a href="https://maps.app.goo.gl/f2hbLvPPH78d8Hkd6">姑姑飛車</a></h4>
-<p>這個從小玩到大 就是小時候覺得很刺激<br>長大的感覺也是一樣很好玩哈哈哈<br>小時候會瘋狂重複排隊 這次只坐了一次<br>嗚嗚嗚 童心還是跟長大不一樣<br><video src="/images/202608/20260819fun3.mp4" controls = "controls" width="720" height="1080"> </video> </p>
-<h4><a href="https://maps.app.goo.gl/h6FcoKKwp7biV6nC8">海神號(海盜船)</a></h4>
-<p>就是許胖胖的腿好粗 安全桿根本壓不到我 我整個人是浮起來的靠北<br>因此這是我體驗過最刺激的海盜船了<br>因為我的安全桿不太安全超好笑<br>我們坐了3次 超猛der 根本坐完都不用吃午餐  </p>
-<h4><a href="https://maps.app.goo.gl/HamDo6ZTqfjpMFGV9">魔鏡迷宮</a></h4>
-<p>這個就是戴手套摸鏡子走迷宮<br>就是對沒什麼好評價 小無聊了</p>
-<h4><a href="https://maps.app.goo.gl/tZsE5ZjwQLz1UmTX9">幸福摩天輪</a></h4>
-<p>就是對幸福摩天輪哈哈哈哈哈
-上照片
-<img src="/images/202608/20260819fun4.webp" alt="摩天輪1"></p>
-<h4><a href="https://maps.app.goo.gl/9UU5QWZmWCWL7QJ2A">衝瘋飛車</a></h4>
-<p>尬damn bro這個太會轉了<br>第一次坐 真的很緊張幹<br>我直接閉眼專注呼吸<br>但我覺得我太緊繃了 
-坐完身體麻麻的  </p>
-<h3>大爆雨離開之路</h3>
-<p>大爆雨阿 直接落湯雞
-那個雨跟瀑布一樣
-這邊就上影片吧<br>幹這個雨真的很扯<br>我們四個人濕答答<br><video src="/images/202608/20260819fun5.mp4" controls = "controls" width="1080" height="1920"> </video> </p>
-<h3>晚餐!!!</h3>
-<p>我們去吃<a href="https://maps.app.goo.gl/zwDj9XWh6MMg2wV7A">養鍋</a> 這間是真的好吃 非常好吃 超級好吃<br>這個蔬菜吧是吃到飽 麵的種類很多 飯也有滷肉可以澆<br>然後然後它是寵物友善(超級友善) 在沒有下雨的時候去幾乎都可以看到狗狗<br>我自己平常也會帶狗狗去吃 它們會幫狗狗開一鍋(同桌有多位子的話)<br>然後會送狗狗肉片 然後自助吧狗狗也可以吃<br>歐買尬真的好棒的餐廳<br>我覺得它的松露牛奶鍋超好吃<br>松露味很重很香 牛奶很濃 煮麵煮菜都好好吃
-調味料也很多樣化<br>然後我個人的推薦點法是松露牛奶鍋+櫻桃鴨 爆好吃了<br>照片!!!
-<img src="/images/202608/20260819hotpot.webp" alt="火鍋"></p>
-<h3>秀泰湯姆熊</h3>
-<p>就是打發打發時間
-等待Pinky和笑笑的火車</p>
-<h3>Go home</h3>
-<h2>台南聚餐</h2>
-<p>很好笑這個上照片
-中餐忘記拍了 只剩晚餐哈哈哈
-中餐吃<a href="https://maps.app.goo.gl/6UzsYyTTeoiW7Xm47">紅樓小館</a> 晚餐吃<a href="https://maps.app.goo.gl/Lr8e3mFk5hNkyjWU8">樂品屋</a>
-<img src="/images/202608/20260825.webp" alt="台南聚餐晚餐"></p>
-<h2>紅豆與中興湖</h2>
-<p><img src="/images/202608/20260815dog1.webp" alt="紅豆1">
-<img src="/images/202608/20260815dog2.webp" alt="紅豆2"></p>
-<h2>超快速租屋之旅</h2>
-<p>很好笑由於中興的宿舍格局太酷了<br>所以我爸媽臨時決定還是搬出來外面住<br>原本要在8/30搬進學校宿舍<br>而我8/29開始找宿舍<br>非常好壓力<br>但是但是最後找到了這間房子😭😭😭
-非常好
-<img src="/images/202608/20260831home1.webp" alt="房間1">
-<img src="/images/202608/20260831home2.webp" alt="房間2">
-<img src="/images/202608/20260831home3.webp" alt="房間3">
-<img src="/images/202608/20260831home4.webp" alt="房間4"></p>
-]]></content>
         <author>
             <name>HYJBLOG</name>
             <uri>https://hyjblog.hyjdevelop.com</uri>
