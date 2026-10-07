@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const matter = require('gray-matter');
+const { parseFrontMatter } = require('../src/lib/frontmatter.js');
 const { marked } = require('marked');
 const { Feed } = require('feed');
 
@@ -18,14 +18,14 @@ function getPosts() {
     .map((fileName) => {
       const slug = fileName.replace(/\.md$/, '');
       const content = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
-      const { data, content: body } = matter(content);
+      const { data, content: body } = parseFrontMatter(content);
 
       return {
         slug,
-        title: data.title || slug,
-        description: data.description || '',
-        date: data.date ? new Date(data.date) : new Date(0),
-        tags: Array.isArray(data.tags) ? data.tags : [],
+        title: typeof data.title === 'string' ? data.title : slug,
+        description: typeof data.description === 'string' ? data.description : '',
+        date: typeof data.date === 'string' ? new Date(data.date) : new Date(0),
+        tags: Array.isArray(data.tags) ? data.tags.filter((tag) => typeof tag === 'string') : [],
         content: body,
       };
     })

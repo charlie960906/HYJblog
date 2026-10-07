@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
+import { parseFrontMatter } from './frontmatter.js';
 import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
 
@@ -154,7 +154,7 @@ export function getPostData(slug: string): PostData {
   }
 
   const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
+  const { data, content } = parseFrontMatter(fileContents);
 
   const wordsPerMinute = 200;
   const cleanContent = content.replace(/[#*`\s]/g, '');
@@ -162,12 +162,12 @@ export function getPostData(slug: string): PostData {
 
   return {
     slug: cleanSlug,
-    title: data.title || cleanSlug,
-    date: data.date || new Date().toISOString().split('T')[0],
-    description: data.description || '',
-    tags: data.tags || [],
-    category: data.category || '未分類',
-    image: getOptimizedImagePath(data.image !== undefined && data.image !== null ? data.image : undefined),
+    title: typeof data.title === 'string' ? data.title : cleanSlug,
+    date: typeof data.date === 'string' ? data.date : new Date().toISOString().split('T')[0],
+    description: typeof data.description === 'string' ? data.description : '',
+    tags: Array.isArray(data.tags) ? data.tags.filter((tag): tag is string => typeof tag === 'string') : [],
+    category: typeof data.category === 'string' ? data.category : '未分類',
+    image: getOptimizedImagePath(typeof data.image === 'string' ? data.image : undefined),
     published: data.published !== false,
     content,
     readingTime,

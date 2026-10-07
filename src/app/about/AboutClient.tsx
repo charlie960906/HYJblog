@@ -48,6 +48,20 @@ export default function AboutClient() {
     { label: 'GitHub', href: 'https://github.com/Charie960906', icon: SiGithub },
   ];
 
+  const focusAreas = isEnglish
+    ? [
+        { title: 'Web development', description: 'Learning and building for the web, while documenting projects and ideas on my blog.' },
+        { title: 'Investment research', description: 'Following markets and sharing notes from my stock research.' },
+        { title: 'Blockchain', description: 'Exploring blockchain topics and writing about what I learn.' },
+        { title: 'Community', description: 'Taking part in student and technology communities through collaboration and event work.' },
+      ]
+    : [
+        { title: '網頁開發', description: '持續學習網頁技術，並透過個人部落格整理開發成果與想法。' },
+        { title: '投資研究', description: '關注市場動態，記錄股票研究與觀察。' },
+        { title: '區塊鏈', description: '探索區塊鏈相關議題，整理研究與學習心得。' },
+        { title: '社群參與', description: '參與學生與資訊社群，累積協作及活動執行經驗。' },
+      ];
+
   const competitionGroups: Array<{ category: string; entries: Array<{ name: string; year: string }> }> = isEnglish
     ? [
         {
@@ -200,18 +214,46 @@ export default function AboutClient() {
               <p className="text-sm font-medium uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
                 About
               </p>
-              <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl">
-                {isEnglish ? 'About me' : '關於我'}
-              </h2>
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl">
+                  {isEnglish ? 'About me' : '關於我'}
+                </h2>
+                <a
+                  href="/黃宥鈞_履歷.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
+                >
+                  Resume
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </div>
 
               <p className="max-w-3xl text-lg leading-8 text-neutral-600 dark:text-neutral-300">
                 {isEnglish ? "Hi, I'm HYJ." : '嗨，我是老黃。'}
               </p>
               <p className="max-w-3xl text-lg leading-8 text-neutral-600 dark:text-neutral-300">
                 {isEnglish
-                  ? 'This is my personal blog. I love web development, investing, and community engagement. I write about blockchain research, stock analysis, and I also share my life here.'
-                  : '這是我的個人部落格，我熱愛網頁開發、投資、參與社群，正在寫區塊鏈相關研究文章、股票研究文章等，然後也會在這分享我的生活!!!'}
+                  ? 'I am an Information Management student at National Chung Hsing University with interests in web development, investment research, blockchain, and community work. This blog is where I share what I learn, my research, and moments from everyday life.'
+                  : '我就讀於中興大學資訊管理學系，關注網頁開發、投資研究、區塊鏈與社群參與。這裡記錄我的學習與研究，也分享生活中的點滴。'}
               </p>
+            </section>
+
+            <section className="border-t border-neutral-200 pt-10 dark:border-neutral-800">
+              <p className="text-sm font-medium uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
+                Profile
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                {isEnglish ? 'Areas of focus' : '專業方向'}
+              </h2>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {focusAreas.map(({ title, description }) => (
+                  <div key={title} className="rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+                    <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">{title}</h3>
+                    <p className="mt-2 leading-7 text-neutral-600 dark:text-neutral-300">{description}</p>
+                  </div>
+                ))}
+              </div>
             </section>
 
             <section className="border-t border-neutral-200 pt-10 dark:border-neutral-800">

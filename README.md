@@ -58,6 +58,17 @@
 
 ---
 
+## 💻 本機開發環境
+
+請先安裝 **Node.js 24 LTS** 與 **npm 11.19.0**。專案以 `.nvmrc`、`engines` 和 lockfile 固定建置環境及相依套件版本。
+
+```bash
+npm ci
+npm run dev
+```
+
+`npm ci` 會依照 `package-lock.json` 安裝完全一致的套件；只有在新增或更新套件時才使用 `npm install`，並將更新後的 `package-lock.json` 一起提交。可用 `npm run lint` 和 `npm run build` 驗證程式碼與正式建置。
+
 ## ✍️ 新增文章指南
 
 文章統一儲存於 `public/post/` 資料夾下。新增文章時，請建立 `.md` 檔案並填寫頂部的 **Front Matter** 元資料：
