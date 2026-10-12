@@ -103,6 +103,7 @@ export interface PostData {
   category: string;
   image: string | undefined;
   published: boolean;
+  showInHomePage: boolean;
   content: string;
   readingTime: number;
   update?: string;
@@ -169,6 +170,7 @@ export function getPostData(slug: string): PostData {
     category: typeof data.category === 'string' ? data.category : '未分類',
     image: getOptimizedImagePath(typeof data.image === 'string' ? data.image : undefined),
     published: data.published !== false,
+    showInHomePage: data.showInHomePage !== false,
     content,
     readingTime,
     update: typeof data.update === 'string' ? data.update : data.update ? String(data.update) : undefined,
@@ -201,6 +203,13 @@ export function getSortedPostsData(): PostData[] {
 }
 
 /**
+ * 獲取首頁要顯示的文章；分類與標籤頁仍會包含所有已發布文章
+ */
+export function getHomePostsData(): PostData[] {
+  return getSortedPostsData().filter((post) => post.showInHomePage);
+}
+
+/**
  * 將文章的 Markdown 內文序列化為 HTML
  */
 export async function getSerializedPost(slug: string): Promise<SerializedPost> {
@@ -218,6 +227,7 @@ export async function getSerializedPost(slug: string): Promise<SerializedPost> {
     category: post.category,
     image: post.image,
     published: post.published,
+    showInHomePage: post.showInHomePage,
     readingTime: post.readingTime,
     update: post.update,
     mdxSource: {

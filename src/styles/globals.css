@@ -264,6 +264,11 @@
     @apply font-mono text-sm bg-[#F5F2EB] dark:bg-neutral-800 px-1.5 py-0.5 rounded-sm text-neutral-800 dark:text-neutral-200;
   }
 
+  & :where(code)::before,
+  & :where(code)::after {
+    content: none;
+  }
+
   & :where(pre):not(:where([class~='not-prose'] *)) {
     @apply bg-[#F5F2EB] dark:bg-neutral-900 rounded-lg p-4 overflow-x-auto border border-neutral-200/60 dark:border-neutral-800 max-w-full;
   }

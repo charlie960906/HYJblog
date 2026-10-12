@@ -1,4 +1,4 @@
-import { getSortedPostsData } from '@/lib/posts';
+import { getHomePostsData } from '@/lib/posts';
 import Hero from '@/components/Hero';
 import FeaturedPost from '@/components/FeaturedPost';
 import PostGrid from '@/components/PostGrid';
@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default function Home() {
-  const allPostsData = getSortedPostsData();
+  const allPostsData = getHomePostsData();
   const featuredPost = allPostsData[0];
   const remainingPosts = allPostsData.slice(1);
 

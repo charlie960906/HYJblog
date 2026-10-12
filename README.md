@@ -80,6 +80,8 @@ date: "YYYY-MM-DD"
 description: "文章簡短描述"
 tags: ["Tag1", "Tag2"]
 category: "分類名稱"
+published: true
+showInHomePage: true
 ---
 
 這裡開始撰寫文章內容...

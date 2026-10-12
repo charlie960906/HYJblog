@@ -7,6 +7,7 @@ marp: true
 category: HTML5課程心得
 image: /images/html.webp
 published: true
+showInHomePage: false
 ---
 
 ## 前端後端比較

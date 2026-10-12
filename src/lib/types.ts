@@ -9,6 +9,7 @@ export interface Post {
   description: string;
   tags: string[];
   published: boolean;
+  showInHomePage: boolean;
   content: string;
   readingTime: number;
   category?: string;
@@ -22,6 +23,7 @@ export interface PostMetadata {
   description: string;
   tags: string[];
   published: boolean;
+  showInHomePage: boolean;
   readingTime: number;
   category?: string;
   image?: string;
