@@ -7,6 +7,48 @@ import hljs from 'highlight.js/lib/common';
 const postsDirectory = path.join(process.cwd(), 'public/post');
 let sortedPostsCache: PostData[] | undefined;
 
+function getMarkdownFiles(directory: string, relativeDirectory = ''): string[] {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = path.join(relativeDirectory, entry.name);
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      return getMarkdownFiles(fullPath, relativePath);
+    }
+
+    return entry.isFile() && entry.name.endsWith('.md') ? [relativePath] : [];
+  });
+}
+
+function getPostPath(slug: string): string {
+  const cleanSlug = decodeURIComponent(slug).replace(/[\\/]+/g, path.sep);
+  const requestedPath = path.resolve(postsDirectory, `${cleanSlug}.md`);
+  const postRoot = `${path.resolve(postsDirectory)}${path.sep}`;
+
+  if (!requestedPath.startsWith(postRoot)) {
+    throw new Error(`Invalid post path: ${slug}`);
+  }
+
+  if (fs.existsSync(requestedPath)) {
+    return requestedPath;
+  }
+
+  const alternatives = [
+    cleanSlug.replace(/_/g, '+'),
+    cleanSlug.replace(/_/g, '-'),
+    cleanSlug.replace(/\+/g, '_'),
+  ];
+
+  for (const alternative of alternatives) {
+    const alternativePath = path.resolve(postsDirectory, `${alternative}.md`);
+    if (alternativePath.startsWith(postRoot) && fs.existsSync(alternativePath)) {
+      return alternativePath;
+    }
+  }
+
+  throw new Error(`Post not found: ${slug}`);
+}
+
 function getOptimizedImagePath(imagePath: string | undefined) {
   if (!imagePath || !imagePath.startsWith('/images/') || /\.(svg|gif|webp|avif)$/i.test(imagePath)) {
     return imagePath;
@@ -125,34 +167,17 @@ export function getAllPostSlugs(): string[] {
     return [];
   }
 
-  const fileNames = fs.readdirSync(postsDirectory);
-  return fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => fileName.replace(/\.md$/, ''));
+  return getMarkdownFiles(postsDirectory).map((fileName) => (
+    fileName.replace(/\.md$/, '').split(path.sep).join('/')
+  ));
 }
 
 /**
  * 根據 Slug 獲取原始文章資料
  */
 export function getPostData(slug: string): PostData {
-  let cleanSlug = decodeURIComponent(slug);
-  let fullPath = path.join(postsDirectory, `${cleanSlug}.md`);
-
-  if (!fs.existsSync(fullPath)) {
-    const alternativeSlug1 = cleanSlug.replace(/_/g, '+');
-    const alternativeSlug2 = cleanSlug.replace(/_/g, '-');
-    const alternativeSlug3 = cleanSlug.replace(/\+/g, '_');
-    
-    if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug1}.md`))) {
-      fullPath = path.join(postsDirectory, `${alternativeSlug1}.md`);
-    } else if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug2}.md`))) {
-      fullPath = path.join(postsDirectory, `${alternativeSlug2}.md`);
-    } else if (fs.existsSync(path.join(postsDirectory, `${alternativeSlug3}.md`))) {
-      fullPath = path.join(postsDirectory, `${alternativeSlug3}.md`);
-    } else {
-      throw new Error(`Post not found: ${slug}`);
-    }
-  }
+  const cleanSlug = decodeURIComponent(slug);
+  const fullPath = getPostPath(cleanSlug);
 
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = parseFrontMatter(fileContents);
@@ -189,13 +214,8 @@ export function getSortedPostsData(): PostData[] {
     return [];
   }
 
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, '');
-      return getPostData(slug);
-    })
+  const allPostsData = getAllPostSlugs()
+    .map((slug) => getPostData(slug))
     .filter((post) => post.published);
 
   sortedPostsCache = allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));

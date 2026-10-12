@@ -10,21 +10,21 @@ import CodeBlockContent from '@/components/CodeBlockContent';
 
 interface PostPageProps {
   params: Promise<{
-    slug: string;
+    slug: string[];
   }>;
 }
 
 export async function generateStaticParams() {
   const slugs = getAllPostSlugs();
-  return slugs.map(slug => ({
-    slug,
+  return slugs.map((slug) => ({
+    slug: slug.split('/'),
   }));
 }
 
 export async function generateMetadata({ params }: PostPageProps) {
   try {
-    const { slug } = await params;
-    const decodedSlug = decodeURIComponent(slug);
+    const { slug: slugSegments } = await params;
+    const decodedSlug = slugSegments.map(decodeURIComponent).join('/');
     const post = getPostData(decodedSlug);
     return {
       title: post.title,
@@ -128,8 +128,8 @@ function wrapGlossarySections(content: string) {
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+  const { slug: slugSegments } = await params;
+  const decodedSlug = slugSegments.map(decodeURIComponent).join('/');
   
   let rawPost;
   let serializedPost;
@@ -203,7 +203,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="py-8 border-t border-neutral-200 dark:border-neutral-800">
             <ShareButtons
               title={serializedPost.title}
-              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://hyjblog.hyjdevelop.com'}/blog/${slug}`}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://hyjblog.hyjdevelop.com'}/blog/${slugSegments.join('/')}`}
               description={serializedPost.description}
             />
           </div>
