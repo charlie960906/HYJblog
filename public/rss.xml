@@ -4,7 +4,7 @@
         <title>HYJBLOG</title>
         <link>https://hyjblog.hyjdevelop.com</link>
         <description>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</description>
-        <lastBuildDate>Mon, 12 Oct 2026 12:52:22 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 12 Oct 2026 13:11:45 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-TW</language>
@@ -16,42 +16,42 @@
             <pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[使用陣列、迴圈、篩選、搜尋與排序，完成 GOMAJI 優惠卡片仿作。]]></description>
             <content:encoded><![CDATA[<h2>陣列與 forEach</h2>
-<p>把每張優惠券的名稱、類別、價格和圖片放在同一個陣列中，之後用 <code>forEach</code> 逐筆產生 12 張卡片。這樣未來要新增優惠券，只要增加一筆資料，不需要重複撰寫 HTML。</p>
+<p>把每張優惠券的名稱、類別、價格和圖片放在同一個陣列中，之後用 <code>forEach</code> 逐筆產生 12 張卡片。<br>未來要新增優惠券，只要增加一筆資料，不需要重複撰寫 HTML。  </p>
 <p>參考連結：
-<a href="https://www.w3schools.com/js/js_arrays.asp">W3Schools - JavaScript Arrays</a>
-<a href="https://www.w3schools.com/jsref/jsref_foreach.asp">W3Schools - JavaScript forEach()</a></p>
+<a href="https://www.w3schools.com/js/js_arrays.asp">W3Schools - JavaScript Arrays</a><br><a href="https://www.w3schools.com/jsref/jsref_foreach.asp">W3Schools - JavaScript forEach()</a></p>
 <h2>includes 搜尋與 filter 篩選</h2>
-<p>搜尋框的 <code>input</code> 事件會在輸入文字時執行 <code>renderProducts()</code>。程式使用 <code>includes()</code> 比對優惠券名稱和描述，再使用 <code>filter()</code> 保留符合條件的資料。</p>
+<p>搜尋框的 <code>input</code> 事件會在輸入文字時執行 <code>renderProducts()</code>。<br>程式使用 <code>includes()</code> 比對優惠券名稱和描述，再使用 <code>filter()</code> 保留符合條件的資料。</p>
 <p>參考連結：
 <a href="https://www.w3schools.com/jsref/jsref_includes.asp">W3Schools - JavaScript String includes()</a>
 <a href="https://www.w3schools.com/jsref/jsref_filter.asp">W3Schools - JavaScript Array filter()</a></p>
 <h2>sort 排序</h2>
-<p>排序按鈕會複製一份目前的資料，再使用 <code>sort()</code> 依價格由低到高或由高到低排列。數字排序一定要提供比較函式，例如 <code>a.price - b.price</code>，否則 JavaScript 可能會按照字串順序排序。</p>
+<p>排序按鈕會複製一份目前的資料，再使用 <code>sort()</code> 依價格由低到高或由高到低排列。<br>數字排序提供比較函式，例如 <code>a.price - b.price</code>，否則 JavaScript 可能會按照字串順序排序。</p>
 <p>參考連結：
 <a href="https://www.w3schools.com/jsref/jsref_sort.asp">W3Schools - JavaScript Array sort()</a>
 <a href="https://sites.google.com/email.nchu.edu.tw/ai4us/vibe-coding#h.e08957bc3d1z">本週課程：Vibe Coding 範例</a></p>
-<h2>本週作業：GOMAJI 優惠卡片仿作</h2>
-<h3>RWD 響應式網頁設計</h3>
-<p>RWD（Responsive Web Design，響應式網頁設計）是讓同一個網頁可以適應電腦、平板和手機的螢幕大小。這次使用 CSS 的 <code>@media</code> 媒體查詢調整版面：</p>
+<h2>RWD 響應式網頁設計</h2>
+<p>RWD(Responsive Web Design，響應式網頁設計)<br>讓同一個網頁可以適應電腦、平板和手機的螢幕大小。</p>
+<p>參考連結：
+<a href="https://www.w3schools.com/css/css_rwd_intro.asp">W3Schools - Responsive Web Design</a>
+<a href="https://www.w3schools.com/css/css_rwd_mediaqueries.asp">W3Schools - CSS Media Queries</a></p>
+<h2>製作有卡片是瀏覽的網站</h2>
+<h3>CSS 動畫與使用者體驗優化</h3>
+<p>使用 CSS 的 <code>@media</code> 媒體查詢調整版面：</p>
 <ul>
 <li>電腦版使用自動換行的 Grid 卡片排版。</li>
 <li>螢幕寬度小於 700px 時，卡片改成兩欄，縮小圖片、文字和按鈕。</li>
 <li>螢幕寬度小於 430px 時，卡片改成一欄，方便手機閱讀。</li>
 <li>使用 <code>viewport</code> 設定，讓手機不要用錯誤的縮放比例顯示頁面。</li>
 </ul>
-<p>參考連結：</p>
-<p><a href="https://www.w3schools.com/css/css_rwd_intro.asp">W3Schools - Responsive Web Design</a>
-<a href="https://www.w3schools.com/css/css_rwd_mediaqueries.asp">W3Schools - CSS Media Queries</a></p>
-<h3>CSS 動畫與使用者體驗</h3>
-<p>這次增加幾個不複雜的 CSS 動畫，讓畫面操作更自然：</p>
+<p>增加 CSS 動畫，讓畫面操作更自然：</p>
 <ul>
 <li><code>@keyframes</code> 讓標題和卡片載入時淡入並往上移動。</li>
 <li><code>transition</code> 讓滑鼠移到卡片時平順地浮起，圖片也會稍微放大。</li>
 <li><code>box-shadow</code> 加強卡片浮起時的層次。</li>
 <li><code>prefers-reduced-motion</code> 尊重使用者的系統設定；如果使用者減少動畫，動畫會縮短到幾乎看不到。</li>
 </ul>
-<p>參考連結：</p>
-<p><a href="https://www.w3schools.com/css/css3_animations.asp">W3Schools - CSS Animations</a>
+<p>參考連結：
+<a href="https://www.w3schools.com/css/css3_animations.asp">W3Schools - CSS Animations</a>
 <a href="https://www.w3schools.com/css/css3_transitions.asp">W3Schools - CSS Transitions</a></p>
 <h3>完成的功能</h3>
 <ol>
@@ -62,7 +62,7 @@
 <li>用按鈕進行價格升序、降序和回復原始順序。</li>
 <li>點擊「查看優惠」後，在頁面下方顯示選到的優惠券名稱。</li>
 </ol>
-<p>完整可執行檔案：<a href="/gomaji-clone.html">gomaji-clone.html</a></p>
+<p>完整可執行檔案：<a href="/post/HTML_homework/gomaji-clone.html">gomaji-clone.html</a></p>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-Hant&quot;&gt;
 &lt;head&gt;
@@ -216,15 +216,6 @@
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<h2>超出本週範圍的部分</h2>
-<p>本次只使用課程已經提到的 JavaScript 基礎功能。相對於前幾週，以下部分算是稍微延伸：</p>
-<ul>
-<li><code>createElement()</code> 和 <code>addEventListener()</code>：先建立卡片，再替按鈕加入點擊事件。</li>
-<li><code>data-category</code>：把分類資料放在按鈕的自訂 HTML 屬性中。</li>
-<li>展開運算子 <code>...</code>：用 <code>[...products]</code> 複製陣列，避免排序時直接破壞原始順序。</li>
-<li>CSS Grid 和 <code>auto-fit</code>：讓卡片在手機和電腦上自動換行。</li>
-</ul>
-<p>這些延伸功能都寫在完整範例的註解與程式碼附近，目的只是讓本週的搜尋、篩選和排序可以一起運作，沒有使用框架或複雜的後端功能。</p>
 ]]></content:encoded>
             <author>HYJBLOG</author>
             <category>課程心得</category>

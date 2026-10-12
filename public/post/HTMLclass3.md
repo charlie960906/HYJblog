@@ -1,7 +1,7 @@
 ---
 title: HTML5 WEB APP程式設計第三周心得
 date: "2026-10-09"
-description: "使用陣列、迴圈、篩選、搜尋與排序，完成 GOMAJI 優惠卡片仿作。"
+description: "陣列、迴圈、篩選、搜尋與排序，完成有卡片的網站。"
 tags: ["課程心得"]
 marp: true
 category: HTML5課程心得
@@ -43,16 +43,14 @@ RWD(Responsive Web Design，響應式網頁設計)
 [W3Schools - CSS Media Queries](https://www.w3schools.com/css/css_rwd_mediaqueries.asp)
 
 
-## 製作有卡片是瀏覽的網站
+## 製作有卡片式瀏覽的網站
 
 ### CSS 動畫與使用者體驗優化
-
 使用 CSS 的 `@media` 媒體查詢調整版面：
 - 電腦版使用自動換行的 Grid 卡片排版。
 - 螢幕寬度小於 700px 時，卡片改成兩欄，縮小圖片、文字和按鈕。
 - 螢幕寬度小於 430px 時，卡片改成一欄，方便手機閱讀。
 - 使用 `viewport` 設定，讓手機不要用錯誤的縮放比例顯示頁面。
-
 
 增加 CSS 動畫，讓畫面操作更自然：
 - `@keyframes` 讓標題和卡片載入時淡入並往上移動。
@@ -64,7 +62,7 @@ RWD(Responsive Web Design，響應式網頁設計)
 [W3Schools - CSS Animations](https://www.w3schools.com/css/css3_animations.asp)
 [W3Schools - CSS Transitions](https://www.w3schools.com/css/css3_transitions.asp)
 
-### 完成的功能
+### 網頁
 1. 用陣列保存優惠券資料。
 2. 用 `forEach` 動態產生優惠卡片。
 3. 用分類按鈕篩選美食、旅遊住宿、美容舒壓、健康商城、休閒娛樂和購物優惠。
@@ -72,7 +70,7 @@ RWD(Responsive Web Design，響應式網頁設計)
 5. 用按鈕進行價格升序、降序和回復原始順序。
 6. 點擊「查看優惠」後，在頁面下方顯示選到的優惠券名稱。
 
-完整可執行檔案：[gomaji-clone.html](/gomaji-clone.html)
+[gomaji-clone.html](/post/HTML_homework/gomaji-clone.html)
 
 ```html
 <!DOCTYPE html>
@@ -129,7 +127,7 @@ RWD(Responsive Web Design，響應式網頁設計)
 <body>
   <header>
     <h1>好麻吉優惠</h1>
-    <p>HTML 課堂練習：找到今天適合自己的優惠</p>
+    <p>HTML 課堂練習：找到優惠</p>
   </header>
 
   <section class="tools">
