@@ -8,15 +8,27 @@ const SITE_URL = 'https://hyjblog.hyjdevelop.com';
 const POSTS_DIR = path.join(process.cwd(), 'public', 'post');
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
+function getMarkdownFiles(directory, relativeDirectory = '') {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = path.join(relativeDirectory, entry.name);
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      return getMarkdownFiles(fullPath, relativePath);
+    }
+
+    return entry.isFile() && entry.name.endsWith('.md') ? [relativePath] : [];
+  });
+}
+
 function getPosts() {
   if (!fs.existsSync(POSTS_DIR)) {
     return [];
   }
 
-  return fs.readdirSync(POSTS_DIR)
-    .filter((fileName) => fileName.endsWith('.md'))
+  return getMarkdownFiles(POSTS_DIR)
     .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, '');
+      const slug = fileName.replace(/\.md$/, '').split(path.sep).join('/');
       const content = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
       const { data, content: body } = parseFrontMatter(content);
 

@@ -4,15 +4,710 @@
         <title>HYJBLOG</title>
         <link>https://hyjblog.hyjdevelop.com</link>
         <description>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</description>
-        <lastBuildDate>Mon, 12 Oct 2026 13:23:53 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 15 Oct 2026 03:28:51 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-TW</language>
         <copyright>© 2026 HYJBLOG. All rights reserved.</copyright>
         <item>
+            <title><![CDATA[HTML5 WEB APP程式設計第三周心得]]></title>
+            <link>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass3</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass3</guid>
+            <pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[陣列、迴圈、篩選、搜尋與排序，完成有卡片的網站。]]></description>
+            <content:encoded><![CDATA[<h2>陣列與 forEach</h2>
+<p>把每張優惠券的名稱、類別、價格和圖片放在同一個陣列中，之後用 <code>forEach</code> 逐筆產生 12 張卡片。<br>未來要新增優惠券，只要增加一筆資料，不需要重複撰寫 HTML。  </p>
+<p>參考連結：
+<a href="https://www.w3schools.com/js/js_arrays.asp">W3Schools - JavaScript Arrays</a><br><a href="https://www.w3schools.com/jsref/jsref_foreach.asp">W3Schools - JavaScript forEach()</a></p>
+<h2>includes 搜尋與 filter 篩選</h2>
+<p>搜尋框的 <code>input</code> 事件會在輸入文字時執行 <code>renderProducts()</code>。<br>程式使用 <code>includes()</code> 比對優惠券名稱和描述，再使用 <code>filter()</code> 保留符合條件的資料。</p>
+<p>參考連結：
+<a href="https://www.w3schools.com/jsref/jsref_includes.asp">W3Schools - JavaScript String includes()</a>
+<a href="https://www.w3schools.com/jsref/jsref_filter.asp">W3Schools - JavaScript Array filter()</a></p>
+<h2>sort 排序</h2>
+<p>排序按鈕會複製一份目前的資料，再使用 <code>sort()</code> 依價格由低到高或由高到低排列。<br>數字排序提供比較函式，例如 <code>a.price - b.price</code>，否則 JavaScript 可能會按照字串順序排序。</p>
+<p>參考連結：
+<a href="https://www.w3schools.com/jsref/jsref_sort.asp">W3Schools - JavaScript Array sort()</a>
+<a href="https://sites.google.com/email.nchu.edu.tw/ai4us/vibe-coding#h.e08957bc3d1z">本週課程：Vibe Coding 範例</a></p>
+<h2>RWD 響應式網頁設計</h2>
+<p>RWD(Responsive Web Design，響應式網頁設計)<br>讓同一個網頁可以適應電腦、平板和手機的螢幕大小。</p>
+<p>參考連結：
+<a href="https://www.w3schools.com/css/css_rwd_intro.asp">W3Schools - Responsive Web Design</a>
+<a href="https://www.w3schools.com/css/css_rwd_mediaqueries.asp">W3Schools - CSS Media Queries</a></p>
+<h2>製作有卡片式瀏覽的網站</h2>
+<h3>CSS 動畫與使用者體驗優化</h3>
+<p>使用 CSS 的 <code>@media</code> 媒體查詢調整版面：</p>
+<ul>
+<li>電腦版使用自動換行的 Grid 卡片排版。</li>
+<li>螢幕寬度小於 700px 時，卡片改成兩欄，縮小圖片、文字和按鈕。</li>
+<li>螢幕寬度小於 430px 時，卡片改成一欄，方便手機閱讀。</li>
+<li>使用 <code>viewport</code> 設定，讓手機不要用錯誤的縮放比例顯示頁面。</li>
+</ul>
+<p>增加 CSS 動畫，讓畫面操作更自然：</p>
+<ul>
+<li><code>@keyframes</code> 讓標題和卡片載入時淡入並往上移動。</li>
+<li><code>transition</code> 讓滑鼠移到卡片時平順地浮起，圖片也會稍微放大。</li>
+<li><code>box-shadow</code> 加強卡片浮起時的層次。</li>
+<li><code>prefers-reduced-motion</code> 尊重使用者的系統設定；如果使用者減少動畫，動畫會縮短到幾乎看不到。</li>
+</ul>
+<p>參考連結：
+<a href="https://www.w3schools.com/css/css3_animations.asp">W3Schools - CSS Animations</a>
+<a href="https://www.w3schools.com/css/css3_transitions.asp">W3Schools - CSS Transitions</a></p>
+<h3>網頁</h3>
+<ol>
+<li>用陣列保存優惠券資料。</li>
+<li>用 <code>forEach</code> 動態產生優惠卡片。</li>
+<li>用分類按鈕篩選美食、旅遊住宿、美容舒壓、健康商城、休閒娛樂和購物優惠。</li>
+<li>用搜尋框搜尋優惠券名稱或描述。</li>
+<li>用按鈕進行價格升序、降序和回復原始順序。</li>
+<li>點擊「查看優惠」後，在頁面下方顯示選到的優惠券名稱。</li>
+</ol>
+<p><a href="/post/HTML_homework/gomaji-clone.html">gomaji-clone.html</a></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;好麻吉優惠｜課堂練習&lt;/title&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; color: #333; }
+    header { padding: 28px 20px; background: linear-gradient(135deg, #e94737, #f47b4d); color: white; text-align: center; }
+    header h1 { margin: 0 0 8px; animation: fadeDown 0.7s ease both; }
+    header p { animation: fadeUp 0.7s 0.15s ease both; }
+    .tools { max-width: 1000px; margin: 20px auto; padding: 0 20px; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+    button { margin: 8px 4px 0 0; padding: 9px 14px; border: 0; border-radius: 5px; background: white; cursor: pointer; }
+    button:hover, button.active { background: #e94737; color: white; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; max-width: 1000px; margin: auto; padding: 0 20px 30px; }
+    .card { overflow: hidden; background: white; border-radius: 8px; box-shadow: 0 2px 8px #0002; animation: cardAppear 0.55s ease both; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .card:hover { transform: translateY(-7px); box-shadow: 0 9px 20px #0003; }
+    .card img { width: 100%; height: 130px; object-fit: cover; transition: transform 0.4s ease; }
+    .card:hover img { transform: scale(1.06); }
+    .card-content { padding: 14px; }
+    .card h2 { margin: 0 0 8px; font-size: 19px; }
+    .card p { min-height: 42px; color: #666; }
+    .price { color: #e94737; font-size: 21px; font-weight: bold; }
+    #message { max-width: 1000px; margin: 0 auto 30px; padding: 0 20px; color: #e94737; font-weight: bold; }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes cardAppear { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 700px) {
+      header { padding: 22px 16px; }
+      header h1 { font-size: 28px; }
+      .tools { margin: 14px auto; padding: 0 12px; }
+      .tools button { margin-top: 7px; padding: 8px 10px; font-size: 14px; }
+      .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0 12px 24px; }
+      .card img { height: 105px; }
+      .card-content { padding: 11px; }
+      .card h2 { font-size: 16px; }
+      .card p { min-height: 54px; font-size: 14px; }
+      .price { font-size: 18px; }
+    }
+    @media (max-width: 430px) {
+      .products { grid-template-columns: 1fr; }
+      .card img { height: 160px; }
+      .card p { min-height: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;好麻吉優惠&lt;/h1&gt;
+    &lt;p&gt;HTML 課堂練習：找到優惠&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;section class=&quot;tools&quot;&gt;
+    &lt;input id=&quot;search&quot; type=&quot;search&quot; placeholder=&quot;搜尋優惠名稱或內容&quot;&gt;
+    &lt;button class=&quot;category active&quot; data-category=&quot;全部&quot;&gt;全部&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;美食&quot;&gt;美食餐廳&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;美容舒壓&quot;&gt;美容舒壓&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;旅遊住宿&quot;&gt;旅遊住宿&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;健康商城&quot;&gt;健康商城&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;休閒娛樂&quot;&gt;休閒娛樂&lt;/button&gt;
+    &lt;button class=&quot;category&quot; data-category=&quot;購物優惠&quot;&gt;購物優惠&lt;/button&gt;
+    &lt;button id=&quot;lowToHigh&quot;&gt;價格低到高&lt;/button&gt;
+    &lt;button id=&quot;highToLow&quot;&gt;價格高到低&lt;/button&gt;
+    &lt;button id=&quot;original&quot;&gt;原始順序&lt;/button&gt;
+  &lt;/section&gt;
+
+  &lt;main id=&quot;products&quot; class=&quot;products&quot;&gt;&lt;/main&gt;
+  &lt;p id=&quot;message&quot;&gt;請選擇一個優惠。&lt;/p&gt;
+
+  &lt;script&gt;
+    const products = [
+      { name: &quot;秋季橄欖油特賣&quot;, category: &quot;健康商城&quot;, price: 399, description: &quot;食安時代的日常健康好物&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/23/540/57540.png&quot; },
+      { name: &quot;假期未完待續&quot;, category: &quot;旅遊住宿&quot;, price: 899, description: &quot;安排下一趟旅行的限時優惠&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/610/57610.jpg&quot; },
+      { name: &quot;秋饗美食優惠&quot;, category: &quot;美食&quot;, price: 250, description: &quot;餐廳美食最高現折優惠&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/563/57563.jpg&quot; },
+      { name: &quot;健康 Chill 起來&quot;, category: &quot;健康商城&quot;, price: 599, description: &quot;保養用品與健康商品優惠&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/583/57583.jpg&quot; },
+      { name: &quot;2026 國旅補助&quot;, category: &quot;旅遊住宿&quot;, price: 1280, description: &quot;國內旅遊住宿優惠活動&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/511/57511.jpg&quot; },
+      { name: &quot;臺灣美食行動 GO&quot;, category: &quot;美食&quot;, price: 299, description: &quot;吃遍臺灣美食還能抽折價券&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/439/57439.jpg&quot; },
+      { name: &quot;Q10 熱門保養&quot;, category: &quot;美容舒壓&quot;, price: 699, description: &quot;熱門保養商品限時優惠&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/561/57561.png&quot; },
+      { name: &quot;GOMAJI 防詐提醒&quot;, category: &quot;購物優惠&quot;, price: 0, description: &quot;購物前先認識安全消費觀念&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/811/54811.jpg&quot; },
+      { name: &quot;回鍋消費享回饋&quot;, category: &quot;購物優惠&quot;, price: 100, description: &quot;核銷登記享每月回饋&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/825/56825.jpg&quot; },
+      { name: &quot;美容週年慶&quot;, category: &quot;美容舒壓&quot;, price: 799, description: &quot;舒壓與保養一起享優惠&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/529/57529.jpg&quot; },
+      { name: &quot;橄欖油加碼折扣&quot;, category: &quot;健康商城&quot;, price: 499, description: &quot;健康商城商品折上再折&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/537/57537.jpg&quot; },
+      { name: &quot;熱門商品排行榜&quot;, category: &quot;休閒娛樂&quot;, price: 349, description: &quot;看看大家最近喜歡的商品&quot;, image: &quot;https://picdn.gomaji.com/uploads/banner/1621440000/o/11/603/57603.jpg&quot; }
+    ];
+
+    const productArea = document.getElementById(&quot;products&quot;);
+    const search = document.getElementById(&quot;search&quot;);
+    const message = document.getElementById(&quot;message&quot;);
+    let selectedCategory = &quot;全部&quot;;
+    let currentProducts = [...products];
+
+    function renderProducts() {
+      const keyword = search.value.trim().toLowerCase();
+      const result = currentProducts.filter(function (product) {
+        const sameCategory = selectedCategory === &quot;全部&quot; || product.category === selectedCategory;
+        const hasKeyword = product.name.toLowerCase().includes(keyword) ||
+          product.description.toLowerCase().includes(keyword);
+        return sameCategory &amp;&amp; hasKeyword;
+      });
+
+      productArea.innerHTML = &quot;&quot;;
+      result.forEach(function (product) {
+        const card = document.createElement(&quot;article&quot;);
+        card.className = &quot;card&quot;;
+        card.innerHTML = `
+          &lt;img src=&quot;${product.image}&quot; alt=&quot;${product.name}&quot;&gt;
+          &lt;div class=&quot;card-content&quot;&gt;
+            &lt;h2&gt;${product.name}&lt;/h2&gt;
+            &lt;p&gt;${product.description}&lt;/p&gt;
+            &lt;span class=&quot;price&quot;&gt;NT$ ${product.price}&lt;/span&gt;
+            &lt;br&gt;&lt;button class=&quot;choose&quot;&gt;查看優惠&lt;/button&gt;
+          &lt;/div&gt;`;
+        card.querySelector(&quot;.choose&quot;).addEventListener(&quot;click&quot;, function () {
+          message.textContent = &quot;你選擇了：「&quot; + product.name + &quot;」&quot;;
+        });
+        productArea.appendChild(card);
+      });
+      if (result.length === 0) message.textContent = &quot;找不到符合條件的優惠。&quot;;
+    }
+
+    document.querySelectorAll(&quot;.category&quot;).forEach(function (button) {
+      button.addEventListener(&quot;click&quot;, function () {
+        selectedCategory = button.dataset.category;
+        document.querySelectorAll(&quot;.category&quot;).forEach(function (item) { item.classList.remove(&quot;active&quot;); });
+        button.classList.add(&quot;active&quot;);
+        renderProducts();
+      });
+    });
+
+    search.addEventListener(&quot;input&quot;, renderProducts);
+    document.getElementById(&quot;lowToHigh&quot;).addEventListener(&quot;click&quot;, function () {
+      currentProducts.sort(function (a, b) { return a.price - b.price; });
+      renderProducts();
+    });
+    document.getElementById(&quot;highToLow&quot;).addEventListener(&quot;click&quot;, function () {
+      currentProducts.sort(function (a, b) { return b.price - a.price; });
+      renderProducts();
+    });
+    document.getElementById(&quot;original&quot;).addEventListener(&quot;click&quot;, function () {
+      currentProducts = [...products];
+      renderProducts();
+    });
+
+    renderProducts();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+]]></content:encoded>
+            <author>HYJBLOG</author>
+            <category>課程心得</category>
+        </item>
+        <item>
+            <title><![CDATA[HTML5 WEB APP程式設計第二周心得]]></title>
+            <link>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass2</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass2</guid>
+            <pubDate>Thu, 24 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Math.random()、switch case、陣列操作、字串拼接，使用CSS & JavaScript 實作轉盤抽獎效果。]]></description>
+            <content:encoded><![CDATA[<h2>上課內容心得</h2>
+<h3>Math.random</h3>
+<pre><code class="language-JavaScript">Math.random()
+</code></pre>
+<p>這個函式可以隨機抽取一個數字介於0 ~ 1之間<br>如果想要抽出 0 ~ 10 的數字可以使用  </p>
+<pre><code class="language-JavaScript">Math.random() * 10
+</code></pre>
+<p>參考連結:
+<a href="https://www.w3schools.com/jsref/jsref_random.asp">W3Schools - JS Math.random</a></p>
+<hr>
+<h3>Switch Statement</h3>
+<pre><code class="language-JavaScript">  switch(rand) {
+    case 0:
+      document.getElementById(&quot;result&quot;).innerText = &quot;便當&quot;;
+      break;
+    case 1:
+      document.getElementById(&quot;result&quot;).innerText = &quot;炒飯&quot;;
+      break;
+    case 2:
+      document.getElementById(&quot;result&quot;).innerText = &quot;牛肉麵&quot;;
+      break;
+    case 3:
+      document.getElementById(&quot;result&quot;).innerText = &quot;壽司&quot;;
+      break;
+  }
+</code></pre>
+<ol>
+<li>單次執行：Switch 僅會被執行一次。</li>
+<li>數值比對：將計算出的數值，依序與每個 case 區塊的值進行比對。</li>
+<li>程式執行：
+ 若比對成功（有匹配）：執行該 case 所對應的程式區塊。
+ 若比對失敗（無匹配）：則不執行任何程式碼（若未撰寫預設的 default 區塊）。</li>
+</ol>
+<p>參考連結:
+<a href="https://www.w3schools.com/js/js_switch.asp">W3Schools - JS Switch Statement</a></p>
+<hr>
+<h3>Arrays</h3>
+<pre><code class="language-Javascript">let foods = [&quot;便當&quot;, &quot;炒飯&quot;, &quot;牛肉麵&quot;, &quot;壽司&quot;, &quot;漢堡&quot;];
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>名稱</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Elements</td>
+<td>陣列是一組數值的清單，清單中的每個數值稱為「元素」</td>
+</tr>
+<tr>
+<td>Ordered</td>
+<td>陣列中的元素會根據其**索引值（Index）**進行有序排列</td>
+</tr>
+<tr>
+<td>Zero indexed</td>
+<td>第一個元素的索引值為 0，第二個為 1，以此類推</td>
+</tr>
+<tr>
+<td>Dynamic size</td>
+<td>陣列長度可動態變更，隨著元素的增減自動調整大</td>
+</tr>
+<tr>
+<td>Heterogeneous</td>
+<td>允許在同一個陣列中混合儲存不同型態的資料(如數字、字串、物件或其他陣列)</td>
+</tr>
+</tbody></table>
+<p><img src="https://media.geeksforgeeks.org/wp-content/uploads/20231130121654/Find-the-array-index-with-a-value-in-JavaScript.png" alt="Array圖示"></p>
+<p>參考連結:
+<a href="https://www.geeksforgeeks.org/javascript/how-to-find-the-array-index-with-a-value-in-javascript/?utm_source=gemini">JavaScript Arrays - GeeksforGeeks</a>
+<a href="https://www.w3schools.com/js/js_arrays.asp">W3Schools - JS Arrays</a></p>
+<hr>
+<h3>字串相加</h3>
+<pre><code class="language-Javascript">choice.name + &quot;&lt;br&gt;&lt;img src=&#39;&quot; + choice.img + &quot;&#39; width=&#39;150&#39;&gt;&quot;;
+</code></pre>
+<p>字串是可以透過相加的方式組合的</p>
+<p>參考連結:
+<a href="https://developer.mozilla.org/zh-TW/docs/Learn_web_development/Core/Scripting/Strings">處理文字 - JavaScript中的字串</a></p>
+<hr>
+<h3>CSS conic-gradient 畫圓盤</h3>
+<pre><code class="language-css">&lt;style&gt;
+  body { font-family: sans-serif; text-align: center; padding-top: 40px; }
+  h2 { margin-bottom: 20px; }
+  .wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 20px auto;
+  }
+  .wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #333;
+    background: conic-gradient(
+      #FF9A9E 0deg 90deg,
+      #FAD0C4 90deg 180deg,
+      #A1C4FD 180deg 270deg,
+      #C2E9FB 270deg 360deg
+    );
+    transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  /* 指針 */
+  .pointer {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid #e74c3c;
+  }
+  button {
+    padding: 10px 25px;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+&lt;/style&gt;
+</code></pre>
+<p>參考連結:
+<a href="https://www.w3schools.com/css/css3_gradients_conic.asp">W3Schools - CSS Conic Gradients</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/conic-gradient">conic-gradient () CSS function - CSS | MDN - MDN Web Docs</a>
+<a href="https://juejin.cn/post/7547761892509843508">稀土掘金 - html轉盤抽獎,conic-gradient+transform</a></p>
+<hr>
+<h3>完整轉盤抽籤實做</h3>
+<p>加上音效、機率、指針</p>
+<pre><code class="language-Javascript">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;版本9 - 簡易圓盤轉動&lt;/title&gt;
+&lt;style&gt;
+  body { font-family: sans-serif; text-align: center; padding-top: 40px; }
+  h2 { margin-bottom: 20px; }
+  .wheel-container { position: relative; width: 300px; height: 300px; margin: 0 auto 20px auto; }
+  .wheel { width: 100%; height: 100%; display: block; border-radius: 50%; transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1); }
+  .pointer { position: absolute; z-index: 1; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #e74c3c; }
+  button { padding: 10px 25px; font-size: 1.2em; cursor: pointer; }
+  #result { margin: 20px 0 0; font-size: 1.2em; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;幸運轉盤&lt;/h2&gt;
+&lt;div class=&quot;wheel-container&quot;&gt;
+  &lt;div class=&quot;pointer&quot;&gt;&lt;/div&gt;
+  &lt;canvas class=&quot;wheel&quot; id=&quot;wheel&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+&lt;button id=&quot;spinButton&quot; onclick=&quot;spin()&quot;&gt;轉動&lt;/button&gt;
+&lt;p id=&quot;result&quot;&gt;中獎結果：尚未抽獎&lt;/p&gt;
+&lt;script&gt;
+// 目前轉盤的旋轉角度，累積角度可以讓每次都順時針旋轉
+let currentRotation = 0;
+// 抽獎進行中時，禁止重複按下按鈕
+let isSpinning = false;
+let audioContext;
+
+// 獎項設定：probability 是中獎機率，所有 probability 加總必須是 100
+// 想調整機率時，只需要修改這裡的數字即可
+const prizes = [
+  { name: &quot;大獎&quot;, probability: 10, color: &quot;#FF9A9E&quot; },
+  { name: &quot;二獎&quot;, probability: 20, color: &quot;#FAD0C4&quot; },
+  { name: &quot;三獎&quot;, probability: 30, color: &quot;#A1C4FD&quot; },
+  { name: &quot;四獎&quot;, probability: 40, color: &quot;#C2E9FB&quot; }
+];
+
+const wheel = document.getElementById(&quot;wheel&quot;);
+const context = wheel.getContext(&quot;2d&quot;);
+
+// 依照每個獎項的機率比例，動態畫出不同大小的扇形
+function drawWheel() {
+  const center = wheel.width / 2;
+  const radius = center - 5;
+  let currentAngle = -Math.PI / 2;
+
+  context.clearRect(0, 0, wheel.width, wheel.height);
+  prizes.forEach((prize, index) =&gt; {
+    const sliceAngle = (prize.probability / 100) * Math.PI * 2;
+    const startAngle = currentAngle;
+    const endAngle = startAngle + sliceAngle;
+    currentAngle = endAngle;
+
+    context.beginPath();
+    context.moveTo(center, center);
+    context.arc(center, center, radius, startAngle, endAngle);
+    context.closePath();
+    context.fillStyle = prize.color;
+    context.fill();
+    context.strokeStyle = &quot;#333&quot;;
+    context.lineWidth = 2;
+    context.stroke();
+
+    context.save();
+    context.translate(center, center);
+    context.rotate(startAngle + sliceAngle / 2);
+    context.fillStyle = &quot;#333&quot;;
+    context.font = &quot;16px sans-serif&quot;;
+    context.textAlign = &quot;right&quot;;
+    context.fillText(prize.name, radius - 12, 5);
+    context.restore();
+  });
+}
+
+// 使用 Web Audio 播放簡單的提示音
+function playSound(frequency, duration) {
+  audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+  oscillator.connect(gain).connect(audioContext.destination);
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + duration);
+}
+
+function spin() {
+  if (isSpinning) return;
+
+  // 依照 probability 加權抽獎，而不是每個獎項平均機率
+  const randomNumber = Math.random() * 100;
+  let accumulatedProbability = 0;
+  let prizeIndex = 0;
+  prizes.some((prize, index) =&gt; {
+    accumulatedProbability += prize.probability;
+    if (randomNumber &lt; accumulatedProbability) {
+      prizeIndex = index;
+      return true;
+    }
+    return false;
+  });
+
+  // 計算中獎扇形的中心角，讓它最後停在指針位置
+  const angleBeforePrize = prizes
+    .slice(0, prizeIndex)
+    .reduce((total, prize) =&gt; total + prize.probability, 0) * 3.6;
+  const prizeAngle = angleBeforePrize + prizes[prizeIndex].probability * 1.8;
+  const targetAngle = (360 - prizeAngle - (currentRotation % 360) + 360) % 360;
+  const randomDeg = 720 + targetAngle;
+  currentRotation += randomDeg;
+  isSpinning = true;
+  document.getElementById(&quot;spinButton&quot;).disabled = true;
+  document.getElementById(&quot;result&quot;).textContent = &quot;中獎結果：轉動中...&quot;;
+  wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+  playSound(520, 0.15);
+  setTimeout(() =&gt; {
+    document.getElementById(&quot;result&quot;).textContent = `中獎結果：${prizes[prizeIndex].name}`;
+    playSound(880, 0.3);
+    document.getElementById(&quot;spinButton&quot;).disabled = false;
+    isSpinning = false;
+  }, 4000);
+}
+
+drawWheel();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+]]></content:encoded>
+            <author>HYJBLOG</author>
+            <category>課程心得</category>
+        </item>
+        <item>
+            <title><![CDATA[HTML5 WEB APP程式設計第一周心得]]></title>
+            <link>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass1</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass1</guid>
+            <pubDate>Thu, 17 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[前端後端比較、按鈕切換圖片及超連結實作]]></description>
+            <content:encoded><![CDATA[<h2>前端後端比較</h2>
+<table>
+<thead>
+<tr>
+<th>比較項目</th>
+<th>前端</th>
+<th>後端</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>面向</td>
+<td>用戶端：打造介面與視覺體驗</td>
+<td>伺服器端：處理邏輯與資料庫儲存</td>
+</tr>
+<tr>
+<td>主要功能</td>
+<td>畫面佈局、動態效果、表單驗證、使用者體驗(UX)</td>
+<td>API 開發、資料庫操作、身份驗證、系統效能與安全</td>
+</tr>
+<tr>
+<td>常用程式語言</td>
+<td>HTML, CSS, JavaScript</td>
+<td>Node.js, Python, Java, Go, C#, PHP 等</td>
+</tr>
+<tr>
+<td>常用框架/工具</td>
+<td>React, Vue.js, Angular, Tailwind CSS</td>
+<td>Express, Django, FastAPI, ASP.NET</td>
+</tr>
+<tr>
+<td>關注焦點</td>
+<td>介面美觀、響應式設計(RWD)、流暢度</td>
+<td>資料正確性、高併發處理、安全性、架構擴充性</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>高併發處理:能夠同時處理大量請求的能力</p>
+</blockquote>
+<h2>作業</h2>
+<h3>課後學習內容</h3>
+<pre><code class="language-html">&lt;html lang=&quot;zh-Hant&quot;&gt;
+</code></pre>
+<p>設定這行的用意:</p>
+<ol>
+<li>搜尋引擎優化(SEO)：告訴搜尋引擎這個網頁是給看「繁體中文」的使用者看的，有助於精準投放搜尋結果。</li>
+<li>無障礙螢幕閱讀器(Screen Readers)：幫助視障人士使用的朗讀軟體切換成正確的「繁體中文發音與語調」來讀出網頁內容。</li>
+<li>瀏覽器自動翻譯：瀏覽器（如 Chrome）會依據這個設定判斷是否需要跳出「翻譯網頁」的提示。</li>
+<li>字體渲染：幫助瀏覽器選擇正確的繁體中文字型顯示，避免出現簡繁混用或部分文字字型不齊的問題。</li>
+</ol>
+<p>參考連結:
+<a href="https://www.w3schools.com/tags/att_lang.asp">W3Schools - att_lang</a>
+<a href="https://www.google.com/search?q=%3Chtml%20lang=%22zh-Hant%22%3E%20%E8%A7%A3%E9%87%8B">html lang=&quot;zh-Hant&quot; 解釋</a></p>
+<hr>
+<pre><code class="language-html">    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+</code></pre>
+<p>這個是使用超連結把圖片包起來，實現點選圖片可以跳轉連結的功能</p>
+<p>參考連結:
+<a href="https://www.google.com/search?q=%E5%A6%82%E4%BD%95%E5%9C%A8%E5%9C%96%E7%89%87%E4%B8%8A%E5%86%8D%E5%8A%A0%E4%B8%8A%E8%B6%85%E9%80%A3%E7%B5%90html">在圖片上再加上超連結方法</a>
+<a href="https://www.w3schools.com/html/html_links.asp">W3Schools - html_links</a>
+<a href="https://www.w3schools.com/html/html_images.asp">W3Schools - html_images</a></p>
+<hr>
+<p>程式碼2中的</p>
+<pre><code class="language-JavaScript"> const imageData = {
+            1: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            },
+            2: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            },
+            3: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;
+            }
+        };
+</code></pre>
+<p>是物件屬性與巢狀物件(JavaScript Object Properties)<br>這樣子寫可以避免重複寫函式<br>在添加第4第5個的時候可以直接加上去<br>不用在寫函式</p>
+<p>參考連結:
+<a href="https://www.w3schools.com/js/js_object_properties.asp">W3Schools - JS Object Properties</a>
+<a href="https://www.w3schools.com/jsref/jsref_const.asp">W3Schools - JS const</a></p>
+<hr>
+<p>程式碼2中的函式</p>
+<pre><code class="language-JavaScript">        function changeImage(imageNumber) {
+            const currentData = imageData[imageNumber] || imageData[1];
+            photo.src = currentData.imgSrc;
+            photoLink.href = currentData.linkUrl;
+        }
+</code></pre>
+<p>這裡使用了中括號存取、OR 邏輯運算子以及 DOM 屬性修改  </p>
+<ul>
+<li><p>OR 運算子:可以防止程式因為找不到資料而報錯崩潰  </p>
+</li>
+<li><p>photo.src = currentData.imgSrc
+修改圖片來源：photo 是前面取得的 &lt; img &gt; 元素。這行把圖片的位置，換成從 currentData 物件裡拿到的 imgSrc 網址。</p>
+</li>
+<li><p>photoLink.href = currentData.linkUrl
+修改超連結網址：photoLink 是外層包住圖片的 &lt; a &gt; 標籤。這行把超連結的網址，換成 currentData 裡的 linkUrl 網址。</p>
+</li>
+</ul>
+<p>相關連結:
+<a href="https://www.w3schools.com/js/js_object_properties.asp">W3Schools - JS Object Properties</a>
+<a href="https://www.w3schools.com/js/js_comparisons.asp">W3Schools - JS Comparison and Logical Operators</a></p>
+<hr>
+<h3>程式碼1(根據上課內容完成)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;HTML5 第一周作業&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- 畫面呈現：圖片包在超連結裡面 --&gt;
+    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+
+    &lt;br&gt;&lt;br&gt;
+
+    &lt;!-- 按鈕 --&gt;
+    &lt;button onclick=&quot;changeToPic1()&quot;&gt;圖片 1&lt;/button&gt;
+    &lt;button onclick=&quot;changeToPic2()&quot;&gt;圖片 2&lt;/button&gt;
+    &lt;button onclick=&quot;changeToPic3()&quot;&gt;圖片 3&lt;/button&gt;
+
+    &lt;!-- 控制函數，按鈕的各自切換功能 --&gt;
+    &lt;script&gt;
+        function changeToPic1() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+
+        function changeToPic2() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+
+        function changeToPic3() {
+            document.getElementById(&#39;photo&#39;).src = &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;;
+            document.getElementById(&#39;photoLink&#39;).href = &#39;https://hyjblog.hyjdevelop.com/folder/HTML5課程心得&#39;;
+        }
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<hr>
+<h3>程式碼2(詢問AI更好的做法)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;第一堂課作業&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;a id=&quot;photoLink&quot; href=&quot;https://hyjblog.hyjdevelop.com&quot; target=&quot;_blank&quot;&gt;
+        &lt;img id=&quot;photo&quot; src=&quot;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&quot; alt=&quot;f1圖片&quot; width=&quot;500&quot; height=&quot;300&quot;&gt;
+    &lt;/a&gt;
+
+    &lt;br&gt;&lt;br&gt;
+    &lt;button onclick=&quot;changeImage(1)&quot;&gt;圖片 1&lt;/button&gt;
+    &lt;button onclick=&quot;changeImage(2)&quot;&gt;圖片 2&lt;/button&gt;
+    &lt;button onclick=&quot;changeImage(3)&quot;&gt;圖片 3&lt;/button&gt;
+
+    &lt;script&gt;
+        // 取得 HTML 元素
+        const photoLink = document.getElementById(&#39;photoLink&#39;);
+        const photo = document.getElementById(&#39;photo&#39;);
+
+        // 定義資料庫：管理圖片路徑與點擊後的跳轉網址
+        const imageData = {
+            1: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic1.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            },
+            2: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic2.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            },
+            3: {
+                imgSrc: &#39;https://hyjblog.hyjdevelop.com/images/f1_movie_pic3.webp&#39;,
+                linkUrl: &#39;https://hyjblog.hyjdevelop.com&#39;
+            }
+        };
+
+        // 切換圖片與連結的函式
+        function changeImage(imageNumber) {
+            // 從 imageData 中取出對應數字的資料，若不存在則預設顯示第 1 組
+            const currentData = imageData[imageNumber] || imageData[1];
+
+            // 更改 &lt;img&gt; 標籤的 src 屬性（更換圖片）
+            photo.src = currentData.imgSrc;
+
+            // 更改 &lt;a&gt; 標籤的 href 屬性（更換點擊跳轉網址）
+            photoLink.href = currentData.linkUrl;
+        }
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+]]></content:encoded>
+            <author>HYJBLOG</author>
+            <category>課程心得</category>
+        </item>
+        <item>
             <title><![CDATA[8月review]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/2026_09_10</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/2026_09_10</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/日記/2026_09_10</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/日記/2026_09_10</guid>
             <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[好欸好欸 又到了每個月review的時候了 這篇好多 歐買尬]]></description>
             <content:encoded><![CDATA[<h2>7/31 蝦皮雙(11) ㄔ飯</h2>
@@ -140,8 +835,8 @@ Pinky&amp;笑笑&amp;許胖胖直接上去玩<br>我在下方思考許久後 還
         </item>
         <item>
             <title><![CDATA[7月review]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/2026_07_22</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/2026_07_22</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/日記/2026_07_22</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/日記/2026_07_22</guid>
             <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[ㄎㄎ 每天寫有點難 現在目標是每個月5篇文章]]></description>
             <content:encoded><![CDATA[<h2>台南之旅</h2>
@@ -215,8 +910,8 @@ Pinky&amp;笑笑&amp;許胖胖直接上去玩<br>我在下方思考許久後 還
         </item>
         <item>
             <title><![CDATA[每天寫文章的起點]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/2026_06_17</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/2026_06_17</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/日記/2026_06_17</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/日記/2026_06_17</guid>
             <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[希望我每天都會寫文章]]></description>
             <content:encoded><![CDATA[<p><img src="/images/20266.webp" alt="6月KTV合照"></p>
@@ -278,8 +973,8 @@ Pinky&amp;笑笑&amp;許胖胖直接上去玩<br>我在下方思考許久後 還
         </item>
         <item>
             <title><![CDATA[C++ 類別（Class）基礎與應用]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/class_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/class_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/class_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/class_c++</guid>
             <pubDate>Wed, 09 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 類別的概念，包括宣告、成員存取控制、物件、建構元、靜態成員、友誼函數及物件陣列的應用。]]></description>
             <content:encoded><![CDATA[<h1>C++ 類別（Class）</h1>
@@ -1014,8 +1709,8 @@ window D: 10000
         </item>
         <item>
             <title><![CDATA[C++ 鏈結串列基礎與應用]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/linked_list_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/linked_list_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/linked_list_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/linked_list_c++</guid>
             <pubDate>Wed, 09 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 鏈結串列的概念，包括循序串列與鏈結串列的比較、動態記憶體配置、節點操作（建立、插入、刪除），以及鏈結堆疊與佇列的實現。]]></description>
             <content:encoded><![CDATA[<h1>C++ 鏈結串列（Linked List）</h1>
@@ -1572,8 +2267,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ STL 與 Vector 容器]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/stl_vector_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/stl_vector_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/stl_vector_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/stl_vector_c++</guid>
             <pubDate>Wed, 09 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 標準模板庫（STL）及其核心組成，並聚焦於 vector 容器的特色、宣告、操作（插入、刪除、遍歷等）與應用。]]></description>
             <content:encoded><![CDATA[<h1>C++ STL 與 Vector 容器</h1>
@@ -1870,8 +2565,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 結構（Struct）基礎與應用]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/struct_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/struct_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/struct_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/struct_c++</guid>
             <pubDate>Wed, 09 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 結構（struct）的概念，包括定義、宣告、別名（typedef）、成員存取、初始化，以及結構與函數的應用。]]></description>
             <content:encoded><![CDATA[<h1>C++ 結構（Struct）</h1>
@@ -2229,8 +2924,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 陣列基礎與應用]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/arrary_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/arrary_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/arrary_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/arrary_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 陣列的基本概念，包括一維、多維陣列的宣告與使用、記憶體表示法、字串、多項式與矩陣應用，以及陣列與指標的關係。]]></description>
             <content:encoded><![CDATA[<h1>C++ 陣列（Array）</h1>
@@ -2647,8 +3342,8 @@ int arr[MAX];
         </item>
         <item>
             <title><![CDATA[C++ 函數與變數等級]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/function_variables_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/function_variables_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/function_variables_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/function_variables_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 函數的優點、宣告方式、回傳值、呼叫方法、inline 函數、變數等級以及遞迴概念，包含程式碼範例與遞迴階乘實作，適合初學者學習。]]></description>
             <content:encoded><![CDATA[<h1>C++ 函數與變數等級</h1>
@@ -3017,8 +3712,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ - 簡單介紹]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/Introduction_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/Introduction_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/Introduction_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/Introduction_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 的歷史、特色、程式結構、流程圖與基本編譯執行方式。]]></description>
             <content:encoded><![CDATA[<h1>C++ 程式語言介紹</h1>
@@ -3208,8 +3903,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 運算式與運算子]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/Operators_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/Operators_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/Operators_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/Operators_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 中的運算式與運算子，包括設定、一元、算術、關係、遞增遞減、邏輯、位元邏輯與括號運算子。]]></description>
             <content:encoded><![CDATA[<h1>C++ 運算式與運算子</h1>
@@ -3671,8 +4366,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 指標與參照]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/pointer_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/pointer_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/pointer_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/pointer_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 指標與參照的概念，包括指標的宣告與運算、函數指標、陣列與雙重指標、靜態與動態記憶體配置。]]></description>
             <content:encoded><![CDATA[<h1>C++ 指標與參照</h1>
@@ -4153,8 +4848,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 排序方法介紹]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/sorting_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/sorting_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/sorting_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/sorting_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 中常用的排序方法，包括氣泡排序、選擇排序、插入排序、快速排序和合併排序。]]></description>
             <content:encoded><![CDATA[<h1>C++ 排序（Sorting）</h1>
@@ -4553,8 +5248,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 堆疊與佇列]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/stack_quere_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/stack_quere_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/stack_quere_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/stack_quere_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 堆疊與佇列的基本概念，包括其特色、宣告、使用方法（push、pop、front、back 等）以及遍歷方式。]]></description>
             <content:encoded><![CDATA[<h1>C++ 堆疊與佇列</h1>
@@ -4841,8 +5536,8 @@ int main() {
         </item>
         <item>
             <title><![CDATA[C++ 程式結構]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/Statements_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/Statements_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/Statements_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/Statements_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 程式語言的結構，包括循序、選擇和重複結構，以及 if-else、for、while、do-while、switch 與條件運算子。]]></description>
             <content:encoded><![CDATA[<h1>C++ 程式結構</h1>
@@ -5146,8 +5841,8 @@ return 0;
         </item>
         <item>
             <title><![CDATA[C++ 字串基礎與應用]]></title>
-            <link>https://hyjblog.hyjdevelop.com/blog/string_c++</link>
-            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/string_c++</guid>
+            <link>https://hyjblog.hyjdevelop.com/blog/C++/string_c++</link>
+            <guid isPermaLink="false">https://hyjblog.hyjdevelop.com/blog/C++/string_c++</guid>
             <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[本文介紹 C++ 字串的定義、宣告、輸入輸出方式、緩衝區處理、字串長度計算、轉數字以及分割字串的方法。]]></description>
             <content:encoded><![CDATA[<h1>C++ 字串（String）</h1>

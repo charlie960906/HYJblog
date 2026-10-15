@@ -16,9 +16,16 @@ interface PostPageProps {
 
 export async function generateStaticParams() {
   const slugs = getAllPostSlugs();
-  return slugs.map((slug) => ({
-    slug: slug.split('/'),
-  }));
+  const params = new Map<string, { slug: string[] }>();
+
+  slugs.forEach((slug) => {
+    const segments = slug.split('/');
+    [segments, segments.map(encodeURIComponent)].forEach((paramSegments) => {
+      params.set(paramSegments.join('/'), { slug: paramSegments });
+    });
+  });
+
+  return Array.from(params.values());
 }
 
 export async function generateMetadata({ params }: PostPageProps) {
