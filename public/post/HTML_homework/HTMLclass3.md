@@ -1,5 +1,5 @@
 ---
-title: HTML5 WEB APP程式設計 第三周心得
+title: HTML5 WEB APP程式設計第三周心得
 date: "2026-10-09"
 description: "陣列、迴圈、篩選、搜尋與排序，完成有卡片的網站。"
 tags: ["課程心得"]

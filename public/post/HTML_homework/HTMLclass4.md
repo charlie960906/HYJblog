@@ -1,5 +1,5 @@
 ---
-title: HTML5 WEB APP程式設計 第四周心得
+title: HTML5 WEB APP程式設計第四周心得
 date: "2026-10-15"
 description: "google studio網站"
 tags: ["課程心得"]
@@ -76,7 +76,7 @@ const filtered = COMPANIES.filter(company => {
 詳細頁使用 `URLSearchParams` 讀取 `id`  
 再從 `COMPANIES_DATA` 找出對應的公司資料  
 
-### `URLSearchParams`
+### URLSearchParams
 詳細頁使用 `URLSearchParams` 讀取網址的查詢參數 `?id=tsmc`  
 再依照公司編號顯示對應資料  
 同一個 `company.html` 可以共用給不同公司  
@@ -96,7 +96,7 @@ const filtered = COMPANIES.filter(company => {
 [W3Schools - JavaScript Arrow Function](https://www.w3schools.com/js/js_arrow_function.asp)  
 [W3Schools - JavaScript Template Strings](https://www.w3schools.com/js/js_string_templates.asp)
 
-### `some()`
+### some()
 搜尋公司時，`some()` 會檢查產品陣列  
 只要其中一個產品名稱符合搜尋文字  
 就會回傳 `true`  
@@ -105,7 +105,7 @@ const filtered = COMPANIES.filter(company => {
 參考連結：  
 [W3Schools - JavaScript Array some()](https://www.w3schools.com/jsref/jsref_some.asp)
 
-### `classList`
+### classList
 `classList` 可以新增、移除或切換 HTML 元素的 class 用來切換按鈕的顯示樣式
 
 參考連結：  

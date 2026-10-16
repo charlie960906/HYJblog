@@ -1,5 +1,5 @@
 ---
-title: HTML5 WEB APP程式設計 第二周心得
+title: HTML5 WEB APP程式設計第二周心得
 date: "2026-09-24"
 description: "Math.random()、switch case、陣列操作、字串拼接，使用CSS & JavaScript 實作轉盤抽獎效果。"
 tags: ["課程心得"]
