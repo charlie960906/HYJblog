@@ -70,8 +70,9 @@ RWD(Responsive Web Design，響應式網頁設計)
 5. 用按鈕進行價格升序、降序和回復原始順序。
 6. 點擊「查看優惠」後，在頁面下方顯示選到的優惠券名稱。
 
-[gomaji-clone.html](/post/HTML_homework/gomaji-clone.html)
+###　網站展示：[gomaji-clone.html](/post/HTML_homework/gomaji-clone.html)
 
+### 程式碼
 ```html
 <!DOCTYPE html>
 <html lang="zh-Hant">

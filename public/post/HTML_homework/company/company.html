@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">企業詳細介紹 - 上市公司觀測站</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+      }
+      .font-mono {
+        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- 頂部導覽列 -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <a href="index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+          <span aria-hidden="true">←</span>
+          <span>返回上市公司列表 (首頁)</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+          <a href="index.html#searchSection" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">
+            🔍 搜尋其他企業
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 內容主體容器 -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-1 w-full" id="mainContainer">
+      
+      <!-- 企業標頭橫幅 (Company Header) -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs mb-6">
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
+              <span id="compTicker" class="font-mono font-bold bg-slate-900 text-white px-2.5 py-0.5 rounded-md text-xs">
+                2330
+              </span>
+              <span>·</span>
+              <span id="compExchange">TWSE</span>
+              <span>·</span>
+              <span id="compMarket" class="text-blue-600 font-semibold">台灣上市</span>
+              <span>·</span>
+              <span id="compSector" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">半導體</span>
+            </div>
+            <h1 id="compName" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              台灣積體電路製造股份有限公司
+            </h1>
+            <div id="compNameEn" class="text-sm sm:text-base text-slate-500 font-medium mt-1">
+              Taiwan Semiconductor Manufacturing Co., Ltd. (TSMC)
+            </div>
+          </div>
+
+          <!-- 官方網站按鈕 -->
+          <div class="shrink-0 self-start">
+            <a
+              id="compWebsite"
+              href="https://www.tsmc.com"
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-800 hover:bg-blue-600 hover:text-white transition-all shadow-xs"
+            >
+              <span>前往官方投資人專區</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 關鍵基本資料條列 (Grid) -->
+        <div class="mt-6 pt-6 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <div>
+            <div class="text-slate-400 font-medium">創立年份</div>
+            <div id="compFounded" class="text-slate-900 font-bold font-mono text-sm mt-0.5">1987 年</div>
+          </div>
+          <div>
+            <div class="text-slate-400 font-medium">全球總部</div>
+            <div id="compHq" class="text-slate-900 font-semibold mt-0.5">台灣新竹科學園區</div>
+          </div>
+          <div>
+            <div class="text-slate-400 font-medium">董事長 / 執行長</div>
+            <div id="compCeo" class="text-slate-900 font-semibold mt-0.5">魏哲家 (C.C. Wei)</div>
+          </div>
+          <div>
+            <div class="text-slate-400 font-medium">年度營收規模</div>
+            <div id="compRevenue" class="text-slate-900 font-bold font-mono text-sm mt-0.5">NT$ 2.89 兆</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心財務指標卡片區 (Financial KPIs) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-xl border border-slate-200">
+          <div class="text-xs font-medium text-slate-500">市值規模 (Market Cap)</div>
+          <div id="compMarketCap" class="text-lg sm:text-2xl font-bold font-mono text-slate-900 mt-1">
+            NT$ 27.8 兆
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">位列全球前十大權重股</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200">
+          <div class="text-xs font-medium text-slate-500">本益比 (P/E Ratio)</div>
+          <div id="compPe" class="text-lg sm:text-2xl font-bold font-mono text-slate-900 mt-1">
+            26.8x
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">反映先進製程成長溢價</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200">
+          <div class="text-xs font-medium text-slate-500">每股盈餘 (EPS)</div>
+          <div id="compEps" class="text-lg sm:text-2xl font-bold font-mono text-slate-900 mt-1">
+            NT$ 44.52
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">歷史獲利標竿水準</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200">
+          <div class="text-xs font-medium text-slate-500">現金殖利率 (Yield)</div>
+          <div id="compYield" class="text-lg sm:text-2xl font-bold font-mono text-emerald-600 mt-1">
+            1.65%
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">季配息與長期資本利得</div>
+        </div>
+      </div>
+
+      <!-- 企業深度介紹與營收分佈 (Two Columns) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- 左側：企業簡介與核心護城河 (佔2欄) -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- 營運總覽 -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              企業營運總覽與歷史定位
+            </h2>
+            <p id="compOverview" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+              台積公司創立於 1987 年，開創全球晶圓專業代工（Pure-play Foundry）商業模式。透過專注於晶片製造與最先進微影製程開發（如 3 奈米、2 奈米 GAA 與 A16 製程），配合 CoWoS、InFO 等 3DFabric 先進封裝技術，為 Apple、NVIDIA、AMD、高通等全球頂尖無廠半導體設計公司生產運算晶片。
+            </p>
+          </div>
+
+          <!-- 旗艦產品與核心技術 -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              旗艦產品與關鍵技術核心
+            </h2>
+            <ul id="compProducts" class="space-y-2.5 text-sm text-slate-700">
+              <!-- JS 動態插入 -->
+            </ul>
+          </div>
+
+          <!-- 護城河與競爭優勢 -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              核心競爭優勢與護城河 (Moat)
+            </h2>
+            <p id="compEdge" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+              無可匹敵的先進製程良率、深厚的客戶信任中立性（絕不與客戶競爭）、完整的開放創新平台 (OIP) 矽智財生態系與規模經濟。
+            </p>
+          </div>
+        </div>
+
+        <!-- 右側：營收業務佔比進度條 (佔1欄) -->
+        <div class="space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-1">主要業務與營收板塊</h2>
+            <p class="text-xs text-slate-400 mb-4">最新財報各業務部門貢獻比重</p>
+
+            <div id="compSegments" class="space-y-4">
+              <!-- JS 動態插入進度條 -->
+            </div>
+          </div>
+
+          <!-- 快速返回卡片 -->
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-sm">
+            <h3 class="font-bold text-base">想要探索更多上市公司？</h3>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              點擊返回首頁，可使用即時關鍵字與代碼搜尋，動態探索包含聯發科、鴻海、輝達、蘋果等 12 家指標企業。
+            </p>
+            <a
+              href="index.html"
+              class="mt-4 inline-block w-full text-center py-2.5 px-4 text-xs font-bold rounded-xl bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-xs"
+            >
+              返回上市公司首頁列表
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 底部快速切換其他公司 (Quick Switcher) -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200">
+        <h3 class="text-sm font-bold text-slate-900 mb-3">切換瀏覽其他知名上市公司：</h3>
+        <div class="flex flex-wrap gap-2" id="companySwitcher">
+          <!-- JS 動態插入公司按鈕 -->
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-auto">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+          © 2026 上市企業資訊導覽平台 · 依據 HTML5 WEB APP 基礎教學規格製作
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="hover:text-blue-600 transition-colors">首頁總覽 (index.html)</a>
+          <span>·</span>
+          <a href="company.html?id=tsmc" class="hover:text-blue-600 transition-colors">企業詳情 (company.html)</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 資料集與動態渲染邏輯 -->
+    <script>
+      const COMPANIES_DATA = {
+        tsmc: {
+          id: 'tsmc',
+          name: '台灣積體電路製造',
+          nameEn: 'Taiwan Semiconductor Manufacturing Co., Ltd. (TSMC)',
+          ticker: '2330',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: '半導體製造',
+          founded: 1987,
+          headquarters: '台灣新竹科學園區研新二路',
+          ceo: '魏哲家 (C.C. Wei)',
+          marketCap: 'NT$ 27.8 兆',
+          peRatio: '26.8x',
+          eps: 'NT$ 44.52',
+          yield: '1.65%',
+          revenue: 'NT$ 2.89 兆 (年增 28.5%)',
+          overview: '台積公司創立於 1987 年，開創全球晶圓專業代工（Pure-play Foundry）商業模式。透過專注於晶片製造與最先進微影製程開發（如 3 奈米、2 奈米 GAA 與 A16 製程），配合 CoWoS、InFO 等 3DFabric 先進封裝技術，為 Apple、NVIDIA、AMD、高通等全球頂尖無廠半導體設計公司生產運算晶片。',
+          edge: '無可匹敵的先進製程良率、深厚的客戶信任中立性（絕不與客戶競爭）、完整的開放創新平台 (OIP) 矽智財生態系與規模經濟。',
+          website: 'https://www.tsmc.com',
+          products: [
+            '3奈米 (N3E / N3P) 先進邏輯製程 (智慧手機與 HPC 運算核心)',
+            '2奈米 (N2 GAA) 奈米片電晶體技術與 A16 超級電軌架構',
+            'CoWoS 先進晶圓級 2.5D/3D 異質整合封裝系統',
+            '車用極限溫控車規微控制器與安全晶片專屬代工'
+          ],
+          segments: [
+            { name: '高效能運算 (HPC / AI 晶片)', pct: 52 },
+            { name: '智慧型手機晶片代工', pct: 34 },
+            { name: '物聯網 (IoT 裝置)', pct: 6 },
+            { name: '車用電子 (Automotive)', pct: 5 },
+            { name: '消費性電子與其他', pct: 3 }
+          ]
+        },
+        nvidia: {
+          id: 'nvidia',
+          name: '輝達',
+          nameEn: 'NVIDIA Corporation',
+          ticker: 'NVDA',
+          exchange: 'NASDAQ (美國納斯達克)',
+          market: '全球指標',
+          sector: '半導體 / 人工智慧',
+          founded: 1993,
+          headquarters: '美國加州聖塔克拉拉 (Santa Clara, CA)',
+          ceo: '黃仁勳 (Jensen Huang)',
+          marketCap: '$3.35 兆 USD',
+          peRatio: '48.2x',
+          eps: '$2.85 USD',
+          yield: '0.08%',
+          revenue: '$96.3B USD (年增 122%)',
+          overview: 'NVIDIA 創立於 1993 年，發明 GPU 並重新定義了現代電腦圖形學。隨著深度學習爆發，NVIDIA 將 GPU 轉型為人工智慧超級運算引擎。結合 CUDA 軟體平台、NVLink 高速互連與 InfiniBand 網路，建構起從晶片、系統到軟體庫的全面 AI 霸權。',
+          edge: '軟硬體一體化的 CUDA 開發生態系護城河，百萬名 AI 工程師的既有代碼相依性，以及頂級系統級 NVLink 互聯架構。',
+          website: 'https://www.nvidia.com',
+          products: [
+            'Blackwell B200 / GB200 NVL72 AI 機架系統',
+            'Hopper H100 / H200 資料中心 GPU',
+            'GeForce RTX 40/50 系列電競顯卡',
+            'CUDA 運算平台與 AI Enterprise 軟體套件'
+          ],
+          segments: [
+            { name: '運算與資料中心 (AI 伺服器晶片)', pct: 87 },
+            { name: '遊戲繪圖晶片 (Gaming)', pct: 9 },
+            { name: '專業視覺化 (Workstations)', pct: 2 },
+            { name: '車用與機器人運算', pct: 2 }
+          ]
+        },
+        mediatek: {
+          id: 'mediatek',
+          name: '聯發科技',
+          nameEn: 'MediaTek Inc.',
+          ticker: '2454',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: 'IC 設計',
+          founded: 1997,
+          headquarters: '台灣新竹科學園區篤行一路',
+          ceo: '蔡力行 (Rick Tsai)',
+          marketCap: 'NT$ 2.05 兆',
+          peRatio: '19.4x',
+          eps: 'NT$ 66.85',
+          yield: '4.20%',
+          revenue: 'NT$ 5150 億 (年增 18.9%)',
+          overview: '聯發科為全球第 4 大無晶圓廠半導體設計公司，每年驅動全球近 20 億台智慧終端設備。天璣（Dimensity）旗艦行動平台憑藉全大核 CPU 與強悍 NPU 架構，在旗艦手機市場佔據關鍵份額，並延伸至 Wi-Fi 7 通訊、車用晶片與 ASIC 雲端客製晶片。',
+          edge: '卓越的晶片能源效率比、高度整合的 SoC 架構設計能力、親近亞洲供應鏈的客製化交付彈性與高性價比。',
+          website: 'https://www.mediatek.com',
+          products: [
+            '天璣 9400 / 9300 旗艦 5G 生成式 AI 處理器',
+            'Filogic Wi-Fi 7 寬頻無線通訊晶片',
+            'Dimensity Auto 車載智慧座艙解決方案',
+            '雲端資料中心特製化 ASIC 晶片'
+          ],
+          segments: [
+            { name: '手機運算平台 (天璣系列)', pct: 54 },
+            { name: '智慧裝置與物聯網 (Smart Edge)', pct: 38 },
+            { name: '電源管理 IC (立錡科技)', pct: 8 }
+          ]
+        },
+        foxconn: {
+          id: 'foxconn',
+          name: '鴻海精密 (富士康)',
+          nameEn: 'Hon Hai Precision Industry (Foxconn)',
+          ticker: '2317',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: '電子代工與 AI 機櫃',
+          founded: 1974,
+          headquarters: '台灣新北市土城區自由街',
+          ceo: '劉揚偉 (Young Liu)',
+          marketCap: 'NT$ 2.48 兆',
+          peRatio: '16.2x',
+          eps: 'NT$ 11.20',
+          yield: '3.35%',
+          revenue: 'NT$ 6.63 兆 (年增 8.2%)',
+          overview: '鴻海成立於 1974 年，以精密模具與連接器起家，發展成為橫跨全球多國的科技巨擘。近年積極推動「3+3 策略」（電動車、數位健康、機器人三大未來產業，結合人工智慧、半導體、新世代通訊三項核心技術），目前在輝達 GB200 AI 伺服器機櫃製造中拿下最高市佔率。',
+          edge: '龐大的全球跨國製造垂直整合鏈、極高週轉效率、世界頂級的機構模具工程與供應鏈議價支配力。',
+          website: 'https://www.honhai.com',
+          products: [
+            'NVIDIA GB200 NVL72 AI 伺服器液冷機櫃整合系統',
+            'Apple iPhone / iPad 核心組裝工程',
+            'MODEL C / MODEL B 純電動車開放平台',
+            '高速光通訊 800G 交換機及資料中心配電模組'
+          ],
+          segments: [
+            { name: '消費智能產品 (iPhone 等)', pct: 48 },
+            { name: '雲端網路 (AI伺服器/交換器)', pct: 32 },
+            { name: '電腦終端產品 (PC/筆電)', pct: 14 },
+            { name: '元件及其他 (連接器/精密機構件)', pct: 6 }
+          ]
+        },
+        apple: {
+          id: 'apple',
+          name: '蘋果公司',
+          nameEn: 'Apple Inc.',
+          ticker: 'AAPL',
+          exchange: 'NASDAQ (美國納斯達克)',
+          market: '全球指標',
+          sector: '消費科技與生態圈',
+          founded: 1976,
+          headquarters: '美國加州庫比蒂諾 (Cupertino, CA)',
+          ceo: '提姆·庫克 (Tim Cook)',
+          marketCap: '$3.45 兆 USD',
+          peRatio: '33.5x',
+          eps: '$6.72 USD',
+          yield: '0.45%',
+          revenue: '$391B USD (年增 2.0%)',
+          overview: 'Apple 由賈伯斯與沃茲尼克創立，革命性地創造了個人電腦與智慧型手機時代。今日 Apple 擁有超過 22 億台活躍裝置生態系，軟體服務（App Store、iCloud、Apple Music、Apple Pay）利潤率高昂，並透過自家設計之 Apple Silicon 締造極高產品黏著度。',
+          edge: '無與倫比的高端品牌忠誠度、自研高能效矽晶片架構，以及封閉且體驗流暢的 iOS 軟硬體雙向護城河。',
+          website: 'https://www.apple.com',
+          products: [
+            'iPhone 16 Pro / Pro Max 智慧手機',
+            'Apple M4 / M4 Max MacBook Pro',
+            'Apple Intelligence 跨裝置端側隱私 AI 引擎',
+            'Apple Watch Ultra 與 AirPods Pro 降噪耳機'
+          ],
+          segments: [
+            { name: 'iPhone 系列手機', pct: 51 },
+            { name: '數位軟體服務 (AppStore/iCloud)', pct: 25 },
+            { name: '穿戴式與家用配件', pct: 9 },
+            { name: 'Mac 個人電腦', pct: 8 },
+            { name: 'iPad 平板電腦', pct: 7 }
+          ]
+        },
+        microsoft: {
+          id: 'microsoft',
+          name: '微軟公司',
+          nameEn: 'Microsoft Corporation',
+          ticker: 'MSFT',
+          exchange: 'NASDAQ (美國納斯達克)',
+          market: '全球指標',
+          sector: '雲端與企業軟體',
+          founded: 1975,
+          headquarters: '美國華盛頓州雷德蒙德 (Redmond, WA)',
+          ceo: '薩蒂亞·納德拉 (Satya Nadella)',
+          marketCap: '$3.15 兆 USD',
+          peRatio: '34.1x',
+          eps: '$11.80 USD',
+          yield: '0.78%',
+          revenue: '$245B USD (年增 15.7%)',
+          overview: '微軟由比爾·蓋茲與保羅·艾倫創立，今日已成功轉型為雲端優先與 AI 優先平台。核心產品涵蓋 Azure 智慧雲端運算架構、Microsoft 365 辦公套裝軟體、GitHub 開發者平台、Windows 作業系統以及 Xbox 遊戲娛樂娛樂生態。',
+          edge: '深植於全球 95% 以上 500 強企業的信任架構、龐大的企業軟體銷售通路、Azure 雲端算力與長期合約黏著度。',
+          website: 'https://www.microsoft.com',
+          products: [
+            'Microsoft Azure 企業雲端基礎設施與 AI 平台',
+            'Microsoft 365 Copilot 智慧辦公協同工具',
+            'Windows 11 作業系統與 Surface 終端',
+            'GitHub 軟體開發平台與 Copilot 輔助編程'
+          ],
+          segments: [
+            { name: '智慧雲端服務 (Azure/伺服器)', pct: 43 },
+            { name: '生產力與商業流程 (M365/LinkedIn)', pct: 32 },
+            { name: '更多個人運算 (Windows/Xbox)', pct: 25 }
+          ]
+        },
+        delta: {
+          id: 'delta',
+          name: '台達電子',
+          nameEn: 'Delta Electronics, Inc.',
+          ticker: '2308',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: '電源與散熱解決方案',
+          founded: 1971,
+          headquarters: '台灣台北市內湖科技園區',
+          ceo: '鄭平 (Ping Cheng)',
+          marketCap: 'NT$ 1.02 兆',
+          peRatio: '24.3x',
+          eps: 'NT$ 13.50',
+          yield: '2.40%',
+          revenue: 'NT$ 4012 億 (年增 5.5%)',
+          overview: '台達電成立於 1971 年，以「環保 節能 愛地球」為經營使命。身為全球交換式電源供應器龍頭，台達在 AI 伺服器散熱（液冷水冷板、CDU 冷卻分配單元）與超高功率電源模組市占第一，並大步跨入微電網、儲能貨櫃與電動車雙向快充樁。',
+          edge: '在電力轉換效率超過 98% 的工程技術專利庫、領先全球的液冷熱傳導架構，以及 ESG 綠能永續標竿地位。',
+          website: 'https://www.deltaww.com',
+          products: [
+            'AI 伺服器專用 Titanium 鈦金級高瓦數電源系統',
+            '伺服器冷卻分配單元 (CDU) 及水對水液冷散熱模組',
+            '電動車高壓車載充電器與牽引驅動逆變器',
+            '兆瓦級智慧儲能貨櫃與商業直流快充樁'
+          ],
+          segments: [
+            { name: '電源及零組件 (AI電源/散熱模組)', pct: 53 },
+            { name: '基礎設施 (資料中心/資通訊/能源)', pct: 28 },
+            { name: '自動化 (工業/樓宇智慧)', pct: 19 }
+          ]
+        },
+        quanta: {
+          id: 'quanta',
+          name: '廣達電腦',
+          nameEn: 'Quanta Computer Inc.',
+          ticker: '2382',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: '筆電與 AI 伺服器',
+          founded: 1988,
+          headquarters: '台灣桃園市華亞科技園區',
+          ceo: '林百里 (Barry Lam)',
+          marketCap: 'NT$ 1.15 兆',
+          peRatio: '18.2x',
+          eps: 'NT$ 14.80',
+          yield: '3.60%',
+          revenue: 'NT$ 1.25 兆 (年增 16.2%)',
+          overview: '廣達自筆電 ODM 起家，敏銳預見雲端運算與生成式 AI 趨勢。透過旗下子公司雲達科技（QCT），廣達直接向微軟、Google、Meta 等北美超大規模雲端服務商提供白牌 AI 伺服器整機櫃整合，成為全球頂級運算叢集的首席硬體架構推手。',
+          edge: '超前部署二十年的雲端伺服器客製化研發能力、直接服務北美雲端 CSP 的白牌商業模式、兼備規模與敏捷客製彈性。',
+          website: 'https://www.quantatw.com',
+          products: [
+            'QCT QuantaGrid AI 運算加速伺服器',
+            '大型資料中心整機櫃水冷散熱集成方案',
+            '高階輕薄商務型筆記型電腦客製代工',
+            '次世代自動駕駛集中式車用網關控制器'
+          ],
+          segments: [
+            { name: '雲端與企業伺服器 (AI機櫃)', pct: 52 },
+            { name: '筆記型電腦與個人電腦', pct: 38 },
+            { name: '車載電子與智慧物聯網', pct: 10 }
+          ]
+        },
+        asml: {
+          id: 'asml',
+          name: '艾司摩爾',
+          nameEn: 'ASML Holding N.V.',
+          ticker: 'ASML',
+          exchange: 'Euronext Amsterdam',
+          market: '全球指標',
+          sector: '半導體微影設備',
+          founded: 1984,
+          headquarters: '荷蘭費爾德霍芬 (Veldhoven, Netherlands)',
+          ceo: '克里斯托夫·富凱',
+          marketCap: '$320B USD',
+          peRatio: '38.6x',
+          eps: '€19.91',
+          yield: '0.85%',
+          revenue: '€27.6B (年增 8.0%)',
+          overview: 'ASML 掌握製造 7 奈米以下最先進半導體製程必備的 EUV（極紫外光）微影技術，一台價值高達 2 億至 3.5 億歐元。全世界每一顆最新款智慧型手機晶片與 AI 運算處理器，均仰賴 ASML 微影系統在晶圓上刻畫電路。',
+          edge: '全球 100% 獨占的 EUV 微影設備商業化技術、蔡司 (Zeiss) 頂級光學系統專屬合作、近 40 年深厚專利金庫與不可替代性。',
+          website: 'https://www.asml.com',
+          products: [
+            '高數值孔徑 High-NA EUV (Twinscan EXE:5000/5200)',
+            '標準 EUV (Twinscan NXE:3800E)',
+            '浸潤式深紫外光微影機 (Twinscan NXT:2100i)',
+            'YieldStar 光學量測與光罩校準軟體系統'
+          ],
+          segments: [
+            { name: '極紫外光微影系統 (EUV)', pct: 50 },
+            { name: '深紫外光微影系統 (DUV)', pct: 32 },
+            { name: '設備升級與服務維護', pct: 18 }
+          ]
+        },
+        fubon: {
+          id: 'fubon',
+          name: '富邦金融控股',
+          nameEn: 'Fubon Financial Holding Co., Ltd.',
+          ticker: '2881',
+          exchange: 'TWSE (台灣證券交易所)',
+          market: '台灣上市',
+          sector: '金融服務',
+          founded: 2001,
+          headquarters: '台灣台北市松山區敦化南路',
+          ceo: '韓蔚廷 (Jerry Harn)',
+          marketCap: 'NT$ 1.18 兆',
+          peRatio: '10.5x',
+          eps: 'NT$ 8.90',
+          yield: '4.80%',
+          revenue: 'NT$ 1520 億 (獲利穩居金控之冠)',
+          overview: '富邦金控為台灣指標性大型民營金融控股集團，旗下核心子公司在各金融業務板塊均名列前茅。公司在資產規模超過 11 兆元台幣，並積極推動 FinTech 數位金融創新、個人財富管理、永續綠色融資與東協跨國金融佈局。',
+          edge: '長年位居台灣金控每股盈餘 (EPS) 冠軍的投資收益管理能力、全方位金融通路綜效、嚴謹的風險防護與品牌信譽。',
+          website: 'https://www.fubon.com',
+          products: [
+            '台北富邦銀行數位金融與高端財富管理專戶',
+            '富邦人壽退休養老年金與分紅型保單',
+            '富邦產險企業風險防護與海外投資信用險',
+            'ESG 永續連結貸款與綠色能源專案聯貸'
+          ],
+          segments: [
+            { name: '人壽保險 (富邦人壽)', pct: 55 },
+            { name: '商業銀行 (台北富邦銀行)', pct: 32 },
+            { name: '財產保險 (富邦產險)', pct: 7 },
+            { name: '證券經紀與投信', pct: 6 }
+          ]
+        },
+        alphabet: {
+          id: 'alphabet',
+          name: 'Alphabet (谷歌母公司)',
+          nameEn: 'Alphabet Inc. (Google)',
+          ticker: 'GOOGL',
+          exchange: 'NASDAQ (美國納斯達克)',
+          market: '全球指標',
+          sector: '網際網路與人工智慧',
+          founded: 1998,
+          headquarters: '美國加州山景城 (Mountain View, CA)',
+          ceo: '桑達·皮查伊 (Sundar Pichai)',
+          marketCap: '$2.15 兆 USD',
+          peRatio: '22.8x',
+          eps: '$7.54 USD',
+          yield: '0.42%',
+          revenue: '$350B USD (年增 15.0%)',
+          overview: 'Alphabet 為 Google 的控股母公司，以組織全球資訊並使其普遍可及且有用為願景。旗下業務涵蓋 Google 搜尋引擎、YouTube 影音社群、Android 系統、Google Cloud 雲端運算，以及包含 Waymo 無人自動駕駛車等前瞻登月計劃。',
+          edge: '掌握全球超過 90% 的網頁搜尋流量、龐大的真實使用者互動數據、世界級自研 TPU 算力集群與頂尖 AI 頂層研究能力。',
+          website: 'https://www.abc.xyz',
+          products: [
+            'Google 搜尋與 YouTube 影音串流廣告生態',
+            'Gemini 系列原生多模態 AI 大語言模型',
+            'Google Cloud 雲端運算與 TPU 自研 AI 加速晶片',
+            'Waymo 商業化無人駕駛計程車 (Robotaxi)'
+          ],
+          segments: [
+            { name: 'Google 廣告業務 (搜尋/YouTube)', pct: 74 },
+            { name: 'Google Cloud 雲端平台', pct: 14 },
+            { name: 'Google 訂閱/硬體平台 (Pixel/Play)', pct: 11 },
+            { name: '前瞻登月計劃 (Waymo等)', pct: 1 }
+          ]
+        },
+        tesla: {
+          id: 'tesla',
+          name: '特斯拉',
+          nameEn: 'Tesla, Inc.',
+          ticker: 'TSLA',
+          exchange: 'NASDAQ (美國納斯達克)',
+          market: '全球指標',
+          sector: '電動車與能源科技',
+          founded: 2003,
+          headquarters: '美國德州奧斯汀 (Austin, TX)',
+          ceo: '伊隆·馬斯克 (Elon Musk)',
+          marketCap: '$720B USD',
+          peRatio: '64.5x',
+          eps: '$2.38 USD',
+          yield: '0.00%',
+          revenue: '$97.8B USD (年增 3.5%)',
+          overview: '特斯拉不僅是車廠，更是一家垂直整合的 AI 與再生能源公司。透過超大型壓鑄一體成型製程（Gigapress）與先進車載軟體架構，引領全球汽車產業電氣化變革。近期重心聚焦於無人駕駛計程車 (Cybercab)、Dojo 超級電腦及通用人形機器人 Optimus 的研發。',
+          edge: '數百萬輛實車在路上行駛累積的海量真實視覺自動駕駛數據、極致的一體壓鑄降低製造成本優勢，以及橫跨全球的超級充電網絡。',
+          website: 'https://www.tesla.com',
+          products: [
+            'Model Y / Model 3 全球暢銷純電乘用車',
+            'Cybertruck 純電不鏽鋼全地形皮卡',
+            '全自動駕駛系統 (Full Self-Driving, FSD Supervised)',
+            'Megapack 百萬度級電網商用儲能設備'
+          ],
+          segments: [
+            { name: '電動汽車銷售與租賃', pct: 80 },
+            { name: '能源儲存與太陽能 (Megapack/Powerwall)', pct: 11 },
+            { name: '服務與超級充電站網絡', pct: 9 }
+          ]
+        }
+      };
+
+      // 讀取 URL 查詢參數 (?id=xxx)
+      const urlParams = new URLSearchParams(window.location.search);
+      let companyKey = urlParams.get('id') || 'tsmc';
+
+      if (!COMPANIES_DATA[companyKey]) {
+        companyKey = 'tsmc';
+      }
+
+      const comp = COMPANIES_DATA[companyKey];
+
+      // 綁定頁面文字與數據
+      document.title = `${comp.name} (${comp.ticker}) - 企業詳細介紹`;
+      document.getElementById('compTicker').textContent = comp.ticker;
+      document.getElementById('compExchange').textContent = comp.exchange;
+      document.getElementById('compMarket').textContent = comp.market;
+      document.getElementById('compSector').textContent = comp.sector;
+      document.getElementById('compName').textContent = comp.name;
+      document.getElementById('compNameEn').textContent = comp.nameEn;
+      document.getElementById('compWebsite').href = comp.website;
+
+      document.getElementById('compFounded').textContent = `${comp.founded} 年`;
+      document.getElementById('compHq').textContent = comp.headquarters;
+      document.getElementById('compCeo').textContent = comp.ceo;
+      document.getElementById('compRevenue').textContent = comp.revenue;
+
+      document.getElementById('compMarketCap').textContent = comp.marketCap;
+      document.getElementById('compPe').textContent = comp.peRatio;
+      document.getElementById('compEps').textContent = comp.eps;
+      document.getElementById('compYield').textContent = comp.yield;
+
+      document.getElementById('compOverview').textContent = comp.overview;
+      document.getElementById('compEdge').textContent = comp.edge;
+
+      // 渲染旗艦產品清單
+      const productsContainer = document.getElementById('compProducts');
+      productsContainer.innerHTML = comp.products
+        .map(p => `
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500 font-bold shrink-0">•</span>
+            <span>${p}</span>
+          </li>
+        `)
+        .join('');
+
+      // 渲染營收分佈進度條
+      const segmentsContainer = document.getElementById('compSegments');
+      segmentsContainer.innerHTML = comp.segments
+        .map(seg => `
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+              <span>${seg.name}</span>
+              <span class="font-mono text-slate-900">${seg.pct}%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-blue-600 h-2 rounded-full" style="width: ${seg.pct}%"></div>
+            </div>
+          </div>
+        `)
+        .join('');
+
+      // 渲染底部快速切換按鈕
+      const switcherContainer = document.getElementById('companySwitcher');
+      switcherContainer.innerHTML = Object.values(COMPANIES_DATA)
+        .map(c => {
+          const isCurrent = c.id === comp.id;
+          return `
+            <a
+              href="company.html?id=${c.id}"
+              class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                isCurrent
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }"
+            >
+              ${c.name} (${c.ticker})
+            </a>
+          `;
+        })
+        .join('');
+    </script>
+  </body>
+</html>

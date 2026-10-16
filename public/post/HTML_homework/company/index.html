@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上市企業資訊導覽平台 - Global & Taiwan Listed Companies</title>
+    <meta name="description" content="探索台股與全球頂尖上市企業的營運概況、核心業務產品與關鍵財務指標，提供即時產業篩選、比較分析與企業深度報告。" />
+    <meta property="og:title" content="上市企業資訊導覽平台 - Global & Taiwan Listed Companies" />
+    <meta property="og:description" content="探索台股與全球頂尖上市企業的營運概況、核心業務產品與關鍵財務指標，提供即時產業篩選、比較分析與企業深度報告。" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+      }
+      .font-mono {
+        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- 頂部導覽列 (Navbar) -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <!-- 品牌標題 -->
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            企
+          </div>
+          <div>
+            <div class="text-base sm:text-lg font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+              上市公司介紹網站
+            </div>
+            <div class="text-[10px] sm:text-xs text-slate-500 font-medium">
+              Listed Companies Overview & Directory
+            </div>
+          </div>
+        </a>
+
+        <!-- 導覽連結 -->
+        <nav class="flex items-center gap-4 text-xs sm:text-sm font-medium">
+          <a href="index.html" class="text-blue-600 font-semibold">首頁總覽</a>
+          <a href="company.html?id=tsmc" class="text-slate-600 hover:text-blue-600 transition-colors">企業詳情範例</a>
+          <a href="#searchSection" class="hidden sm:inline-block px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+            快速搜尋
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 主頁橫幅 (Hero Banner) -->
+    <section class="bg-white border-b border-slate-200 py-10 sm:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">
+            <span>● 企業資訊觀測與導覽</span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            探索全球與台灣關鍵上市龍頭企業
+          </h1>
+          <p class="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
+            收錄半導體代工霸主台積電、AI 算力先鋒輝達、消費電子龍頭蘋果、電子製造龍頭鴻海等指標公司。下方提供即時動態搜尋，輸入關鍵字即可快速尋找！
+          </p>
+        </div>
+
+        <!-- 數據摘要 -->
+        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-6 border-t border-slate-100">
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
+            <div class="text-xs text-slate-500">收錄企業數</div>
+            <div class="text-2xl font-bold font-mono text-slate-900 mt-1" id="statTotalCount">12 家</div>
+          </div>
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
+            <div class="text-xs text-slate-500">市場涵蓋</div>
+            <div class="text-2xl font-bold font-mono text-slate-900 mt-1">台股 & 美股</div>
+          </div>
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
+            <div class="text-xs text-slate-500">涵蓋核心產業</div>
+            <div class="text-2xl font-bold font-mono text-slate-900 mt-1">5 大關鍵領域</div>
+          </div>
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
+            <div class="text-xs text-slate-500">即時動態過濾</div>
+            <div class="text-2xl font-bold font-mono text-emerald-600 mt-1">即打即顯</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 搜尋與篩選操作區 (Search & Filter Section) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full" id="searchSection">
+      
+      <!-- 搜尋卡片 -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs mb-8">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+          
+          <!-- 即時動態搜尋輸入框 -->
+          <div class="relative flex-1">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="搜尋公司名稱、股票代碼、英文名或產品 (例: 台積電, 2330, 輝達, 鴻海, iPhone, 伺服器)..."
+              class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-slate-400 font-medium"
+            />
+            <button
+              id="clearSearchBtn"
+              class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600"
+              title="清除搜尋內容"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- 市場類別切換 -->
+          <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start md:self-auto shrink-0" id="marketButtons">
+            <button data-market="All" class="market-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-slate-900 shadow-xs transition-all">
+              全部市場
+            </button>
+            <button data-market="Taiwan" class="market-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+              台灣上市 (TWSE)
+            </button>
+            <button data-market="Global" class="market-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+              全球巨擘 (Global)
+            </button>
+          </div>
+
+        </div>
+
+        <!-- 產業分類標籤列 -->
+        <div class="mt-4 pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-1.5 flex-wrap" id="sectorButtons">
+            <span class="text-xs font-semibold text-slate-400 mr-1">產業篩選:</span>
+            <button data-sector="All" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-900 text-white transition-all">
+              全部產業
+            </button>
+            <button data-sector="Semiconductor" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              半導體
+            </button>
+            <button data-sector="AI Hardware & Cloud" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              AI 硬體與伺服器
+            </button>
+            <button data-sector="Software & Tech" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              軟體與科技
+            </button>
+            <button data-sector="Power & Components" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              電源與電子元件
+            </button>
+            <button data-sector="Financial Services" class="sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              金融控股
+            </button>
+          </div>
+
+          <!-- 即時統計筆數 -->
+          <div class="text-xs text-slate-500 font-medium ml-auto">
+            共找到 <span id="matchCount" class="font-mono font-bold text-blue-600">12</span> 家企業
+          </div>
+        </div>
+      </div>
+
+      <!-- 公司卡片列表容器 (Cards Grid) -->
+      <div id="companyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- 由 JavaScript 動態渲染卡片 -->
+      </div>
+
+      <!-- 查無結果提示 (Empty State) -->
+      <div id="noResults" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200">
+        <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3 text-xl">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-slate-900">找不到符合搜尋條件的上市公司</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          請嘗試搜尋不同關鍵字、股票代碼（如 2330、NVDA），或清除產業篩選條件。
+        </p>
+        <button id="resetSearchBtn" class="mt-4 px-4 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          重設所有篩選條件
+        </button>
+      </div>
+
+    </main>
+
+    <!-- 頁腳 (Footer) -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+          © 2026 上市企業資訊導覽平台
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="hover:text-blue-600 transition-colors">首頁列表 (index.html)</a>
+          <span>·</span>
+          <a href="company.html?id=tsmc" class="hover:text-blue-600 transition-colors">企業詳情 (company.html)</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 內建資料庫與即時動態搜尋邏輯 (Vanilla JavaScript) -->
+    <script>
+      const COMPANIES = [
+        {
+          id: 'tsmc',
+          name: '台灣積體電路製造',
+          nameEn: 'Taiwan Semiconductor Manufacturing Co. (TSMC)',
+          ticker: '2330',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'Semiconductor',
+          sectorLabel: '半導體',
+          founded: 1987,
+          headquarters: '台灣新竹科學園區',
+          ceo: '魏哲家',
+          marketCapDisplay: 'NT$ 27.8 兆',
+          peRatio: '26.8x',
+          dividendYield: '1.65%',
+          shortDescription: '全球首創純晶圓專業代工商業模式，先進製程全球市占率超過 60%，為全世界 AI 運算晶片的最核心製造基石。',
+          flagshipProducts: ['3奈米 / 2奈米先進邏輯製程', 'CoWoS 3DFabric 先進晶圓級封裝', '車規極限晶片代工'],
+          badgeColor: 'bg-red-50 text-red-700 border-red-200'
+        },
+        {
+          id: 'nvidia',
+          name: '輝達',
+          nameEn: 'NVIDIA Corporation',
+          ticker: 'NVDA',
+          exchange: 'NASDAQ',
+          market: 'Global',
+          sector: 'Semiconductor',
+          sectorLabel: '半導體 / AI',
+          founded: 1993,
+          headquarters: '美國加州聖塔克拉拉',
+          ceo: '黃仁勳 (Jensen Huang)',
+          marketCapDisplay: '$3.35 兆 USD',
+          peRatio: '48.2x',
+          dividendYield: '0.08%',
+          shortDescription: '全球加速運算與生成式人工智慧領導者，發明 GPU 並結合 CUDA 運算平台壟斷全球資料中心 AI 算力。',
+          flagshipProducts: ['Blackwell GB200 NVL72 AI 機架系統', 'Hopper H100/H200 GPU', 'CUDA 軟體開發平台'],
+          badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+        },
+        {
+          id: 'mediatek',
+          name: '聯發科技',
+          nameEn: 'MediaTek Inc.',
+          ticker: '2454',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'Semiconductor',
+          sectorLabel: '半導體 IC 設計',
+          founded: 1997,
+          headquarters: '台灣新竹科學園區',
+          ceo: '蔡力行',
+          marketCapDisplay: 'NT$ 2.05 兆',
+          peRatio: '19.4x',
+          dividendYield: '4.20%',
+          shortDescription: '全球第4大無晶圓廠 IC 設計巨擘，天璣系列行動晶片引領智慧型手機全大核生成式 AI 運算時代。',
+          flagshipProducts: ['天璣 9400 旗艦 5G AI 處理器', 'Filogic Wi-Fi 7 通訊晶片', 'Dimensity Auto 車載晶片'],
+          badgeColor: 'bg-orange-50 text-orange-700 border-orange-200'
+        },
+        {
+          id: 'foxconn',
+          name: '鴻海精密 (富士康)',
+          nameEn: 'Hon Hai Precision Industry (Foxconn)',
+          ticker: '2317',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'AI Hardware & Cloud',
+          sectorLabel: 'AI 硬體與代工',
+          founded: 1974,
+          headquarters: '台灣新北市土城區',
+          ceo: '劉揚偉',
+          marketCapDisplay: 'NT$ 2.48 兆',
+          peRatio: '16.2x',
+          dividendYield: '3.35%',
+          shortDescription: '全球最大電子製造服務 (EMS) 龍頭，掌握全球 40% 資訊產品代工，全力拓展 GB200 AI 機櫃與電動車平台。',
+          flagshipProducts: ['NVIDIA GB200 液冷 AI 伺服器整機櫃', 'Apple iPhone 核心組裝工程', 'MODEL C/B 純電開放架構'],
+          badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+        },
+        {
+          id: 'apple',
+          name: '蘋果公司',
+          nameEn: 'Apple Inc.',
+          ticker: 'AAPL',
+          exchange: 'NASDAQ',
+          market: 'Global',
+          sector: 'Software & Tech',
+          sectorLabel: '消費科技與軟體',
+          founded: 1976,
+          headquarters: '美國加州庫比蒂諾',
+          ceo: '提姆·庫克 (Tim Cook)',
+          marketCapDisplay: '$3.45 兆 USD',
+          peRatio: '33.5x',
+          dividendYield: '0.45%',
+          shortDescription: '全球個人電子與數位服務巨擘，以 iPhone、Mac、Apple Silicon 與隱私導向的 Apple Intelligence 打造頂級生態。',
+          flagshipProducts: ['iPhone 16 Pro 旗艦手機', 'M4 系列晶片 MacBook Pro', 'Apple Intelligence 裝置端 AI'],
+          badgeColor: 'bg-slate-100 text-slate-700 border-slate-300'
+        },
+        {
+          id: 'microsoft',
+          name: '微軟公司',
+          nameEn: 'Microsoft Corporation',
+          ticker: 'MSFT',
+          exchange: 'NASDAQ',
+          market: 'Global',
+          sector: 'Software & Tech',
+          sectorLabel: '雲端與企業軟體',
+          founded: 1975,
+          headquarters: '美國華盛頓州雷德蒙德',
+          ceo: '薩蒂亞·納德拉',
+          marketCapDisplay: '$3.15 兆 USD',
+          peRatio: '34.1x',
+          dividendYield: '0.78%',
+          shortDescription: '全球企業生產力軟體與智慧雲端霸主，Azure 雲端運算與 Microsoft 365 Copilot 深植全球各大企業基礎架構。',
+          flagshipProducts: ['Microsoft Azure 智慧雲端運算', 'Microsoft 365 Copilot 智慧協作', 'Windows 11 與 GitHub 生態'],
+          badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+        },
+        {
+          id: 'delta',
+          name: '台達電子',
+          nameEn: 'Delta Electronics, Inc.',
+          ticker: '2308',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'Power & Components',
+          sectorLabel: '電源與零組件',
+          founded: 1971,
+          headquarters: '台灣台北市內湖區',
+          ceo: '鄭平',
+          marketCapDisplay: 'NT$ 1.02 兆',
+          peRatio: '24.3x',
+          dividendYield: '2.40%',
+          shortDescription: '全球交換式電源與伺服器散熱解決方案第一霸主，以極致能效技術提供 AI 伺服器水冷散熱與電動車快充樁。',
+          flagshipProducts: ['AI 伺服器鈦金級超高瓦數電源', '冷卻分配單元 (CDU) 水冷散熱', 'MW級儲能貨櫃與電動車快充'],
+          badgeColor: 'bg-green-50 text-green-700 border-green-200'
+        },
+        {
+          id: 'quanta',
+          name: '廣達電腦',
+          nameEn: 'Quanta Computer Inc.',
+          ticker: '2382',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'AI Hardware & Cloud',
+          sectorLabel: '筆電與雲端伺服器',
+          founded: 1988,
+          headquarters: '台灣桃園市華亞科技園區',
+          ceo: '林百里',
+          marketCapDisplay: 'NT$ 1.15 兆',
+          peRatio: '18.2x',
+          dividendYield: '3.60%',
+          shortDescription: '全球筆記型電腦與雲端 AI 伺服器製造領航者，旗下雲達科技 (QCT) 深耕微軟、Google 等北美 CSP 超大規模資料中心。',
+          flagshipProducts: ['QuantaGrid 大型 AI 加速伺服器', '雲端整機櫃水冷散熱集成方案', '高階商務筆記型電腦 ODM'],
+          badgeColor: 'bg-cyan-50 text-cyan-700 border-cyan-200'
+        },
+        {
+          id: 'asml',
+          name: '艾司摩爾',
+          nameEn: 'ASML Holding N.V.',
+          ticker: 'ASML',
+          exchange: 'Euronext',
+          market: 'Global',
+          sector: 'Semiconductor',
+          sectorLabel: '半導體微影設備',
+          founded: 1984,
+          headquarters: '荷蘭費爾德霍芬',
+          ceo: '克里斯托夫·富凱',
+          marketCapDisplay: '$320B USD',
+          peRatio: '38.6x',
+          dividendYield: '0.85%',
+          shortDescription: '全球唯一具備量產極紫外光 (EUV) 微影設備的晶片製造設備商，全世界最先進晶片製造的物理微縮關鍵把關者。',
+          flagshipProducts: ['High-NA EUV (EXE:5000/5200) 微影機', 'Twinscan NXE:3800E EUV 微影設備', 'YieldStar 精密光學量測機'],
+          badgeColor: 'bg-sky-50 text-sky-700 border-sky-200'
+        },
+        {
+          id: 'fubon',
+          name: '富邦金控',
+          nameEn: 'Fubon Financial Holding Co., Ltd.',
+          ticker: '2881',
+          exchange: 'TWSE',
+          market: 'Taiwan',
+          sector: 'Financial Services',
+          sectorLabel: '金融控股',
+          founded: 2001,
+          headquarters: '台灣台北市敦化南路',
+          ceo: '韓蔚廷',
+          marketCapDisplay: 'NT$ 1.18 兆',
+          peRatio: '10.5x',
+          dividendYield: '4.80%',
+          shortDescription: '連續十餘年蟬聯台灣金控獲利與每股盈餘 (EPS) 冠軍，旗下涵蓋富邦人壽、台北富邦銀行、富邦產險與證券。',
+          flagshipProducts: ['台北富邦銀行數位財富管理專戶', '富邦人壽退休養老年金與分紅保單', 'ESG 綠色永續專案聯貸融資'],
+          badgeColor: 'bg-blue-50 text-blue-800 border-blue-200'
+        },
+        {
+          id: 'alphabet',
+          name: 'Alphabet (谷歌母公司)',
+          nameEn: 'Alphabet Inc. (Google)',
+          ticker: 'GOOGL',
+          exchange: 'NASDAQ',
+          market: 'Global',
+          sector: 'Software & Tech',
+          sectorLabel: '搜尋與人工智慧',
+          founded: 1998,
+          headquarters: '美國加州山景城',
+          ceo: '桑達·皮查伊',
+          marketCapDisplay: '$2.15 兆 USD',
+          peRatio: '22.8x',
+          dividendYield: '0.42%',
+          shortDescription: '全球搜尋引擎與網際網路資訊基石，研發 Gemini 原生多模態大模型、自研 TPU AI 晶片及 Waymo 無人計程車。',
+          flagshipProducts: ['Google 搜尋與 YouTube 影音生態', 'Gemini 原生多模態 AI 系統', 'Waymo 自駕計程車商業化服務'],
+          badgeColor: 'bg-rose-50 text-rose-700 border-rose-200'
+        },
+        {
+          id: 'tesla',
+          name: '特斯拉',
+          nameEn: 'Tesla, Inc.',
+          ticker: 'TSLA',
+          exchange: 'NASDAQ',
+          market: 'Global',
+          sector: 'Power & Components',
+          sectorLabel: '電動車與能源科技',
+          founded: 2003,
+          headquarters: '美國德州奧斯汀',
+          ceo: '伊隆·馬斯克',
+          marketCapDisplay: '$720B USD',
+          peRatio: '64.5x',
+          dividendYield: '0.00%',
+          shortDescription: '引領全球電動車革命與再生能源轉型，結合超大型一體壓鑄、FSD 純視覺全自動駕駛與 Optimus 人形機器人。',
+          flagshipProducts: ['Model Y / Model 3 全球暢銷純電車', 'FSD (全自動駕駛監督版系統)', 'Megapack 電網級商用儲能設備'],
+          badgeColor: 'bg-red-50 text-red-800 border-red-200'
+        }
+      ];
+
+      // 當前篩選狀態
+      let currentSearch = '';
+      let currentSector = 'All';
+      let currentMarket = 'All';
+
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const companyGrid = document.getElementById('companyGrid');
+      const noResults = document.getElementById('noResults');
+      const matchCount = document.getElementById('matchCount');
+      const statTotalCount = document.getElementById('statTotalCount');
+      const resetSearchBtn = document.getElementById('resetSearchBtn');
+
+      if (statTotalCount) {
+        statTotalCount.textContent = COMPANIES.length + ' 家';
+      }
+
+      // 渲染單張公司卡片 HTML
+      function renderCard(company) {
+        const flagships = company.flagshipProducts
+          .map(p => `<li class="truncate">• ${p}</li>`)
+          .join('');
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all duration-150 p-5 flex flex-col justify-between group">
+            <div>
+              <!-- 頂部代碼與市場標籤 -->
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                  <span class="font-mono font-bold bg-slate-100 text-slate-900 px-2 py-0.5 rounded">
+                    ${company.ticker}
+                  </span>
+                  <span>·</span>
+                  <span>${company.exchange}</span>
+                  <span>·</span>
+                  <span class="text-blue-600 font-medium">${company.market === 'Taiwan' ? '台灣上市' : '全球指標'}</span>
+                </div>
+                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md border ${company.badgeColor}">
+                  ${company.sectorLabel}
+                </span>
+              </div>
+
+              <!-- 公司名稱與連結 -->
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mt-2">
+                <a href="company.html?id=${company.id}" class="hover:underline">
+                  ${company.name}
+                </a>
+              </h3>
+              <div class="text-xs text-slate-500 line-clamp-1 mt-0.5">
+                ${company.nameEn}
+              </div>
+
+              <!-- 公司簡介 -->
+              <p class="text-xs sm:text-sm text-slate-600 mt-3 line-clamp-2 leading-relaxed">
+                ${company.shortDescription}
+              </p>
+
+              <!-- 核心業務/產品清單 -->
+              <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">核心產品與技術</div>
+                <ul class="text-xs text-slate-600 space-y-1">
+                  ${flagships}
+                </ul>
+              </div>
+            </div>
+
+            <!-- 底部財務數據與跳轉按鈕 -->
+            <div class="mt-5 pt-3.5 border-t border-slate-100">
+              <div class="grid grid-cols-3 gap-2 text-left mb-3.5 bg-slate-50 p-2.5 rounded-xl">
+                <div>
+                  <div class="text-[10px] text-slate-500 font-medium">市值規模</div>
+                  <div class="text-xs font-bold font-mono text-slate-900 truncate">${company.marketCapDisplay}</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-500 font-medium">本益比 P/E</div>
+                  <div class="text-xs font-bold font-mono text-slate-900">${company.peRatio}</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-500 font-medium">現金殖利率</div>
+                  <div class="text-xs font-bold font-mono text-emerald-600">${company.dividendYield}</div>
+                </div>
+              </div>
+
+              <a
+                href="company.html?id=${company.id}"
+                class="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-900 text-white hover:bg-blue-600 transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                <span>閱讀詳細企業介紹</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
+      // 執行即時過濾並重新渲染
+      function filterAndRender() {
+        const query = currentSearch.trim().toLowerCase();
+
+        const filtered = COMPANIES.filter(company => {
+          // 搜尋比對：中文名、英文名、代碼、產業、產品
+          const matchesSearch =
+            !query ||
+            company.name.toLowerCase().includes(query) ||
+            company.nameEn.toLowerCase().includes(query) ||
+            company.ticker.toLowerCase().includes(query) ||
+            company.sectorLabel.toLowerCase().includes(query) ||
+            company.flagshipProducts.some(p => p.toLowerCase().includes(query));
+
+          // 產業篩選
+          const matchesSector =
+            currentSector === 'All' || company.sector === currentSector;
+
+          // 市場篩選
+          const matchesMarket =
+            currentMarket === 'All' || company.market === currentMarket;
+
+          return matchesSearch && matchesSector && matchesMarket;
+        });
+
+        // 更新計數
+        matchCount.textContent = filtered.length;
+
+        // 渲染列表或無結果提示
+        if (filtered.length > 0) {
+          companyGrid.innerHTML = filtered.map(renderCard).join('');
+          companyGrid.classList.remove('hidden');
+          noResults.classList.add('hidden');
+        } else {
+          companyGrid.innerHTML = '';
+          companyGrid.classList.add('hidden');
+          noResults.classList.remove('hidden');
+        }
+      }
+
+      // 監聽搜尋輸入框 (即時即打即顯)
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        if (currentSearch.length > 0) {
+          clearSearchBtn.classList.remove('hidden');
+        } else {
+          clearSearchBtn.classList.add('hidden');
+        }
+        filterAndRender();
+      });
+
+      // 清除搜尋按鈕
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        currentSearch = '';
+        clearSearchBtn.classList.add('hidden');
+        searchInput.focus();
+        filterAndRender();
+      });
+
+      // 重設按鈕
+      resetSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        currentSearch = '';
+        currentSector = 'All';
+        currentMarket = 'All';
+        clearSearchBtn.classList.add('hidden');
+
+        // 重置按鈕視覺樣式
+        document.querySelectorAll('.market-btn').forEach(btn => {
+          if (btn.dataset.market === 'All') {
+            btn.className = 'market-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-slate-900 shadow-xs transition-all';
+          } else {
+            btn.className = 'market-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+          }
+        });
+
+        document.querySelectorAll('.sector-btn').forEach(btn => {
+          if (btn.dataset.sector === 'All') {
+            btn.className = 'sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-900 text-white transition-all';
+          } else {
+            btn.className = 'sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+          }
+        });
+
+        filterAndRender();
+      });
+
+      // 市場按鈕點擊
+      document.querySelectorAll('.market-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentMarket = btn.dataset.market;
+          document.querySelectorAll('.market-btn').forEach(b => {
+            b.className = 'market-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+          });
+          btn.className = 'market-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-slate-900 shadow-xs transition-all';
+          filterAndRender();
+        });
+      });
+
+      // 產業按鈕點擊
+      document.querySelectorAll('.sector-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentSector = btn.dataset.sector;
+          document.querySelectorAll('.sector-btn').forEach(b => {
+            b.className = 'sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+          });
+          btn.className = 'sector-btn px-3 py-1 text-xs font-semibold rounded-lg bg-slate-900 text-white transition-all';
+          filterAndRender();
+        });
+      });
+
+      // 初始渲染
+      filterAndRender();
+    </script>
+  </body>
+</html>
