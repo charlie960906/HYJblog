@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     default: 'HYJBLOG - 技術與生活隨筆',
   },
   description: '分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。',
+  verification: {
+    google: 'SUxPDlMSwGiUtKHUCrXT79K10bJS3Z-D_6olqGgIYQQ',
+  },
   manifest: '/manifest.json',
   icons: {
     icon: '/images/icon.webp',
