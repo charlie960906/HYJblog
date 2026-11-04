@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useLanguage } from '@/app/providers';
+import { FaFacebookF, FaLink, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 
 interface ShareProps {
   title: string;
@@ -19,25 +20,25 @@ export default function ShareButtons({ title, url }: ShareProps) {
   const shareLinks = [
     {
       name: 'Twitter',
-      icon: '𝕏',
+      icon: FaXTwitter,
       url: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
       color: 'hover:text-blue-400',
     },
     {
       name: 'Facebook',
-      icon: 'f',
+      icon: FaFacebookF,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
       color: 'hover:text-blue-600',
     },
     {
       name: 'LinkedIn',
-      icon: 'in',
+      icon: FaLinkedinIn,
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
       color: 'hover:text-blue-700',
     },
     {
       name: 'Copy Link',
-      icon: '🔗',
+      icon: FaLink,
       url: '#',
       color: 'hover:text-neutral-600 dark:hover:text-neutral-300',
       onClick: async (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -69,11 +70,11 @@ export default function ShareButtons({ title, url }: ShareProps) {
               rel={link.name === 'Copy Link' ? undefined : 'noopener noreferrer'}
               onClick={link.onClick}
               title={link.name}
-              className={`inline-block w-8 h-8 rounded-full flex items-center justify-center transition-smooth
+              className={`inline-flex w-8 h-8 rounded-full items-center justify-center transition-smooth
                 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400
                 ${link.color}`}
             >
-              <span className="text-xs font-mono font-bold">{link.icon}</span>
+              <link.icon className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           ))}
         </div>
