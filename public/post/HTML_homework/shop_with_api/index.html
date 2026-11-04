@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>精選商品列表（讀取 Google 試算表）</title>
+
+  <!-- DaisyUI + Tailwind (CDN 版) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Visualization API -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    .card-img-container {
+      height: 220px;
+      overflow: hidden;
+      background-color: #f8fafc;
+    }
+    .card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .card:hover .card-img-container img {
+      transform: scale(1.06);
+    }
+  </style>
+</head>
+
+<body class="bg-base-200 min-h-screen flex flex-col font-sans">
+
+  <!-- 頂部導航列 -->
+  <div class="navbar bg-base-100 shadow-sm px-4 lg:px-8 sticky top-0 z-30">
+    <div class="flex-1 gap-2">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-slate-800">
+        <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-sm text-sm">📊</span>
+        <span>精選商品資訊平台</span>
+      </a>
+    </div>
+
+    <div class="flex-none gap-2">
+      <!-- 重新整理按鈕 -->
+      <button onclick="fetchSheetData()" class="btn btn-sm btn-ghost gap-1 text-xs" title="從 Google 試算表重新抓取最新資料">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>重新整理</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 space-y-6">
+
+    <h1 class="text-3xl font-bold text-center text-slate-800 my-4">精選商品列表</h1>
+
+    <!-- 搜尋與篩選工具列 -->
+    <div class="card bg-base-100 shadow-sm p-4">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <!-- 關鍵字搜尋 -->
+        <div class="relative flex-1 max-w-md">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="搜尋商品編號 (如 P001)、名稱或說明..."
+            class="input input-bordered input-sm w-full pl-9 text-xs"
+            oninput="handleSearch()"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <div class="text-xs text-slate-500 font-medium self-end sm:self-auto" id="productCountText">
+          共載入 0 項商品
+        </div>
+      </div>
+    </div>
+
+    <!-- 載入中骨架畫面 (Loading State) -->
+    <div id="loadingSpinner" class="flex flex-col items-center justify-center py-20 space-y-3">
+      <span class="loading loading-spinner loading-lg text-emerald-600"></span>
+      <p class="text-sm text-slate-500">正在透過 Google Visualization API 查詢試算表資料...</p>
+    </div>
+
+    <!-- 錯誤提示區 (Error Alert) -->
+    <div id="errorAlert" class="alert alert-warning shadow-sm hidden text-xs leading-relaxed">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <div id="errorMessageText">試算表連線異常</div>
+    </div>
+
+    <!-- 商品列表 Cards 容器 (Product Listing Cards) -->
+    <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+  </main>
+
+  <!-- JavaScript 核心程式碼 (純 JS，無 TypeScript) -->
+  <script>
+    // 攔截跨來源腳本錯誤，確保不會因 CDN 或 iframe 阻擋而報 Script error
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.indexOf('Script error') !== -1) {
+        e.preventDefault();
+        return true;
+      }
+    });
+
+    // 試算表 ID 與工作表名稱
+    var SHEET_ID = "1Cw2FuugvCqCOss6yV-76Cy2o7NkgWOVJaDeLGHqcTK0";
+    var SHEET_NAME = "工作表1";
+
+    var allProducts = [];
+
+    // 初始化 Google Charts
+    if (typeof google !== 'undefined' && google.charts) {
+      try {
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+      } catch (e) {
+        window.addEventListener('DOMContentLoaded', init);
+      }
+    } else {
+      window.addEventListener('DOMContentLoaded', init);
+    }
+
+    function init() {
+      fetchSheetData();
+    }
+
+    function fetchSheetData() {
+      var spinner = document.getElementById("loadingSpinner");
+      if (spinner) spinner.classList.remove("hidden");
+      var alertBox = document.getElementById("errorAlert");
+      if (alertBox) alertBox.classList.add("hidden");
+      document.getElementById("productList").innerHTML = "";
+
+      var baseUrl =
+        'https://docs.google.com/spreadsheets/d/' +
+        SHEET_ID +
+        '/gviz/tq?sheet=' +
+        encodeURIComponent(SHEET_NAME);
+
+      // 優先方式：使用 Google Visualization API (作業標準規範)
+      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery('select *');
+          query.send(function(response) {
+            if (response && !response.isError()) {
+              parseDataTable(response.getDataTable());
+            } else {
+              // 若 GViz 查詢受到跨網域限制，切換至直接 fetch 解析
+              fetchViaDirectApi(baseUrl + '&tqx=out:json');
+            }
+          });
+          return;
+        } catch (err) {
+          console.warn("GViz query execution failed, trying direct fetch:", err);
+        }
+      }
+
+      // 備援方式：直接透過 GViz JSON 端點取得
+      fetchViaDirectApi(baseUrl + '&tqx=out:json');
+    }
+
+    // 解析 Google Visualization DataTable
+    function parseDataTable(data) {
+      hideLoading();
+      var rows = data.getNumberOfRows();
+      allProducts = [];
+
+      var startIndex = 0;
+      if (rows > 0) {
+        var firstCell = String(data.getFormattedValue(0, 0) || '').toLowerCase().trim();
+        if (firstCell === 'id' || firstCell === '編號') {
+          startIndex = 1;
+        }
+      }
+
+      for (var r = startIndex; r < rows; r++) {
+        var id    = data.getFormattedValue(r, 0);
+        var name  = data.getFormattedValue(r, 1);
+        var desc  = data.getFormattedValue(r, 2);
+        var rawPrice = data.getFormattedValue(r, 3);
+        var img   = data.getFormattedValue(r, 4);
+
+        if (!id) continue;
+
+        var numPrice = Number(String(rawPrice).replace(/[^0-9.]/g, ''));
+        var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : (rawPrice || "0");
+
+        allProducts.push({
+          id: id,
+          name: name || id,
+          desc: desc || "尚無商品說明",
+          price: formattedPrice,
+          img: img
+        });
+      }
+
+      renderFilteredCards(allProducts);
+    }
+
+    // 直接呼叫 GViz JSON 格式端點 (免依賴外部 JS 腳本)
+    function fetchViaDirectApi(url) {
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var startIdx = text.indexOf('{');
+          var endIdx = text.lastIndexOf('}') + 1;
+          if (startIdx === -1 || endIdx <= startIdx) throw new Error("無法解析回傳格式");
+
+          var json = JSON.parse(text.substring(startIdx, endIdx));
+          if (json.status === 'error') throw new Error(json.errors[0].message);
+
+          var rows = json.table.rows;
+          allProducts = [];
+
+          var startIndex = 0;
+          if (rows.length > 0 && rows[0].c && rows[0].c[0] && rows[0].c[0].v) {
+            var val0 = String(rows[0].c[0].v).toLowerCase().trim();
+            if (val0 === 'id' || val0 === '編號') startIndex = 1;
+          }
+
+          for (var i = startIndex; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (!c) continue;
+
+            var id = String(c[0] ? c[0].v : '').trim();
+            var name = String(c[1] ? c[1].v : '').trim();
+            var desc = String(c[2] ? c[2].v : '').trim();
+            var rawPrice = c[3] ? (c[3].f || c[3].v) : '0';
+            var img = String(c[4] ? c[4].v : '').trim();
+
+            if (!id) continue;
+
+            var numPrice = Number(String(rawPrice).replace(/[^0-9.]/g, ''));
+            var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : (rawPrice || "0");
+            allProducts.push({
+              id: id,
+              name: name || id,
+              desc: desc || "尚無商品說明",
+              price: formattedPrice,
+              img: img
+            });
+          }
+
+          hideLoading();
+          renderFilteredCards(allProducts);
+        })
+        .catch(function(err) {
+          console.error("連線至 Google 試算表失敗：", err);
+          hideLoading();
+          showError("無法讀取 Google 試算表資料，請確認試算表已公開，稍後再試。");
+        });
+    }
+
+    function hideLoading() {
+      var spinner = document.getElementById("loadingSpinner");
+      if (spinner) spinner.classList.add("hidden");
+    }
+
+    function renderFilteredCards(products) {
+      document.getElementById("productCountText").innerText = "共載入 " + products.length + " 項商品";
+      var container = document.getElementById("productList");
+
+      if (products.length === 0) {
+        container.innerHTML =
+          '<div class="col-span-full text-center py-12 bg-base-100 rounded-2xl">' +
+            '<p class="text-slate-400 text-sm">找不到符合條件的商品項目</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < products.length; i++) {
+        var p = products[i];
+
+        // 產生商品 Cards，按鈕直接導向 detail.html?id=...
+        html +=
+          '<div class="card bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-300 flex flex-col justify-between overflow-hidden group">' +
+            '<figure class="card-img-container relative">' +
+              '<img src="' + escapeHtml(p.img || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80') + '" alt="' + escapeHtml(p.name) + '" onerror="this.src=\'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80\'" />' +
+              '<div class="absolute top-2 left-2 badge badge-neutral text-xs font-mono font-bold shadow">' +
+                escapeHtml(p.id) +
+              '</div>' +
+            '</figure>' +
+            '<div class="card-body p-5 flex flex-col justify-between flex-1">' +
+              '<div>' +
+                '<h2 class="card-title text-base font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1 mb-1">' +
+                  escapeHtml(p.name) +
+                '</h2>' +
+                '<p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">' +
+                  escapeHtml(p.desc) +
+                '</p>' +
+              '</div>' +
+              '<div class="pt-3 border-t border-base-200 flex items-center justify-between">' +
+                '<div>' +
+                  '<span class="text-[10px] text-slate-400 block font-medium">售價 NT$</span>' +
+                  '<span class="text-lg font-black text-primary">$' + escapeHtml(p.price) + '</span>' +
+                '</div>' +
+                '<div class="card-actions">' +
+                  '<a href="detail.html?id=' + encodeURIComponent(p.id) + '" class="btn btn-primary btn-sm text-xs font-semibold">' +
+                    '查看詳細' +
+                  '</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, function(character) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[character];
+      });
+    }
+
+    function handleSearch() {
+      var query = document.getElementById("searchInput").value.toLowerCase().trim();
+      if (!query) {
+        renderFilteredCards(allProducts);
+        return;
+      }
+
+      var filtered = allProducts.filter(function(p) {
+        return (
+          p.id.toLowerCase().indexOf(query) !== -1 ||
+          p.name.toLowerCase().indexOf(query) !== -1 ||
+          p.desc.toLowerCase().indexOf(query) !== -1
+        );
+      });
+
+      renderFilteredCards(filtered);
+    }
+
+    function showError(message) {
+      var alertBox = document.getElementById("errorAlert");
+      document.getElementById("errorMessageText").innerText = message;
+      alertBox.classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>

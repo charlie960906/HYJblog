@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品詳細介紹 - Google 試算表串接專案</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body class="bg-base-200 min-h-screen flex flex-col font-sans">
+  <nav class="navbar bg-base-100 shadow-sm px-4 lg:px-8">
+    <a href="index.html" class="flex-1 text-xl font-bold text-slate-800">📊 精選商品資訊平台</a>
+    <a href="index.html" class="btn btn-sm btn-outline">返回商品列表</a>
+  </nav>
+
+  <main class="max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1">
+    <div class="breadcrumbs text-xs text-slate-500 mb-6">
+      <ul><li><a href="index.html">商品列表</a></li><li id="crumbProductName">載入中...</li></ul>
+    </div>
+
+    <div id="loadingSpinner" class="card bg-base-100 shadow-sm p-12 text-center">
+      <span class="loading loading-spinner loading-lg text-emerald-600 mx-auto"></span>
+      <p class="text-sm text-slate-500 mt-3">正在從 Google 試算表查詢資料...</p>
+    </div>
+
+    <div id="errorAlert" class="alert alert-warning hidden">
+      <span id="errorMessageText">無法取得商品資料。</span>
+    </div>
+
+    <article id="productDetailCard" class="card lg:card-side bg-base-100 shadow-md hidden overflow-hidden">
+      <figure class="lg:w-1/2 bg-slate-50 min-h-80">
+        <img id="detailImg" class="w-full h-full object-cover" alt="商品圖片"
+          src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80" />
+      </figure>
+      <div class="card-body lg:w-1/2">
+        <div class="flex gap-2">
+          <span id="detailBadgeId" class="badge badge-neutral font-mono"></span>
+          <span class="badge badge-success">Google 試算表資料</span>
+        </div>
+        <h1 id="detailName" class="card-title text-3xl"></h1>
+        <div class="p-4 bg-emerald-50 rounded-xl">
+          <span class="text-xs text-emerald-700">售價 NT$</span>
+          <div id="detailPrice" class="text-3xl font-black text-emerald-900"></div>
+        </div>
+        <p id="detailDesc" class="leading-relaxed text-slate-600"></p>
+        <div class="text-xs border rounded-xl p-3">
+          商品代號：<span id="tableId" class="font-mono font-bold text-emerald-700"></span>
+        </div>
+        <div class="card-actions justify-end">
+          <a href="index.html" class="btn btn-outline">返回商品列表</a>
+          <button onclick="copyShareLink()" class="btn btn-primary">分享此商品</button>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    var SHEET_ID = "1Cw2FuugvCqCOss6yV-76Cy2o7NkgWOVJaDeLGHqcTK0";
+    var SHEET_NAME = "工作表1";
+    var PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80";
+
+    if (typeof google !== "undefined" && google.charts) {
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(init);
+    } else {
+      window.addEventListener("DOMContentLoaded", init);
+    }
+
+    function init() {
+      var productId = new URLSearchParams(window.location.search).get("id");
+      if (!productId) {
+        handleError("網址缺少商品 ID，請回到列表頁選取商品。");
+        return;
+      }
+      fetchProductDetail(productId);
+    }
+
+    function fetchProductDetail(productId) {
+      var baseUrl = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+        "/gviz/tq?sheet=" + encodeURIComponent(SHEET_NAME);
+      var sqlQuery = "select * where A = '" + productId.replace(/'/g, "''") + "'";
+      var queryUrl = baseUrl + "&tqx=out:json";
+
+      if (typeof google !== "undefined" && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery(sqlQuery);
+          query.send(function(response) {
+            if (response && !response.isError() && response.getDataTable().getNumberOfRows()) {
+              renderProductDetail(readDataTableRow(response.getDataTable()));
+            } else {
+              fetchDetailDirect(queryUrl, productId);
+            }
+          });
+          return;
+        } catch (error) {
+          console.error("GViz query failed:", error);
+        }
+      }
+      fetchDetailDirect(queryUrl, productId);
+    }
+
+    function readDataTableRow(data) {
+      return {
+        id: data.getFormattedValue(0, 0),
+        name: data.getFormattedValue(0, 1),
+        desc: data.getFormattedValue(0, 2),
+        price: data.getFormattedValue(0, 3),
+        img: data.getFormattedValue(0, 4)
+      };
+    }
+
+    function fetchDetailDirect(url, productId) {
+      fetch(url)
+        .then(function(response) {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.text();
+        })
+        .then(function(text) {
+          var start = text.indexOf("{");
+          var end = text.lastIndexOf("}") + 1;
+          if (start < 0 || end <= start) throw new Error("Invalid response");
+          var rows = JSON.parse(text.slice(start, end)).table.rows;
+          var found = null;
+          for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].c || [];
+            if (cells[0] && String(cells[0].v).toLowerCase() === productId.toLowerCase()) {
+              found = {
+                id: String(cells[0].v),
+                name: String(cells[1] ? cells[1].v : cells[0].v),
+                desc: String(cells[2] ? cells[2].v : ""),
+                price: String(cells[3] ? (cells[3].f || cells[3].v) : "0"),
+                img: String(cells[4] ? cells[4].v : "")
+              };
+              break;
+            }
+          }
+          if (found) renderProductDetail(found);
+          else handleError("在 Google 試算表中找不到商品編號為「" + productId + "」的資料。");
+        })
+        .catch(function(error) {
+          console.error("讀取 Google 試算表失敗:", error);
+          handleError("無法讀取 Google 試算表資料，請確認試算表已公開，稍後再試。");
+        });
+    }
+
+    function renderProductDetail(product) {
+      document.getElementById("loadingSpinner").classList.add("hidden");
+      document.getElementById("productDetailCard").classList.remove("hidden");
+      document.title = product.name + " - 商品詳細介紹";
+      document.getElementById("crumbProductName").innerText = product.name;
+      document.getElementById("detailBadgeId").innerText = product.id;
+      document.getElementById("detailName").innerText = product.name;
+      document.getElementById("detailDesc").innerText = product.desc || "尚無商品說明";
+      document.getElementById("tableId").innerText = product.id;
+      document.getElementById("detailImg").src = product.img || PLACEHOLDER_IMAGE;
+      document.getElementById("detailImg").onerror = function() { this.src = PLACEHOLDER_IMAGE; };
+      var price = Number(String(product.price).replace(/[^0-9.]/g, ""));
+      document.getElementById("detailPrice").innerText =
+        !isNaN(price) && price > 0 ? price.toLocaleString() : product.price || "0";
+    }
+
+    function handleError(message) {
+      document.getElementById("loadingSpinner").classList.add("hidden");
+      document.getElementById("errorMessageText").innerText = message;
+      document.getElementById("errorAlert").classList.remove("hidden");
+    }
+
+    function copyShareLink() {
+      navigator.clipboard.writeText(window.location.href)
+        .then(function() { alert("商品連結已複製到剪貼簿！"); })
+        .catch(function(error) { console.error("複製連結失敗:", error); });
+    }
+  </script>
+</body>
+</html>
