@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hyjblog.hyjdevelop.com</id>
     <title>HYJBLOG</title>
-    <updated>2026-10-15T03:28:51.804Z</updated>
+    <updated>2026-11-07T14:06:05.768Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <author>
         <name>HYJBLOG</name>
@@ -12,6 +12,232 @@
     <subtitle>分享 C++、前端開發、資料結構與演算法，以及生活隨筆的個人部落格。</subtitle>
     <icon>https://hyjblog.hyjdevelop.com/favicon.ico</icon>
     <rights>© 2026 HYJBLOG. All rights reserved.</rights>
+    <entry>
+        <title type="html"><![CDATA[HTML5 WEB APP程式設計第五周心得]]></title>
+        <id>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass5</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass5"/>
+        <updated>2026-10-21T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[使用 Google Visualization API 串接 Google 試算表，完成商品列表與詳細介紹頁。]]></summary>
+        <content type="html"><![CDATA[<h2>作業：使用 Google 試算表 API 製作商品網站</h2>
+<p>網頁：<a href="https://onlineshopwithapi.netlify.app/">精選商品資訊平台</a></p>
+<p>資料放在<a href="https://docs.google.com/spreadsheets/d/1Cw2FuugvCqCOss6yV-76Cy2o7NkgWOVJaDeLGHqcTK0/edit?usp=sharing">Google 試算表</a>，透過 Google Visualization API 讀取資料，製作商品列表頁和商品詳細介紹頁<br>試算表目前有商品編號、名稱、說明、價格和圖片網址等欄位<br>和前幾次把資料直接寫在 JavaScript 陣列裡相比<br>這邊只要修改試算表內容，網頁重新整理後就能取得最新資料，不需要再次修改 HTML</p>
+<h2>Google 試算表資料格式</h2>
+<p>程式使用試算表 ID 和工作表名稱組合出查詢網址：</p>
+<pre><code class="language-JavaScript">var SHEET_ID = &quot;1Cw2FuugvCqCOss6yV-76Cy2o7NkgWOVJaDeLGHqcTK0&quot;;
+var SHEET_NAME = &quot;工作表1&quot;;
+
+var baseUrl =
+  &quot;https://docs.google.com/spreadsheets/d/&quot; +
+  SHEET_ID + &quot;/gviz/tq?sheet=&quot; +
+  encodeURIComponent(SHEET_NAME);
+</code></pre>
+<p>資料欄位的順序固定為：</p>
+<table>
+<thead>
+<tr>
+<th>欄位</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>商品編號，例如 P001</td>
+</tr>
+<tr>
+<td>name</td>
+<td>商品名稱</td>
+</tr>
+<tr>
+<td>desc</td>
+<td>商品說明</td>
+</tr>
+<tr>
+<td>price</td>
+<td>商品價格</td>
+</tr>
+<tr>
+<td>img</td>
+<td>商品圖片網址</td>
+</tr>
+</tbody></table>
+<p><code>encodeURIComponent()</code> 可以把工作表名稱轉換成適合放在網址中的格式，避免中文或特殊字元造成查詢錯誤</p>
+<h2>Google Visualization API 與備援讀取</h2>
+<p>網站優先使用 <code>google.visualization.Query</code> 查詢試算表：</p>
+<pre><code class="language-JavaScript">var query = new google.visualization.Query(baseUrl);
+query.setQuery(&quot;select *&quot;);
+query.send(function(response) {
+  if (response &amp;&amp; !response.isError()) {
+    parseDataTable(response.getDataTable());
+  } else {
+    fetchViaDirectApi(baseUrl + &quot;&amp;tqx=out:json&quot;);
+  }
+});
+</code></pre>
+<p>如果 Visualization API 查詢失敗，程式會改用 <code>fetch()</code> 讀取 GViz JSON 格式<br>這樣即使 CDN 載入較慢或查詢方式受到瀏覽器限制，仍然有另一種方式可以取得資料</p>
+<p>直接讀取時，回傳內容不是純 JSON，而是包在其他文字裡<br>所以程式先找出第一個 <code>{</code> 和最後一個 <code>}</code>，再使用 <code>JSON.parse()</code> 解析：</p>
+<pre><code class="language-JavaScript">var startIdx = text.indexOf(&quot;{&quot;);
+var endIdx = text.lastIndexOf(&quot;}&quot;) + 1;
+var json = JSON.parse(text.substring(startIdx, endIdx));
+</code></pre>
+<h2>非同步程式與載入狀態</h2>
+<p>讀取試算表需要等待網路回應，所以網頁一開始會顯示 loading spinner<br>等資料解析完成後，再呼叫 <code>renderFilteredCards()</code> 產生商品卡片：</p>
+<pre><code class="language-JavaScript">fetch(url)
+  .then(function(response) {
+    if (!response.ok) throw new Error(&quot;HTTP &quot; + response.status);
+    return response.text();
+  })
+  .then(function(text) {
+    // 解析資料並產生商品卡片
+  })
+  .catch(function(error) {
+    console.error(&quot;連線至 Google 試算表失敗：&quot;, error);
+    showError(&quot;無法讀取 Google 試算表資料，請稍後再試。&quot;);
+  });
+</code></pre>
+<h2>動態產生商品卡片</h2>
+<p>API 回傳的每一列資料會先整理成商品物件，再使用迴圈產生卡片 HTML<br>每張卡片包含圖片、商品編號、名稱、說明、價格和詳細頁連結</p>
+<p>詳細頁的網址會把商品編號放在查詢參數中：</p>
+<pre><code class="language-JavaScript">href = &quot;detail.html?id=&quot; + encodeURIComponent(p.id);
+</code></pre>
+<p>商品編號不是寫死在詳細頁，而是由 <code>URLSearchParams</code> 讀取：</p>
+<pre><code class="language-JavaScript">var productId = new URLSearchParams(window.location.search).get(&quot;id&quot;);
+</code></pre>
+<p>同一個 <code>detail.html</code> 就能顯示 P001、P002 或其他商品<br>不用為每件商品建立一個新的 HTML 檔案</p>
+<h2>搜尋功能與資料過濾</h2>
+<p>搜尋框會在 <code>input</code> 事件發生時執行 <code>handleSearch()</code><br>程式將輸入文字轉成小寫並去除前後空白<br>再使用 <code>filter()</code> 比對商品編號、名稱和說明：</p>
+<pre><code class="language-JavaScript">var filtered = allProducts.filter(function(p) {
+  return (
+    p.id.toLowerCase().indexOf(query) !== -1 ||
+    p.name.toLowerCase().indexOf(query) !== -1 ||
+    p.desc.toLowerCase().indexOf(query) !== -1
+  );
+});
+</code></pre>
+<h2>圖片、價格與安全處理</h2>
+<p>價格資料從試算表讀出來時可能包含逗號或其他文字<br>先移除非數字字元，再使用 <code>toLocaleString()</code> 顯示千分位<br>圖片載入失敗時，會改用預設圖片，避免卡片出現破圖  </p>
+<p>商品名稱和說明會被放進 <code>innerHTML</code><br>程式另外使用 <code>escapeHtml()</code> 將 <code>&amp;</code>、<code>&lt;</code>、<code>&gt;</code>、引號等特殊字元轉換  </p>
+<h2>參考資料</h2>
+<p><a href="https://developers.google.com/chart/interactive/docs/querylanguage">Google Visualization API - Query Language</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API">MDN - Fetch API</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/API/URLSearchParams">MDN - URLSearchParams</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent">MDN - encodeURIComponent()</a></p>
+]]></content>
+        <author>
+            <name>HYJBLOG</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
+        </author>
+        <category label="課程心得"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[9月review]]></title>
+        <id>https://hyjblog.hyjdevelop.com/blog/日記/2026_10_21</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/日記/2026_10_21"/>
+        <updated>2026-10-21T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[尬damn 10月怎麼過的那麼快都來不及寫，But 9月是我的生日月!!!]]></summary>
+        <content type="html"><![CDATA[<h2>新生訓練</h2>
+<p>新生訓練 除了演講以外都讚讚讚
+演講聽到要睡著 超級無敵想睡
+然後坐到屁股超痛
+然後主任超好笑哈哈哈</p>
+<p>這邊的照片慢慢找哈哈哈
+<img src="/images/202609/20260831fresh.webp" alt="主任"></p>
+<h2>Happy Birthday</h2>
+<p>好的，就是我的生日哈哈哈哈哈<br>㊗️我生日快樂 ㊗️年底五萬點 ㊗️發大財
+超好笑好像沒什麼好說的<br>寫個願望:<br>希望自己在大學交到更多朋友<br>讀書認真點、少耍廢!!!  </p>
+<p><img src="/images/202609/202609044birthday.webp" alt="生日慶生1"></p>
+<h2>中秋節烤肉</h2>
+<p>好的中秋節烤肉<br>我烤了三天 整整三天<br>我那時候真是要胖死了  </p>
+<h3>第一攤烤肉</h3>
+<p><a href="https://maps.app.goo.gl/LCQbTUmruTqdqMxa7">夯石頭無煙燒肉 斗六旗艦館</a>
+第一天是和家人去吃石頭燒肉<br>給到夯 雖然重點是燒肉<br>但是我很推他們的味噌湯底火鍋<br>尬電好吃阿<br>尤其是拿來煮泡麵哈哈哈<br>超好吃🤤🤤🤤  </p>
+<h3>第二攤烤肉</h3>
+<p>好欸 上大學後第一次聚<br>這邊請許O祐、高O鈞、郭O瑨喝酒適量<br><del>喝車不開酒，開酒不喝車</del><br>還有阿姨請騎車經過路口的路中間請不要急煞=_=<br>你差點轉身到異世界<br>烤肉非常好吃 沒有拉肚子就是好烤肉
+<img src="/images/202609/20260926BBQ1.webp" alt="烤肉">
+<img src="/images/202609/20260926BBQ2.webp" alt="烤肉">
+<img src="/images/202609/20260926BBQ3.webp" alt="烤肉">
+<img src="/images/202609/20260926BBQ4.webp" alt="烤肉">
+<img src="/images/202609/20260926BBQ5.webp" alt="烤肉"></p>
+<h3>第三攤烤肉</h3>
+<p>感謝Dray一家照顧我們 感動哭了<br>居然在中秋節的烤肉可以吃到和牛與牛舌<br>下次聚就是寒假了QQ<br>希望下次可以全部抵達<br>太認真吃肉了都沒烤肉照只拍了月亮
+<img src="/images/202609/20260927BBQ1.webp" alt="天空">
+新的台南車站真漂亮
+<img src="/images/202609/20260927BBQ3.webp" alt="台南車站">
+<img src="/images/202609/20260927BBQ2.webp" alt="月亮">
+samsung Galaxy S24 Ultra
+f/3.4 | 1/439s | 18.6mm | ISO32 | 3000x4000 </p>
+<h2>小妞</h2>
+<p>這是九月裡面最難過的事 
+她是從我小二開始陪我長大到大一的狗狗<br>她一直是我最愛的狗狗 雖然她醜醜的<br>但是她的毛都是我剪的 雖然我有時候會夾到她的肉<br>她會生氣 但從來沒有咬過我<br>在她離開前的一個禮拜  我也才剛幫她剪過毛毛<br>她很乖 一直是家裡四隻狗狗的大姊姊<br>也很厲害 當草皮出現蛇的時候
+不管是哪一種蛇 她都能精準的抓住她 然後她毫髮無傷<br>留在9月的最後<br>我愛你歐
+<img src="/images/202609/20260418bigsisterdog.jpg" alt="小妞"></p>
+]]></content>
+        <author>
+            <name>HYJBLOG</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
+        </author>
+        <category label="日記"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HTML5 WEB APP程式設計第四周心得]]></title>
+        <id>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass4</id>
+        <link href="https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass4"/>
+        <updated>2026-10-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[google studio網站]]></summary>
+        <content type="html"><![CDATA[<h2>作業：使用Google AI Studio 做網站</h2>
+<p>作品：<a href="https://introductioncompanies.netlify.app/">上市公司介紹網站</a>
+介紹台灣與全球上市公司的網站
+首頁顯示公司卡片，詳細頁介紹更多該公司的資料</p>
+<h3>陣列與物件</h3>
+<p>每一家公司都是一個物件，所有公司物件放在 <code>COMPANIES</code> 陣列中<br>物件可以同時保存公司名稱、股票代碼、產業、簡介和產品清單等資料<br>這樣新增公司時只要增加一個物件，不需要重新複製整張 HTML 卡片  </p>
+<pre><code class="language-JavaScript">const COMPANIES = [
+  {
+    id: &#39;tsmc&#39;,
+    name: &#39;台灣積體電路製造股份有限公司&#39;,
+    ticker: &#39;2330&#39;,
+    market: &#39;Taiwan&#39;,
+    flagshipProducts: [&#39;先進製程&#39;, &#39;先進封裝&#39;]
+  }
+];
+</code></pre>
+<h3>迴圈產生卡片</h3>
+<p><code>map()</code> 會逐一處理 <code>COMPANIES</code> 裡的資料<br><code>renderCard()</code> 再把每家公司轉成一段卡片 HTML<br>使用 <code>join(&#39;&#39;)</code> 合併成完整內容，放進 <code>companyGrid</code><br>這樣畫面上的卡片和資料內容可以保持一致</p>
+<pre><code class="language-JavaScript">companyGrid.innerHTML = filtered.map(renderCard).join(&#39;&#39;);
+</code></pre>
+<h3>搜尋與篩選</h3>
+<h4>搜尋</h4>
+<p>輸入框綁定 <code>input</code> 事件<br>使用者每輸入一個字<br>就會更新 <code>currentSearch</code><br>然後再呼叫 <code>filterAndRender()</code><br>程式使用 <code>includes()</code> 比對公司中文名稱、英文名稱、股票代碼、產業和產品<br>只保留符合關鍵字的公司</p>
+<h4>篩選</h4>
+<p>按造市場和產業按鈕篩選<br><code>filter()</code> 會依照 <code>matchesSearch</code>、<code>matchesSector</code> 和 <code>matchesMarket</code> 三個條件來判斷</p>
+<pre><code class="language-JavaScript">const filtered = COMPANIES.filter(company =&gt; {
+  const matchesSearch =
+    !query || company.name.toLowerCase().includes(query);
+  const matchesMarket =
+    currentMarket === &#39;All&#39; || company.market === currentMarket;
+
+  return matchesSearch &amp;&amp; matchesMarket;
+});
+</code></pre>
+<h3>按鈕</h3>
+<p>市場按鈕和產業按鈕使用 <code>addEventListener(&#39;click&#39;, ...)</code> 監聽點擊事件<br>點擊後會修改目前的篩選狀態<br>再重新執行篩選和畫面渲染<br>清除搜尋和重設按鈕也使用同樣的方式來判斷</p>
+<h3>詳細介紹頁</h3>
+<p>詳細頁使用 <code>URLSearchParams</code> 讀取 <code>id</code><br>再從 <code>COMPANIES_DATA</code> 找出對應的公司資料  </p>
+<h3>URLSearchParams</h3>
+<p>詳細頁使用 <code>URLSearchParams</code> 讀取網址的查詢參數 <code>?id=tsmc</code><br>再依照公司編號顯示對應資料<br>同一個 <code>company.html</code> 可以共用給不同公司<br>這樣就不需要建立很多份相同的 HTML </p>
+<p>參考連結：<br><a href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams">MDN - URLSearchParams</a><br><a href="https://www.w3schools.com/js/js_api_url.asp">W3Schools - JavaScript URL</a></p>
+<h3>箭頭函式與模板字串</h3>
+<p><code>company =&gt; ...</code> 是箭頭函式<br>可以簡化只有一個參數的函式寫法
+程式中的反引號是模板字串<br>可以使用 <code>${}</code> 把公司名稱、產品和其他資料放入 HTML 字串中  </p>
+<p>參考連結：<br><a href="https://www.w3schools.com/js/js_arrow_function.asp">W3Schools - JavaScript Arrow Function</a><br><a href="https://www.w3schools.com/js/js_string_templates.asp">W3Schools - JavaScript Template Strings</a></p>
+<h3>some()</h3>
+<p>搜尋公司時，<code>some()</code> 會檢查產品陣列<br>只要其中一個產品名稱符合搜尋文字<br>就會回傳 <code>true</code><br>這樣就能搜尋公司名稱以外的產品資料</p>
+<p>參考連結：<br><a href="https://www.w3schools.com/jsref/jsref_some.asp">W3Schools - JavaScript Array some()</a></p>
+<h3>classList</h3>
+<p><code>classList</code> 可以新增、移除或切換 HTML 元素的 class 用來切換按鈕的顯示樣式</p>
+<p>參考連結：<br><a href="https://www.w3schools.com/jsref/prop_element_classlist.asp">W3Schools - JavaScript classList</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset">MDN - HTMLElement.dataset</a></p>
+]]></content>
+        <author>
+            <name>HYJBLOG</name>
+            <uri>https://hyjblog.hyjdevelop.com</uri>
+        </author>
+        <category label="課程心得"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[HTML5 WEB APP程式設計第三周心得]]></title>
         <id>https://hyjblog.hyjdevelop.com/blog/HTML_homework/HTMLclass3</id>
@@ -65,7 +291,8 @@
 <li>用按鈕進行價格升序、降序和回復原始順序。</li>
 <li>點擊「查看優惠」後，在頁面下方顯示選到的優惠券名稱。</li>
 </ol>
-<p><a href="/post/HTML_homework/gomaji-clone.html">gomaji-clone.html</a></p>
+<h3>網站展示：<a href="/post/HTML_homework/gomaji-clone.html">gomaji-clone.html</a></h3>
+<h3>程式碼</h3>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-Hant&quot;&gt;
 &lt;head&gt;
