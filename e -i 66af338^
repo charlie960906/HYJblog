@@ -1,0 +1,147 @@
+[33m7aeeabc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m 刪除超過100MB之檔案
+[33mb3fd8de[m 更新
+[33mfdb0626[m 將11月Review放到草稿
+[33m66af338[m 11月文章更新
+[33m42d28dd[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m 9月Review 封面更新
+[33m47b3ce2[m 更新9月Review
+[33mc7a66fc[m 更新Next版本 修補風險漏洞以及分享圖標錯位問題
+[33me21de0c[m 更新Next版本 修補風險漏洞
+[33m81f580b[m Giscus渲染位置錯誤
+[33m1307092[m HTMLclass5完成
+[33m8738fd0[m HTMLclass5作業心得上傳(希望我會把9月Review在這兩天寫完)
+[33me220d16[m google search console 增加
+[33mfbe9442[m 小標題整理好
+[33m9956737[m 增加文章標題間空格
+[33m7af8cfd[m HTML_Week4_homework
+[33m94d0a1b[m 更新文章放置位置
+[33m886e256[m 文章掃描改成遞迴讀取
+[33m9d42c21[m 更新HTML作業，新增gomaji-clone.html，修改HTMLclass3.md，更新atom.xml與rss.xml
+[33m44ecbda[m 完成HTMLclass3功課，增加是否將文章放到首頁的功能
+[33m3d33381[m HTML class 3心得跟黑夜模式文字有些是黑色的改成白色修正
+[33me58f8d8[m 更新RSS&atom
+[33m74af888[m 更新npmrc和nvmrc文件，修改了部署工作流配置，更新了README和其他配置文件，添加了新的文档和资源文件，删除了旧的Tailwind配置文件。
+[33m6bbdf6a[m 下架封裝文章 內容排版錯誤
+[33m3aaad3b[m 先進封裝文章上線
+[33med35779[m 優化動畫、完成第二周HTML課程筆記、修改About頁面內容、修改全域CSS樣式
+[33m1f0c7ee[m 修正按鈕覆蓋問題，並新增 icon-swap 與 menu-dropdown 兩個過渡動畫 補充程式碼複製按鈕語言切換
+[33m354a61a[m 網站新增回到最上面按鈕及雙語支援按鈕
+[33m8d62c8d[m 更新個人介紹
+[33mff2f6c5[m 更新自介
+[33m8510d5d[m 目錄高亮效果與線條不同步問題修正
+[33m818a5aa[m 暫時下架先進封裝文章
+[33m0535977[m 標籤整理
+[33m8db323f[m 先進封裝文章上線
+[33mc8b29e5[m 更新HTMLclass作業程式碼備註
+[33mb0f9361[m 更新Update頁面，新增最近的更新紀錄
+[33m9e5f254[m 第一周程式作業心得
+[33m76fd69d[m 更新README.md
+[33m6a45ebd[m 第一周程式作業心得
+[33mf4910e7[m 字體大小修正 第一周程式作業心得
+[33mee8a998[m Merge branch 'main' of https://github.com/charlie960906/HYJblog
+[33mf108c45[m 程式碼區塊 保留原始格式，盡量不自動換行 螢幕寬度不足時左右水平滾動 支援觸控裝置滑動
+[33mb56f77c[m 程式碼區塊 保留原始格式，盡量不自動換行 螢幕寬度不足時左右水平滾動 支援觸控裝置滑動
+[33m7fa5ce2[m 報錯網址更新
+[33mf8f8157[m 完善markdawn解析的内容，增加了程式高亮和複製按鈕。
+[33m47c0bcc[m 更改檔案名稱
+[33m1645370[m 更新hero內容，新增HTML課程心得
+[33meb0e335[m 修正主控台報錯誤訊息，將日期格式化為正確的中文格式，並修正 Footer 統計字數顯示問題。
+[33m2cda14a[m 修正Tag點選動畫外框遮蓋 bug
+[33m3c80d4d[m 優化網站 優化無障礙功能，改善使用者體驗，提升網站效能與可訪問性。
+[33mcab7d8b[m feat(theme): implement circular reveal transition via View Transitions API
+[33m95b0542[m rebuild
+[33m1d9e47d[m Image formats from JPG to WebP
+[33mafd49de[m 更新排版
+[33m2c1b38d[m 更改影片格式
+[33m1be9312[m 更新照片路徑
+[33maef941a[m 更新影片布局
+[33m573973b[m 新增照片
+[33m1cf8510[m 8月Review排版修正
+[33mf53f99e[m 修正排版
+[33m12e4321[m 8月Review
+[33ma67481c[m 8月Review
+[33m3779191[m 8月Review
+[33m8c9d970[m 修正換行問題
+[33mc54abb1[m 8月Review+檔案整理
+[33mb973238[m 暫時下架區塊鏈字典
+[33m22beecc[m Footer更新文字
+[33m28525f8[m rebuild&Fixed warning
+[33m03f5da7[m MENU排版更新、頁尾整理與個人About頁面新增
+[33mbc362d0[m 寵物系統優化、目錄元件更新與程式碼警告修正
+[33mc44c5ed[m 網頁程式碼警告和網站寵物按鈕遮蓋問題修正
+[33m25269d3[m 增加update頁面，顯示網站更新紀錄
+[33md173e51[m 小貓一個人修修補補，拯救了整個部落格
+[33m5bcad72[m update: add BlockchainDictionary.md and Pixiuscam.md, modify electric_heavy_equipment.md
+[33m4e0ba25[m fixed bug
+[33m2959abf[m update error word in post 2026_07_22.md
+[33m23e7904[m rebuild
+[33mc5a2658[m update giscus comments component to use new giscus API and add support for dark mode
+[33m2d4f77c[m fixed discussion component to work with giscus and added comments to blog posts
+[33ma8b261d[m checkpoint Restored
+[33md5128cf[m fixed Discussion mapping issue in GiscusComments component
+[33m88b8cad[m fixed build bug with giscus comments component. The issue was that the giscus component was not being rendered correctly on the page. I fixed this by updating the component to use the correct props and state management. Now, the giscus comments should display properly on the blog post pages.
+[33m0466084[m fixed discussion component to work with giscus and added comments to blog posts
+[33mb2592dc[m 留言bug維護
+[33m89a6839[m 更新評論系統和連結系統
+[33mfafe237[m 新增照片+feature 改成 latest
+[33mefb71cb[m update 微積分之日照片
+[33ma586395[m update 台南照片 & 台中旅程 & 微積分之旅
+[33m8302e25[m update 台中之旅
+[33m82de26c[m update 台南影片
+[33me24456e[m update 7月reviewed
+[33m6fc75b9[m pets system beta 2.0 & Optimize screen adaptation
+[33m53e315b[m pets system beta 1.0
+[33m868a528[m rebuild
+[33m53eb2f6[m update zj image
+[33m9e7f14c[m update images and post
+[33m363791a[m add photo and update c++ post
+[33m9b3531b[m move documentation file to root directory
+[33m42e885c[m rebuild
+[33m2a19e43[m Tag page container occlusion issue fixed
+[33md76157b[m Tag update
+[33m93d1595[m Tag update
+[33mbab1f87[m 更新標籤和文章的相關內容，並修正了一些樣式和功能上的問題
+[33m13dfecb[m 優化動畫、網站效能、SEO
+[33m90b6ae1[m add anime、fixed the bug of the table of contents, and added a new component for posts section optimize efficiency and performance of the website, and improve the user experience by adding new features and fixing existing issues.
+[33m63e96a0[m fixed posts page overflow
+[33m8ee9162[m rebuild: next-env.d.ts, public/atom.xml, public/rss.xml
+[33md2d2bb1[m add PWA support and manifest.json for web app installation optimization anime page wrapper and tag cloud d3 component indentaion and formatting for layout and page components
+[33m7458c70[m 優化動畫和縮排
+[33m2cdc2a9[m fixed overflow problem
+[33mebf272d[m fixed overflow problem
+[33m558b94f[m rebuild
+[33m2395775[m fixed Hero word overflow
+[33m8c27c0a[m Update README
+[33m62bc594[m update README
+[33md8a1004[m Update README
+[33m6dd1935[m fixed Hero word overflow
+[33m8e15377[m rebuild rss&atom
+[33ma4807d4[m update LICENSE&fixed rss,atom,sitmap web address
+[33ma8b757b[m update Hero word
+[33me136d4b[m category,tag chinese keyword error fixed
+[33m9e6824f[m category,tag chinese keyword search error fixed
+[33mf5db662[m fixed bug
+[33m018a472[m rebuild
+[33md5efc2d[m rebuild
+[33m8a85aaa[m 2026/6/17文章
+[33me813252[m update article,tag,category,article,layout ,
+[33m828ab32[m Tag,category bug fixed
+[33me43529b[m Screen safe retreat
+[33m66051fd[m fix search engine add atom.xml add rss.xml
+[33m8c23edb[m del api folder
+[33m12d4231[m fix: enable export mode and purge backend api routes
+[33me9728e5[m fix deploy bug
+[33m38e1890[m deploy update
+[33mc1d9fd6[m deploy update
+[33m9c87455[m deploy update
+[33mc950007[m Version 1.1 (BETA)
+[33m2a32884[m 更新圖片
+[33m9a6673a[m updeate deploy.yml
+[33m00efebb[m Merge branch 'main' of https://github.com/charlie960906/HYJblog
+[33m79c1fb9[m 合併分支
+[33m8444a63[m Create deploy.yml
+[33m2f6172d[m push deploy.yml
+[33m796482a[m 設定Domain
+[33m512041b[m Version 1.0 (BETA)
+[33m83e32ec[m 更新文章，修復問題
+[33m6c3bfdc[m 更新錯誤
+[33mb0d88ec[m 個人部落格
