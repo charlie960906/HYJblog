@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>精選商品列表與最新消息（讀取 Google 試算表）</title>
+
+  <!-- DaisyUI + Tailwind (CDN 版) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Visualization API -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    .card-img-container {
+      height: 220px;
+      overflow: hidden;
+      background-color: #f8fafc;
+    }
+    .card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .card:hover .card-img-container img {
+      transform: scale(1.06);
+    }
+  </style>
+</head>
+
+<body class="bg-base-200 min-h-screen flex flex-col font-sans">
+
+  <!-- 頂部導航列 -->
+  <div class="navbar bg-base-100 shadow-sm px-4 lg:px-8 sticky top-0 z-30">
+    <div class="flex-1 gap-2">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-slate-800">
+        <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-sm text-sm">📊</span>
+        <span>精選商品資訊平台</span>
+      </a>
+    </div>
+
+    <div class="flex-none gap-2">
+      <!-- 重新整理按鈕 -->
+      <button onclick="fetchAllData()" class="btn btn-sm btn-ghost gap-1 text-xs" title="從 Google 試算表重新抓取最新資料">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>重新整理</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 space-y-8">
+
+    <!-- 最上面一條：只有「最新訊息」和「查看訊息」，中間空白 -->
+    <section class="card bg-base-100 shadow-sm border border-emerald-100 hover:border-emerald-300 transition-all">
+      <div class="p-3.5 sm:p-4 flex items-center justify-between">
+        <!-- 左側：最新訊息 -->
+        <div class="flex items-center gap-2.5">
+          <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-sm shadow-xs">📢</span>
+          <span class="font-bold text-slate-800 text-base sm:text-lg tracking-tight">最新訊息</span>
+        </div>
+
+        <!-- 中間空白 -->
+        <div class="flex-1"></div>
+
+        <!-- 右側：查看訊息 -->
+        <div>
+          <a href="detail.html?type=news" class="btn btn-sm btn-primary font-semibold gap-1.5 shadow-xs">
+            <span>查看訊息</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 商品列表標題與搜尋篩選 -->
+    <section class="space-y-4">
+      <h1 class="text-2xl sm:text-3xl font-bold text-center text-slate-800 pt-2">精選商品列表</h1>
+
+      <!-- 搜尋與篩選工具列 -->
+      <div class="card bg-base-100 shadow-sm p-4">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <!-- 關鍵字搜尋 -->
+          <div class="relative flex-1 max-w-md">
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="搜尋商品編號 (如 P001)、名稱或說明..."
+              class="input input-bordered input-sm w-full pl-9 text-xs"
+              oninput="handleSearch()"
+            />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <div class="text-xs text-slate-500 font-medium self-end sm:self-auto" id="productCountText">
+            共載入 0 項商品
+          </div>
+        </div>
+      </div>
+
+      <!-- 載入中骨架畫面 (Loading State) -->
+      <div id="loadingSpinner" class="flex flex-col items-center justify-center py-16 space-y-3">
+        <span class="loading loading-spinner loading-lg text-emerald-600"></span>
+        <p class="text-sm text-slate-500">正在透過 Google Visualization API 查詢試算表資料...</p>
+      </div>
+
+      <!-- 錯誤提示區 (Error Alert) -->
+      <div id="errorAlert" class="alert alert-warning shadow-sm hidden text-xs leading-relaxed">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div id="errorMessageText">試算表連線異常</div>
+      </div>
+
+      <!-- 商品列表 Cards 容器 (Product Listing Cards) -->
+      <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </section>
+
+  </main>
+
+
+
+  <!-- JavaScript 核心程式碼 (純 JS，無 TypeScript) -->
+  <script>
+    // 攔截跨來源腳本錯誤
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.indexOf('Script error') !== -1) {
+        e.preventDefault();
+        return true;
+      }
+    });
+
+    // 試算表 ID 與工作表名稱
+    var SHEET_ID = "1gv0E0WL66GmsT4_fVmE7TnIKGb3MK2_70_3YkAr2qKo";
+    var SHEET_NAME_PRODUCTS = "工作表1";
+    var SHEET_NAME_NEWS = "最新消息";
+
+    // 使用者提供之最新 12 筆圖片對應表 (商品)
+    var LATEST_IMAGES = {
+      "P001": "https://xmobile.lk/wp-content/uploads/2026/02/samsung-galaxy-buds-4-pro.jpg",
+      "P002": "https://cdn.mos.cms.futurecdn.net/86S3zjUZVNktyg7vLZjWFC-1200-80.jpg",
+      "P003": "https://th.bing.com/th/id/OIP.QX6POWNtbEwC_iKpaCShrQHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P004": "https://images.storeberry.chat/shops/c138/products/L/241103102732928c11.png",
+      "P005": "https://tse3.mm.bing.net/th/id/OIP.DHdI4NatoMzLl3NVtNnWegHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P006": "https://tse4.mm.bing.net/th/id/OIP.U4Cdt3d36KU92ufPygi-XQHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P007": "https://down-tw.img.susercontent.com/file/tw-11134207-7rasf-m5zc74dd0psm76",
+      "P008": "https://th.bing.com/th/id/OIP.L7Vq-4oe4uvID7vR_Mg1IwHaEu?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P009": "https://img.pchome.com.tw/cs/items/DMBL1CA900FDYBY/000001_1681981709.jpg",
+      "P010": "https://th.bing.com/th/id/OIP.qPNaFKe3BN1x5S8j_NC5SwAAAA?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P011": "https://down-tw.img.susercontent.com/file/tw-11134208-7qul7-lk7ut5822vyl1d",
+      "P012": "https://th.bing.com/th/id/OIP.p9G-85ddNg03u1vg2V-VqwHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+    };
+
+    // 最新消息 12 筆資料 (來自使用者提供之最新消息 Google 試算表 CSV)
+    var DEFAULT_NEWS = [
+      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/200/120" },
+      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/200/120" },
+      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/200/120" },
+      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/200/120" },
+      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/200/120" },
+      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/200/120" },
+      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/200/120" },
+      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/200/120" },
+      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/200/120" },
+      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/200/120" },
+      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/200/120" },
+      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/200/120" }
+    ];
+
+    // 商品備份資料
+    var FALLBACK_PRODUCTS = [
+      { id: "P001", name: "無線藍牙耳機", desc: "輕巧舒適，支援日常音樂聆聽與通話", price: "1,290", img: LATEST_IMAGES["P001"] },
+      { id: "P002", name: "智慧手錶", desc: "掌握每日活動、運動紀錄與通知資訊", price: "2,490", img: LATEST_IMAGES["P002"] },
+      { id: "P003", name: "藍牙喇叭", desc: "小巧便攜，適合居家聆聽與戶外活動", price: "990", img: LATEST_IMAGES["P003"] },
+      { id: "P004", name: "機械式鍵盤", desc: "手感清晰，適合打字、學習與辦公使用", price: "1,890", img: LATEST_IMAGES["P004"] },
+      { id: "P005", name: "無線滑鼠", desc: "人體工學設計，提升日常操作便利性", price: "690", img: LATEST_IMAGES["P005"] },
+      { id: "P006", name: "行動電源", desc: "大容量設計，外出時為手機補充電力", price: "890", img: LATEST_IMAGES["P006"] },
+      { id: "P007", name: "桌上型檯燈", desc: "提供舒適照明，適合閱讀與工作環境", price: "1,190", img: LATEST_IMAGES["P007"] },
+      { id: "P008", name: "數位相機", desc: "輕鬆記錄生活，捕捉旅行與日常精彩時刻", price: "8,990", img: LATEST_IMAGES["P008"] },
+      { id: "P009", name: "智慧掃地機器人", desc: "協助清潔地板，讓居家打掃更加省力", price: "6,990", img: LATEST_IMAGES["P009"] },
+      { id: "P010", name: "隨身保溫杯", desc: "方便攜帶，適合通勤、上課與戶外活動", price: "490", img: LATEST_IMAGES["P010"] },
+      { id: "P011", name: "筆記型電腦支架", desc: "調整螢幕高度，打造舒適的桌面工作空間", price: "790", img: LATEST_IMAGES["P011"] },
+      { id: "P012", name: "USB 多孔充電器", desc: "提供多個充電接口，方便同時為裝置充電", price: "1,090", img: LATEST_IMAGES["P012"] }
+    ];
+
+    var allProducts = [];
+    var allNews = [];
+
+    // 初始化 Google Charts
+    if (typeof google !== 'undefined' && google.charts) {
+      try {
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+      } catch (e) {
+        window.addEventListener('DOMContentLoaded', init);
+      }
+    } else {
+      window.addEventListener('DOMContentLoaded', init);
+    }
+
+    function init() {
+      fetchAllData();
+    }
+
+    function fetchAllData() {
+      fetchNewsData();
+      fetchProductData();
+    }
+
+    // ========== 最新消息區塊（Table 形式，串聯 Google 試算表） ==========
+    function fetchNewsData() {
+      var baseUrl =
+        'https://docs.google.com/spreadsheets/d/' +
+        SHEET_ID +
+        '/gviz/tq?sheet=' +
+        encodeURIComponent(SHEET_NAME_NEWS);
+
+      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery('select *');
+          query.send(function(response) {
+            if (response && !response.isError()) {
+              var data = response.getDataTable();
+              if (data && data.getNumberOfRows() > 0) {
+                parseNewsDataTable(data);
+                return;
+              }
+            }
+            fetchNewsViaDirectApi(baseUrl + '&tqx=out:json');
+          });
+          return;
+        } catch (e) {
+          console.warn("GViz news query error:", e);
+        }
+      }
+
+      fetchNewsViaDirectApi(baseUrl + '&tqx=out:json');
+    }
+
+    function fetchNewsViaDirectApi(url) {
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var startIdx = text.indexOf('{');
+          var endIdx = text.lastIndexOf('}') + 1;
+          if (startIdx === -1 || endIdx <= startIdx) throw new Error("Format error");
+          var json = JSON.parse(text.substring(startIdx, endIdx));
+          var rows = json.table.rows;
+          allNews = [];
+
+          var startIndex = 0;
+          if (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'id') {
+            startIndex = 1;
+          }
+
+          for (var i = startIndex; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (!c) continue;
+            var id = c[0] ? c[0].v : (i + 1);
+            var title = c[1] ? String(c[1].v) : '';
+            var date = c[2] ? String(c[2].f || c[2].v) : '';
+            var content = c[3] ? String(c[3].v) : '';
+            var link = c[4] ? String(c[4].v) : '';
+            var img = c[5] ? String(c[5].v) : '';
+
+            if (!title) continue;
+
+            allNews.push({
+              id: id,
+              title: title,
+              date: date,
+              content: content,
+              link: link,
+              img: img || 'https://picsum.photos/seed/news' + id + '/200/120'
+            });
+          }
+
+          if (allNews.length > 0) {
+            renderNewsTable(allNews);
+          } else {
+            allNews = DEFAULT_NEWS;
+            renderNewsTable(allNews);
+          }
+        })
+        .catch(function(err) {
+          console.warn("最新消息 Google 試算表尚未建立該分頁，載入預設 12 筆消息資料：", err);
+          allNews = DEFAULT_NEWS;
+          renderNewsTable(allNews);
+        });
+    }
+
+    function parseNewsDataTable(data) {
+      var rows = data.getNumberOfRows();
+      allNews = [];
+
+      var startIndex = 0;
+      if (rows > 0 && String(data.getFormattedValue(0, 0)).toLowerCase() === 'id') {
+        startIndex = 1;
+      }
+
+      for (var r = startIndex; r < rows; r++) {
+        var id = data.getFormattedValue(r, 0);
+        var title = data.getFormattedValue(r, 1);
+        var date = data.getFormattedValue(r, 2);
+        var content = data.getFormattedValue(r, 3);
+        var link = data.getFormattedValue(r, 4);
+        var img = data.getFormattedValue(r, 5);
+
+        if (!title) continue;
+
+        allNews.push({
+          id: id,
+          title: title,
+          date: date,
+          content: content,
+          link: link,
+          img: img || 'https://picsum.photos/seed/news' + id + '/200/120'
+        });
+      }
+
+      if (allNews.length > 0) {
+        renderNewsTable(allNews);
+      } else {
+        allNews = DEFAULT_NEWS;
+        renderNewsTable(allNews);
+      }
+    }
+
+    // 渲染首頁最新消息（只有一條，點擊查看訊息跳轉至新頁面展示 12 則公告）
+    function renderNewsTable(newsList) {
+      if (!newsList || newsList.length === 0) return;
+      var latest = newsList[0];
+      var dateEl = document.getElementById("singleNewsDate");
+      var titleEl = document.getElementById("singleNewsTitle");
+      var descEl = document.getElementById("singleNewsDesc");
+
+      if (dateEl) dateEl.innerText = latest.date || "";
+      if (titleEl) titleEl.innerText = latest.title || "";
+      if (descEl) descEl.innerText = latest.content ? "- " + latest.content : "";
+    }
+
+    // 跳轉至最新消息專屬新頁面 (展示 12 則公告)
+    function goToNewsPage() {
+      window.location.href = "detail.html?type=news";
+    }
+
+    // ========== 商品列表區塊（Cards 形式，串聯 Google 試算表） ==========
+    function fetchProductData() {
+      var spinner = document.getElementById("loadingSpinner");
+      if (spinner) spinner.classList.remove("hidden");
+      var alertBox = document.getElementById("errorAlert");
+      if (alertBox) alertBox.classList.add("hidden");
+      document.getElementById("productList").innerHTML = "";
+
+      var baseUrl =
+        'https://docs.google.com/spreadsheets/d/' +
+        SHEET_ID +
+        '/gviz/tq?sheet=' +
+        encodeURIComponent(SHEET_NAME_PRODUCTS);
+
+      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery('select *');
+          query.send(function(response) {
+            if (response && !response.isError()) {
+              parseDataTable(response.getDataTable());
+            } else {
+              fetchViaDirectApi(baseUrl + '&tqx=out:json');
+            }
+          });
+          return;
+        } catch (err) {
+          console.warn("GViz query execution failed, trying direct fetch:", err);
+        }
+      }
+
+      fetchViaDirectApi(baseUrl + '&tqx=out:json');
+    }
+
+    function parseDataTable(data) {
+      hideLoading();
+      var rows = data.getNumberOfRows();
+      allProducts = [];
+
+      var startIndex = 0;
+      if (rows > 0) {
+        var firstCell = String(data.getFormattedValue(0, 0) || '').toLowerCase().trim();
+        if (firstCell === 'id' || firstCell === '編號') {
+          startIndex = 1;
+        }
+      }
+
+      for (var r = startIndex; r < rows; r++) {
+        var id    = data.getFormattedValue(r, 0);
+        var name  = data.getFormattedValue(r, 1);
+        var desc  = data.getFormattedValue(r, 2);
+        var rawPrice = data.getFormattedValue(r, 3);
+        var img   = data.getFormattedValue(r, 4);
+
+        if (!id) continue;
+
+        var numPrice = Number(String(rawPrice).replace(/[^0-9.]/g, ''));
+        var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : (rawPrice || "0");
+        var finalImg = (img && img.indexOf('picsum.photos') === -1) ? img : (LATEST_IMAGES[id] || img);
+
+        allProducts.push({
+          id: id,
+          name: name || id,
+          desc: desc || "尚無商品說明",
+          price: formattedPrice,
+          img: finalImg
+        });
+      }
+
+      renderFilteredCards(allProducts);
+    }
+
+    function fetchViaDirectApi(url) {
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var startIdx = text.indexOf('{');
+          var endIdx = text.lastIndexOf('}') + 1;
+          if (startIdx === -1 || endIdx <= startIdx) throw new Error("無法解析回傳格式");
+
+          var json = JSON.parse(text.substring(startIdx, endIdx));
+          if (json.status === 'error') throw new Error(json.errors[0].message);
+
+          var rows = json.table.rows;
+          allProducts = [];
+
+          var startIndex = 0;
+          if (rows.length > 0 && rows[0].c && rows[0].c[0] && rows[0].c[0].v) {
+            var val0 = String(rows[0].c[0].v).toLowerCase().trim();
+            if (val0 === 'id' || val0 === '編號') startIndex = 1;
+          }
+
+          for (var i = startIndex; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (!c) continue;
+
+            var id = String(c[0] ? c[0].v : '').trim();
+            var name = String(c[1] ? c[1].v : '').trim();
+            var desc = String(c[2] ? c[2].v : '').trim();
+            var rawPrice = c[3] ? (c[3].f || c[3].v) : '0';
+            var img = String(c[4] ? c[4].v : '').trim();
+
+            if (!id) continue;
+
+            var numPrice = Number(String(rawPrice).replace(/[^0-9.]/g, ''));
+            var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : (rawPrice || "0");
+            var finalImg = (img && img.indexOf('picsum.photos') === -1) ? img : (LATEST_IMAGES[id] || img);
+
+            allProducts.push({
+              id: id,
+              name: name || id,
+              desc: desc || "尚無商品說明",
+              price: formattedPrice,
+              img: finalImg
+            });
+          }
+
+          hideLoading();
+          renderFilteredCards(allProducts);
+        })
+        .catch(function(err) {
+          console.warn("商品試算表連線失敗，啟用備份資料庫：", err);
+          hideLoading();
+          allProducts = FALLBACK_PRODUCTS;
+          renderFilteredCards(allProducts);
+        });
+    }
+
+    function hideLoading() {
+      var spinner = document.getElementById("loadingSpinner");
+      if (spinner) spinner.classList.add("hidden");
+    }
+
+    function renderFilteredCards(products) {
+      document.getElementById("productCountText").innerText = "共載入 " + products.length + " 項商品";
+      var container = document.getElementById("productList");
+
+      if (products.length === 0) {
+        container.innerHTML =
+          '<div class="col-span-full text-center py-12 bg-base-100 rounded-2xl">' +
+            '<p class="text-slate-400 text-sm">找不到符合條件的商品項目</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < products.length; i++) {
+        var p = products[i];
+
+        html +=
+          '<div class="card bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-300 flex flex-col justify-between overflow-hidden group">' +
+            '<figure class="card-img-container relative">' +
+              '<img src="' + p.img + '" alt="' + p.name + '" onerror="this.src=\'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80\'" />' +
+              '<div class="absolute top-2 left-2 badge badge-neutral text-xs font-mono font-bold shadow">' +
+                p.id +
+              '</div>' +
+            '</figure>' +
+            '<div class="card-body p-5 flex flex-col justify-between flex-1">' +
+              '<div>' +
+                '<h2 class="card-title text-base font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1 mb-1">' +
+                  p.name +
+                '</h2>' +
+                '<p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">' +
+                  p.desc +
+                '</p>' +
+              '</div>' +
+              '<div class="pt-3 border-t border-base-200 flex items-center justify-between">' +
+                '<div>' +
+                  '<span class="text-[10px] text-slate-400 block font-medium">售價 NT$</span>' +
+                  '<span class="text-lg font-black text-primary">$' + p.price + '</span>' +
+                '</div>' +
+                '<div class="card-actions">' +
+                  '<a href="detail.html?id=' + encodeURIComponent(p.id) + '" class="btn btn-primary btn-sm text-xs font-semibold">' +
+                    '查看詳細' +
+                  '</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    function handleSearch() {
+      var query = document.getElementById("searchInput").value.toLowerCase().trim();
+      if (!query) {
+        renderFilteredCards(allProducts);
+        return;
+      }
+
+      var filtered = allProducts.filter(function(p) {
+        return (
+          p.id.toLowerCase().indexOf(query) !== -1 ||
+          p.name.toLowerCase().indexOf(query) !== -1 ||
+          p.desc.toLowerCase().indexOf(query) !== -1
+        );
+      });
+
+      renderFilteredCards(filtered);
+    }
+  </script>
+
+</body>
+</html>

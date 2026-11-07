@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>最新消息與詳細資訊 - Google 試算表串接專案</title>
+
+  <!-- DaisyUI + Tailwind (CDN 版) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Visualization API -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    .detail-img-container {
+      max-height: 420px;
+      overflow: hidden;
+      background-color: #f8fafc;
+    }
+    .detail-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .detail-img-container:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body class="bg-base-200 min-h-screen flex flex-col font-sans">
+
+  <!-- 頂部導航列 -->
+  <div class="navbar bg-base-100 shadow-sm px-4 lg:px-8 sticky top-0 z-30">
+    <div class="flex-1 gap-2">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-slate-800">
+        <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-sm text-sm">📊</span>
+        <span>精選商品與最新消息平台</span>
+      </a>
+    </div>
+
+    <div class="flex-none gap-2">
+      <a href="index.html" class="btn btn-sm btn-outline gap-1.5 text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span id="navBackBtnText">返回首頁列表</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 space-y-6">
+
+    <!-- 麵包屑導航 (Breadcrumbs) -->
+    <div class="text-xs breadcrumbs text-slate-500">
+      <ul>
+        <li><a href="index.html">首頁</a></li>
+        <li id="crumbParent"><a href="index.html">商品列表</a></li>
+        <li class="font-bold text-emerald-700" id="crumbCurrentTitle">載入中...</li>
+      </ul>
+    </div>
+
+    <!-- 載入中畫面 (Loading State) -->
+    <div id="loadingSpinner" class="card bg-base-100 shadow-sm p-12 flex flex-col items-center justify-center space-y-3">
+      <span class="loading loading-spinner loading-lg text-emerald-600"></span>
+      <p class="text-sm text-slate-500" id="loadingText">正在依據條件從 Google 試算表查詢資料...</p>
+    </div>
+
+    <!-- 錯誤提示區 (Error Alert) -->
+    <div id="errorAlert" class="card bg-base-100 shadow-sm p-8 text-center max-w-lg mx-auto hidden border border-warning">
+      <div class="w-16 h-16 rounded-full bg-warning/10 text-warning mx-auto flex items-center justify-center mb-4 text-2xl font-bold">
+        ⚠️
+      </div>
+      <h2 class="text-lg font-bold text-slate-800 mb-2" id="errorAlertTitle">查無詳細資訊</h2>
+      <p id="errorMessageText" class="text-xs text-slate-500 mb-6 leading-relaxed">
+        Google 試算表中未檢索到指定資料。
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <a href="index.html" class="btn btn-sm btn-primary">
+          返回首頁
+        </a>
+      </div>
+    </div>
+
+    <!-- 1. 最新消息 12 則公告專區 (News Table View) -->
+    <div id="newsTableSection" class="space-y-6 hidden">
+      
+      <!-- 標題與簡介卡 -->
+      <div class="card bg-base-100 shadow-sm border border-base-200 p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-xs text-base">📢</span>
+              <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">最新消息公告列表</h1>
+              <span class="badge badge-emerald bg-emerald-600 text-white text-xs font-semibold" id="newsTotalBadge">共 12 則公告</span>
+            </div>
+            <p class="text-xs text-slate-500">
+              透過 Google Visualization API 即時查詢 Google 試算表「最新消息」工作表 · 點選各公告列可查閱完整內容
+            </p>
+          </div>
+
+          <!-- 搜尋篩選 -->
+          <div class="relative w-full sm:w-72">
+            <input
+              id="newsSearchInput"
+              type="text"
+              placeholder="搜尋公告標題或內文..."
+              class="input input-bordered input-sm w-full pl-9 text-xs"
+              oninput="filterNewsTable()"
+            />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 則公告表格 (Table 形式) -->
+      <div class="card bg-base-100 shadow-sm border border-base-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-hover w-full text-xs sm:text-sm">
+            <thead class="bg-base-200/70 text-slate-700 text-xs uppercase font-bold">
+              <tr>
+                <th class="w-16 text-center">序號</th>
+                <th class="w-28 text-center">發布日期</th>
+                <th class="w-24 text-center hidden sm:table-cell">縮圖</th>
+                <th class="w-1/3">公告標題</th>
+                <th>公告內容</th>
+                <th class="w-28 text-center">操作</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody">
+              <!-- 動態生成 12 則公告列 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2. 商品詳細資訊主卡片 (Product Detail View) -->
+    <div id="productDetailCard" class="card bg-base-100 shadow-md border border-base-200 overflow-hidden hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+
+        <!-- 左側：商品大圖 -->
+        <div class="p-6 sm:p-8 border-b lg:border-b-0 lg:border-r border-base-200 flex flex-col justify-center space-y-6">
+          <div>
+            <div class="detail-img-container rounded-2xl relative shadow-inner">
+              <img id="detailImg" src="" alt="商品圖片" onerror="this.src='https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80'" />
+              <div class="absolute top-3 left-3 badge badge-neutral text-xs font-mono font-bold shadow-md" id="detailBadgeId">
+                P001
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：商品品名、售價、詳細說明與訂購 -->
+        <div class="p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="badge badge-success badge-sm text-xs font-semibold text-white">精選推薦</span>
+              <span class="badge badge-outline badge-sm text-xs" id="detailTagCategory">現貨在庫</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="detailName">
+              商品名稱
+            </h1>
+
+            <!-- 售價卡 -->
+            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-baseline justify-between">
+              <div>
+                <span class="text-xs text-emerald-700 block font-medium">特惠售價</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-sm font-bold text-emerald-800">NT$</span>
+                  <span class="text-3xl font-black text-emerald-900" id="detailPrice">0</span>
+                </div>
+              </div>
+              <span class="badge badge-success text-xs font-bold text-white">免運費</span>
+            </div>
+
+            <!-- 詳細介紹內文 -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">商品說明與特色</h3>
+              <p class="text-sm text-slate-600 leading-relaxed bg-base-200/50 p-4 rounded-xl" id="detailDesc">
+                尚無商品說明
+              </p>
+            </div>
+
+            <!-- 規格表 -->
+            <div class="overflow-x-auto text-xs border border-base-200 rounded-xl">
+              <table class="table table-zebra table-xs">
+                <tbody>
+                  <tr>
+                    <td class="font-bold text-slate-500 w-1/3">商品代號 (ID)</td>
+                    <td id="tableId" class="font-mono text-emerald-700 font-bold">-</td>
+                  </tr>
+                  <tr>
+                    <td class="font-bold text-slate-500">資料來源</td>
+                    <td>Google 試算表 (Google Visualization API)</td>
+                  </tr>
+                  <tr>
+                    <td class="font-bold text-slate-500">庫存狀況</td>
+                    <td>現貨充足，下單後 24 小時內寄出</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 購買與動作按鈕 -->
+          <div class="pt-4 border-t border-base-200 space-y-3">
+            <div class="flex items-center gap-3">
+              <a href="index.html" class="btn btn-outline btn-sm flex-1 text-xs">
+                ← 返回商品列表
+              </a>
+              <button onclick="copyShareLink()" class="btn btn-ghost btn-sm text-xs border border-base-300">
+                分享此商品
+              </button>
+            </div>
+            <button onclick="showToast('感謝洽詢！本專案為 Google 試算表串接作業展示。')" class="btn btn-primary w-full text-sm font-bold shadow-md">
+              立即洽詢 / 訂購
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 最新消息詳細內容彈出視窗 (Modal) -->
+  <dialog id="newsDetailModal" class="modal">
+    <div class="modal-box max-w-xl p-6">
+      <div class="flex items-center justify-between border-b border-base-200 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-emerald bg-emerald-600 text-white text-xs font-semibold" id="modalNewsDate">2026-11-03</span>
+          <span class="badge badge-ghost text-xs font-mono" id="modalNewsId">#1</span>
+        </div>
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost">✕</button>
+        </form>
+      </div>
+
+      <div class="space-y-4">
+        <div class="w-full h-52 rounded-xl overflow-hidden bg-slate-100 shadow-inner">
+          <img id="modalNewsImg" src="" alt="新聞圖片" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/news/800/480'" />
+        </div>
+        <h3 class="font-bold text-lg text-slate-900 leading-snug" id="modalNewsTitle">
+          公告標題
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-base-200/60 p-4 rounded-xl whitespace-pre-line" id="modalNewsContent">
+          公告完整內容
+        </p>
+      </div>
+
+      <div class="modal-action pt-4 border-t border-base-200 flex justify-between items-center">
+        <a id="modalNewsLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline gap-1 text-xs">
+          <span>前往相關連結</span>
+          <span>↗</span>
+        </a>
+        <form method="dialog">
+          <button class="btn btn-sm btn-primary text-xs font-semibold">關閉</button>
+        </form>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>關閉</button>
+    </form>
+  </dialog>
+
+  <!-- 提示訊息 Toast (取代阻塞性 alert) -->
+  <div id="toastNotification" class="toast toast-end hidden z-50">
+    <div class="alert alert-success text-white text-xs shadow-lg">
+      <span id="toastMessage">已複製到剪貼簿！</span>
+    </div>
+  </div>
+
+  <!-- JavaScript 核心程式碼 (純 JS，無 TypeScript) -->
+  <script>
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.indexOf('Script error') !== -1) {
+        e.preventDefault();
+        return true;
+      }
+    });
+
+    var SHEET_ID = "1gv0E0WL66GmsT4_fVmE7TnIKGb3MK2_70_3YkAr2qKo";
+    var SHEET_NAME_PRODUCTS = "工作表1";
+    var SHEET_NAME_NEWS = "最新消息";
+
+    // 商品圖片清單
+    var LATEST_IMAGES = {
+      "P001": "https://xmobile.lk/wp-content/uploads/2026/02/samsung-galaxy-buds-4-pro.jpg",
+      "P002": "https://cdn.mos.cms.futurecdn.net/86S3zjUZVNktyg7vLZjWFC-1200-80.jpg",
+      "P003": "https://th.bing.com/th/id/OIP.QX6POWNtbEwC_iKpaCShrQHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P004": "https://images.storeberry.chat/shops/c138/products/L/241103102732928c11.png",
+      "P005": "https://tse3.mm.bing.net/th/id/OIP.DHdI4NatoMzLl3NVtNnWegHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P006": "https://tse4.mm.bing.net/th/id/OIP.U4Cdt3d36KU92ufPygi-XQHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P007": "https://down-tw.img.susercontent.com/file/tw-11134207-7rasf-m5zc74dd0psm76",
+      "P008": "https://th.bing.com/th/id/OIP.L7Vq-4oe4uvID7vR_Mg1IwHaEu?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P009": "https://img.pchome.com.tw/cs/items/DMBL1CA900FDYBY/000001_1681981709.jpg",
+      "P010": "https://th.bing.com/th/id/OIP.qPNaFKe3BN1x5S8j_NC5SwAAAA?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "P011": "https://down-tw.img.susercontent.com/file/tw-11134208-7qul7-lk7ut5822vyl1d",
+      "P012": "https://th.bing.com/th/id/OIP.p9G-85ddNg03u1vg2V-VqwHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+    };
+
+    // 最新消息 12 筆資料 (來自使用者提供之最新消息 Google 試算表 CSV)
+    var DEFAULT_NEWS = [
+      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/600/400" },
+      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/600/400" },
+      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/600/400" },
+      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/600/400" },
+      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/600/400" },
+      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/600/400" },
+      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/600/400" },
+      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/600/400" },
+      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/600/400" },
+      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/600/400" },
+      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/600/400" },
+      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/600/400" }
+    ];
+
+    // 商品備份資料
+    var FALLBACK_PRODUCTS = [
+      { id: "P001", name: "無線藍牙耳機", desc: "輕巧舒適，支援日常音樂聆聽與通話", price: "1,290", img: LATEST_IMAGES["P001"] },
+      { id: "P002", name: "智慧手錶", desc: "掌握每日活動、運動紀錄與通知資訊", price: "2,490", img: LATEST_IMAGES["P002"] },
+      { id: "P003", name: "藍牙喇叭", desc: "小巧便攜，適合居家聆聽與戶外活動", price: "990", img: LATEST_IMAGES["P003"] },
+      { id: "P004", name: "機械式鍵盤", desc: "手感清晰，適合打字、學習與辦公使用", price: "1,890", img: LATEST_IMAGES["P004"] },
+      { id: "P005", name: "無線滑鼠", desc: "人體工學設計，提升日常操作便利性", price: "690", img: LATEST_IMAGES["P005"] },
+      { id: "P006", name: "行動電源", desc: "大容量設計，外出時為手機補充電力", price: "890", img: LATEST_IMAGES["P006"] },
+      { id: "P007", name: "桌上型檯燈", desc: "提供舒適照明，適合閱讀與工作環境", price: "1,190", img: LATEST_IMAGES["P007"] },
+      { id: "P008", name: "數位相機", desc: "輕鬆記錄生活，捕捉旅行與日常精彩時刻", price: "8,990", img: LATEST_IMAGES["P008"] },
+      { id: "P009", name: "智慧掃地機器人", desc: "協助清潔地板，讓居家打掃更加省力", price: "6,990", img: LATEST_IMAGES["P009"] },
+      { id: "P010", name: "隨身保溫杯", desc: "方便攜帶，適合通勤、上課與戶外活動", price: "490", img: LATEST_IMAGES["P010"] },
+      { id: "P011", name: "筆記型電腦支架", desc: "調整螢幕高度，打造舒適的桌面工作空間", price: "790", img: LATEST_IMAGES["P011"] },
+      { id: "P012", name: "USB 多孔充電器", desc: "提供多個充電接口，方便同時為裝置充電", price: "1,090", img: LATEST_IMAGES["P012"] }
+    ];
+
+    var allNewsData = [];
+
+    if (typeof google !== 'undefined' && google.charts) {
+      try {
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+      } catch (e) {
+        window.addEventListener('DOMContentLoaded', init);
+      }
+    } else {
+      window.addEventListener('DOMContentLoaded', init);
+    }
+
+    function init() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var type = urlParams.get('type');
+      var id = urlParams.get('id');
+
+      // 情況 A：若網址為 ?type=news 或無指定商品 ID，則進入「最新消息 12 則公告列表頁面」
+      if (type === 'news' || (!id && !urlParams.has('id'))) {
+        document.title = "最新消息公告專區（共 12 則）- Google 試算表串接";
+        document.getElementById("navBackBtnText").innerText = "返回商品首頁";
+        document.getElementById("crumbParent").innerHTML = '<a href="index.html">首頁</a>';
+        document.getElementById("crumbCurrentTitle").innerText = "最新消息專區";
+        document.getElementById("loadingText").innerText = "正在從 Google 試算表（最新消息）載入 12 則公告...";
+        loadAllNewsForTable();
+        return;
+      }
+
+      // 情況 B：若網址有 id 且以 P 開頭（商品 ID）
+      if (id && id.toUpperCase().startsWith('P')) {
+        document.getElementById("navBackBtnText").innerText = "返回商品列表";
+        document.getElementById("crumbParent").innerHTML = '<a href="index.html">商品列表</a>';
+        document.getElementById("loadingText").innerText = "正在從 Google 試算表（工作表1）查詢商品資料...";
+        fetchProductDetail(id);
+        return;
+      }
+
+      // 情況 C：若以數字 ID 進入（如單一最新消息詳細）
+      document.title = "最新消息公告專區 - Google 試算表串接";
+      document.getElementById("navBackBtnText").innerText = "返回商品首頁";
+      document.getElementById("crumbParent").innerHTML = '<a href="index.html">首頁</a>';
+      document.getElementById("crumbCurrentTitle").innerText = "最新消息專區";
+      loadAllNewsForTable(id);
+    }
+
+    // ================= 最新消息 12 則公告表格載入邏輯 =================
+    function loadAllNewsForTable(targetModalId) {
+      var baseUrl =
+        'https://docs.google.com/spreadsheets/d/' +
+        SHEET_ID +
+        '/gviz/tq?sheet=' +
+        encodeURIComponent(SHEET_NAME_NEWS);
+
+      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery('select *');
+          query.send(function(response) {
+            if (response && !response.isError()) {
+              var data = response.getDataTable();
+              if (data && data.getNumberOfRows() > 0) {
+                parseNewsDataTable(data, targetModalId);
+                return;
+              }
+            }
+            fetchNewsViaDirectApi(baseUrl + '&tqx=out:json', targetModalId);
+          });
+          return;
+        } catch (e) {
+          console.warn("GViz news query error:", e);
+        }
+      }
+
+      fetchNewsViaDirectApi(baseUrl + '&tqx=out:json', targetModalId);
+    }
+
+    function fetchNewsViaDirectApi(url, targetModalId) {
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var startIdx = text.indexOf('{');
+          var endIdx = text.lastIndexOf('}') + 1;
+          if (startIdx === -1 || endIdx <= startIdx) throw new Error("Format error");
+          var json = JSON.parse(text.substring(startIdx, endIdx));
+          var rows = json.table.rows;
+          allNewsData = [];
+
+          var startIndex = 0;
+          if (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'id') {
+            startIndex = 1;
+          }
+
+          for (var i = startIndex; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (!c) continue;
+            var id = c[0] ? c[0].v : (i + 1);
+            var title = c[1] ? String(c[1].v) : '';
+            var date = c[2] ? String(c[2].f || c[2].v) : '';
+            var content = c[3] ? String(c[3].v) : '';
+            var link = c[4] ? String(c[4].v) : '';
+            var img = c[5] ? String(c[5].v) : '';
+
+            if (!title) continue;
+
+            allNewsData.push({
+              id: id,
+              title: title,
+              date: date,
+              content: content,
+              link: link,
+              img: img || ('https://picsum.photos/seed/news' + id + '/600/400')
+            });
+          }
+
+          if (allNewsData.length === 0) {
+            allNewsData = DEFAULT_NEWS;
+          }
+
+          renderNewsTable(allNewsData);
+          if (targetModalId) openNewsDetailModal(targetModalId);
+        })
+        .catch(function(err) {
+          console.warn("最新消息使用預設 12 筆資料：", err);
+          allNewsData = DEFAULT_NEWS;
+          renderNewsTable(allNewsData);
+          if (targetModalId) openNewsDetailModal(targetModalId);
+        });
+    }
+
+    function parseNewsDataTable(data, targetModalId) {
+      var rows = data.getNumberOfRows();
+      allNewsData = [];
+
+      var startIndex = 0;
+      if (rows > 0 && String(data.getFormattedValue(0, 0)).toLowerCase() === 'id') {
+        startIndex = 1;
+      }
+
+      for (var r = startIndex; r < rows; r++) {
+        var id = data.getFormattedValue(r, 0);
+        var title = data.getFormattedValue(r, 1);
+        var date = data.getFormattedValue(r, 2);
+        var content = data.getFormattedValue(r, 3);
+        var link = data.getFormattedValue(r, 4);
+        var img = data.getFormattedValue(r, 5);
+
+        if (!title) continue;
+
+        allNewsData.push({
+          id: id,
+          title: title,
+          date: date,
+          content: content,
+          link: link,
+          img: img || ('https://picsum.photos/seed/news' + id + '/600/400')
+        });
+      }
+
+      if (allNewsData.length === 0) {
+        allNewsData = DEFAULT_NEWS;
+      }
+
+      renderNewsTable(allNewsData);
+      if (targetModalId) openNewsDetailModal(targetModalId);
+    }
+
+    // 渲染 12 則公告 Table
+    function renderNewsTable(newsList) {
+      document.getElementById("loadingSpinner").classList.add("hidden");
+      document.getElementById("newsTableSection").classList.remove("hidden");
+      document.getElementById("productDetailCard").classList.add("hidden");
+
+      var countBadge = document.getElementById("newsTotalBadge");
+      if (countBadge) countBadge.innerText = "共 " + newsList.length + " 則公告";
+
+      var tbody = document.getElementById("newsTableBody");
+      var html = "";
+
+      for (var i = 0; i < newsList.length; i++) {
+        var n = newsList[i];
+        var linkBtn = (n.link && n.link !== '#' && n.link !== '')
+          ? '<a href="' + n.link + '" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline gap-1 text-[11px]" onclick="event.stopPropagation()">連結↗</a>'
+          : '';
+
+        html +=
+          '<tr class="hover cursor-pointer transition-colors" onclick="openNewsDetailModal(\'' + n.id + '\')">' +
+            '<td class="text-center font-mono font-bold text-slate-400">#' + n.id + '</td>' +
+            '<td class="text-center">' +
+              '<span class="badge badge-sm badge-neutral font-mono text-[11px] whitespace-nowrap">' + n.date + '</span>' +
+            '</td>' +
+            '<td class="text-center hidden sm:table-cell">' +
+              '<img src="' + n.img + '" alt="' + n.title + '" class="w-14 h-9 object-cover rounded shadow-xs inline-block" onerror="this.src=\'https://picsum.photos/seed/news' + n.id + '/120/80\'" />' +
+            '</td>' +
+            '<td>' +
+              '<div class="font-bold text-slate-900 hover:text-emerald-700 transition-colors">' +
+                n.title +
+              '</div>' +
+            '</td>' +
+            '<td class="text-slate-600 text-xs leading-relaxed">' +
+              '<div class="line-clamp-2">' + n.content + '</div>' +
+            '</td>' +
+            '<td class="text-center space-x-1 whitespace-nowrap">' +
+              '<button class="btn btn-xs btn-primary font-semibold" onclick="event.stopPropagation(); openNewsDetailModal(\'' + n.id + '\')">' +
+                '詳細' +
+              '</button>' +
+              linkBtn +
+            '</td>' +
+          '</tr>';
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    // 搜尋公告過濾
+    function filterNewsTable() {
+      var query = document.getElementById("newsSearchInput").value.trim().toLowerCase();
+      if (!query) {
+        renderNewsTable(allNewsData);
+        return;
+      }
+      var filtered = allNewsData.filter(function(n) {
+        return String(n.title).toLowerCase().indexOf(query) !== -1 ||
+               String(n.content).toLowerCase().indexOf(query) !== -1 ||
+               String(n.date).toLowerCase().indexOf(query) !== -1;
+      });
+      renderNewsTable(filtered);
+    }
+
+    // 點擊彈出視窗查看公告完整內容
+    function openNewsDetailModal(id) {
+      var target = null;
+      for (var i = 0; i < allNewsData.length; i++) {
+        if (String(allNewsData[i].id) === String(id)) {
+          target = allNewsData[i];
+          break;
+        }
+      }
+
+      if (!target) return;
+
+      document.getElementById("modalNewsId").innerText = "#" + target.id;
+      document.getElementById("modalNewsDate").innerText = target.date;
+      document.getElementById("modalNewsTitle").innerText = target.title;
+      document.getElementById("modalNewsContent").innerText = target.content;
+      document.getElementById("modalNewsImg").src = target.img;
+
+      var linkBtn = document.getElementById("modalNewsLink");
+      if (target.link && target.link !== '#') {
+        linkBtn.href = target.link;
+        linkBtn.classList.remove("hidden");
+      } else {
+        linkBtn.classList.add("hidden");
+      }
+
+      var modal = document.getElementById("newsDetailModal");
+      if (modal) modal.showModal();
+    }
+
+    // ================= 商品詳細查詢邏輯 =================
+    function fetchProductDetail(productId) {
+      var baseUrl =
+        'https://docs.google.com/spreadsheets/d/' +
+        SHEET_ID +
+        '/gviz/tq?sheet=' +
+        encodeURIComponent(SHEET_NAME_PRODUCTS);
+
+      var sqlQuery = "select * where A = '" + productId + "'";
+      var queryDisplay = document.getElementById("debugQuery");
+      if (queryDisplay) queryDisplay.innerText = sqlQuery;
+
+      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
+        try {
+          var query = new google.visualization.Query(baseUrl);
+          query.setQuery(sqlQuery);
+          query.send(function(response) {
+            if (response && !response.isError()) {
+              var data = response.getDataTable();
+              if (data.getNumberOfRows() > 0) {
+                var id = data.getFormattedValue(0, 0);
+                var name = data.getFormattedValue(0, 1);
+                var desc = data.getFormattedValue(0, 2);
+                var rawPrice = data.getFormattedValue(0, 3);
+                var img = data.getFormattedValue(0, 4);
+                renderProductDetail({
+                  id: id,
+                  name: name,
+                  desc: desc,
+                  price: rawPrice,
+                  img: (img && img.indexOf('picsum.photos') === -1) ? img : (LATEST_IMAGES[id] || img)
+                });
+                return;
+              }
+            }
+            fetchProductDetailDirect(baseUrl + '&tqx=out:json', productId);
+          });
+          return;
+        } catch (e) {
+          console.warn("GViz query failed:", e);
+        }
+      }
+
+      fetchProductDetailDirect(baseUrl + '&tqx=out:json', productId);
+    }
+
+    function fetchProductDetailDirect(url, productId) {
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var startIdx = text.indexOf('{');
+          var endIdx = text.lastIndexOf('}') + 1;
+          if (startIdx === -1 || endIdx <= startIdx) throw new Error("Invalid format");
+          var json = JSON.parse(text.substring(startIdx, endIdx));
+          var rows = json.table.rows;
+          var found = null;
+
+          for (var i = 0; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (c && c[0] && String(c[0].v).toLowerCase() === productId.toLowerCase()) {
+              var id = String(c[0].v);
+              var img = String(c[4] ? c[4].v : '');
+              found = {
+                id: id,
+                name: String(c[1] ? c[1].v : id),
+                desc: String(c[2] ? c[2].v : ''),
+                price: String(c[3] ? (c[3].f || c[3].v) : '0'),
+                img: (img && img.indexOf('picsum.photos') === -1) ? img : (LATEST_IMAGES[id] || img)
+              };
+              break;
+            }
+          }
+
+          if (found) {
+            renderProductDetail(found);
+          } else {
+            useFallbackProductDetail(productId);
+          }
+        })
+        .catch(function(err) {
+          console.warn("Direct fetch detail error:", err);
+          useFallbackProductDetail(productId);
+        });
+    }
+
+    function useFallbackProductDetail(productId) {
+      var found = null;
+      for (var i = 0; i < FALLBACK_PRODUCTS.length; i++) {
+        if (FALLBACK_PRODUCTS[i].id.toLowerCase() === productId.toLowerCase()) {
+          found = FALLBACK_PRODUCTS[i];
+          break;
+        }
+      }
+
+      if (found) {
+        renderProductDetail(found);
+      } else {
+        handleError("在 Google 試算表中找不到商品編號為「" + productId + "」的資料。");
+      }
+    }
+
+    function renderProductDetail(p) {
+      document.getElementById("loadingSpinner").classList.add("hidden");
+      document.title = p.name + " - 商品詳細介紹";
+      document.getElementById("crumbCurrentTitle").innerText = p.name;
+      document.getElementById("detailImg").src = p.img || (LATEST_IMAGES[p.id] || "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80");
+      document.getElementById("detailBadgeId").innerText = p.id;
+      document.getElementById("detailName").innerText = p.name;
+      document.getElementById("detailDesc").innerText = p.desc || "尚無商品說明";
+
+      var numPrice = Number(String(p.price).replace(/[^0-9.]/g, ''));
+      var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : p.price;
+      document.getElementById("detailPrice").innerText = formattedPrice;
+      document.getElementById("tableId").innerText = p.id;
+
+      document.getElementById("productDetailCard").classList.remove("hidden");
+      document.getElementById("newsTableSection").classList.add("hidden");
+    }
+
+    function handleError(msg) {
+      document.getElementById("loadingSpinner").classList.add("hidden");
+      document.getElementById("productDetailCard").classList.add("hidden");
+      document.getElementById("newsTableSection").classList.add("hidden");
+      document.getElementById("errorAlert").classList.remove("hidden");
+      document.getElementById("errorMessageText").innerText = msg;
+    }
+
+    function copyShareLink() {
+      navigator.clipboard.writeText(window.location.href);
+      showToast("頁面連結已複製到剪貼簿！");
+    }
+
+    function showToast(msg) {
+      var toast = document.getElementById("toastNotification");
+      var toastMsg = document.getElementById("toastMessage");
+      if (toast && toastMsg) {
+        toastMsg.innerText = msg;
+        toast.classList.remove("hidden");
+        setTimeout(function() {
+          toast.classList.add("hidden");
+        }, 2500);
+      }
+    }
+  </script>
+
+</body>
+</html>
