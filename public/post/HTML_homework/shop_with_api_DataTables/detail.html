@@ -8,6 +8,8 @@
   <!-- DaisyUI + Tailwind (CDN 版) -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet" />
+  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
   <!-- Google Visualization API -->
   <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -109,7 +111,6 @@
               type="text"
               placeholder="搜尋公告標題或內文..."
               class="input input-bordered input-sm w-full pl-9 text-xs"
-              oninput="filterNewsTable()"
             />
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -121,7 +122,7 @@
       <!-- 12 則公告表格 (Table 形式) -->
       <div class="card bg-base-100 shadow-sm border border-base-200 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="table table-zebra table-hover w-full text-xs sm:text-sm">
+          <table id="newsTable" class="table table-zebra table-hover w-full text-xs sm:text-sm">
             <thead class="bg-base-200/70 text-slate-700 text-xs uppercase font-bold">
               <tr>
                 <th class="w-16 text-center">序號</th>
@@ -288,7 +289,7 @@
       }
     });
 
-    var SHEET_ID = "1gv0E0WL66GmsT4_fVmE7TnIKGb3MK2_70_3YkAr2qKo";
+    var SHEET_ID = "1GOosTuqGX2kcSTHGDELpyzWyNldirx5spKvO5BNTmwE";
     var SHEET_NAME_PRODUCTS = "工作表1";
     var SHEET_NAME_NEWS = "最新消息";
 
@@ -308,20 +309,20 @@
       "P012": "https://th.bing.com/th/id/OIP.p9G-85ddNg03u1vg2V-VqwHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
     };
 
-    // 最新消息 12 筆資料 (來自使用者提供之最新消息 Google 試算表 CSV)
+    // 最新消息 12 筆資料 (來自使用者提供之最新公告 CSV)
     var DEFAULT_NEWS = [
-      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/600/400" },
-      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/600/400" },
-      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/600/400" },
-      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/600/400" },
-      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/600/400" },
-      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/600/400" },
-      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/600/400" },
-      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/600/400" },
-      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/600/400" },
-      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/600/400" },
-      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/600/400" },
-      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/600/400" }
+      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/200/120" },
+      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/200/120" },
+      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/200/120" },
+      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/200/120" },
+      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/200/120" },
+      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/200/120" },
+      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/200/120" },
+      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/200/120" },
+      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/200/120" },
+      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/200/120" },
+      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/200/120" },
+      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/200/120" }
     ];
 
     // 商品備份資料
@@ -341,6 +342,7 @@
     ];
 
     var allNewsData = [];
+    var newsDataTable = null;
 
     if (typeof google !== 'undefined' && google.charts) {
       try {
@@ -354,6 +356,7 @@
     }
 
     function init() {
+      document.getElementById("newsSearchInput").addEventListener("input", filterNewsTable);
       var urlParams = new URLSearchParams(window.location.search);
       var type = urlParams.get('type');
       var id = urlParams.get('id');
@@ -364,7 +367,7 @@
         document.getElementById("navBackBtnText").innerText = "返回商品首頁";
         document.getElementById("crumbParent").innerHTML = '<a href="index.html">首頁</a>';
         document.getElementById("crumbCurrentTitle").innerText = "最新消息專區";
-        document.getElementById("loadingText").innerText = "正在從 Google 試算表（最新消息）載入 12 則公告...";
+        document.getElementById("loadingText").innerText = "正在載入 12 則最新公告資料...";
         loadAllNewsForTable();
         return;
       }
@@ -386,87 +389,57 @@
       loadAllNewsForTable(id);
     }
 
-    // ================= 最新消息 12 則公告表格載入邏輯 =================
-    function loadAllNewsForTable(targetModalId) {
-      var baseUrl =
-        'https://docs.google.com/spreadsheets/d/' +
-        SHEET_ID +
-        '/gviz/tq?sheet=' +
-        encodeURIComponent(SHEET_NAME_NEWS);
-
-      if (typeof google !== 'undefined' && google.visualization && google.visualization.Query) {
-        try {
-          var query = new google.visualization.Query(baseUrl);
-          query.setQuery('select *');
-          query.send(function(response) {
-            if (response && !response.isError()) {
-              var data = response.getDataTable();
-              if (data && data.getNumberOfRows() > 0) {
-                parseNewsDataTable(data, targetModalId);
-                return;
-              }
-            }
-            fetchNewsViaDirectApi(baseUrl + '&tqx=out:json', targetModalId);
+    // ================= 最新消息 12 則公告載入邏輯（依使用者提供 CSV 抓取） =================
+    function parseCsvNewsText(csvText) {
+      var lines = csvText.trim().split(/\r?\n/);
+      var result = [];
+      for (var i = 1; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line) continue;
+        var parts = line.split(',');
+        if (parts.length >= 6) {
+          var id = parts[0].trim();
+          var title = parts[1].trim();
+          var date = parts[2].trim();
+          var content = parts.slice(3, parts.length - 2).join(',').trim();
+          var link = parts[parts.length - 2].trim();
+          var img = parts[parts.length - 1].trim();
+          result.push({
+            id: id,
+            title: title,
+            date: date,
+            content: content,
+            link: link,
+            img: img
           });
-          return;
-        } catch (e) {
-          console.warn("GViz news query error:", e);
         }
       }
-
-      fetchNewsViaDirectApi(baseUrl + '&tqx=out:json', targetModalId);
+      return result;
     }
 
-    function fetchNewsViaDirectApi(url, targetModalId) {
-      fetch(url)
+    function loadAllNewsForTable(targetModalId) {
+      // 優先依使用者要求從 news.csv 抓取最新公告
+      fetch('news.csv')
         .then(function(res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
+          if (!res.ok) return fetch('/assets/aistudio/Google_Sheet_____2_4acce913');
+          return res;
+        })
+        .then(function(res) {
+          if (!res.ok) throw new Error("CSV fetch not ok");
           return res.text();
         })
         .then(function(text) {
-          var startIdx = text.indexOf('{');
-          var endIdx = text.lastIndexOf('}') + 1;
-          if (startIdx === -1 || endIdx <= startIdx) throw new Error("Format error");
-          var json = JSON.parse(text.substring(startIdx, endIdx));
-          var rows = json.table.rows;
-          allNewsData = [];
-
-          var startIndex = 0;
-          if (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'id') {
-            startIndex = 1;
-          }
-
-          for (var i = startIndex; i < rows.length; i++) {
-            var c = rows[i].c;
-            if (!c) continue;
-            var id = c[0] ? c[0].v : (i + 1);
-            var title = c[1] ? String(c[1].v) : '';
-            var date = c[2] ? String(c[2].f || c[2].v) : '';
-            var content = c[3] ? String(c[3].v) : '';
-            var link = c[4] ? String(c[4].v) : '';
-            var img = c[5] ? String(c[5].v) : '';
-
-            if (!title) continue;
-
-            allNewsData.push({
-              id: id,
-              title: title,
-              date: date,
-              content: content,
-              link: link,
-              img: img || ('https://picsum.photos/seed/news' + id + '/600/400')
-            });
-          }
-
-          if (allNewsData.length === 0) {
+          var list = parseCsvNewsText(text);
+          if (list && list.length > 0) {
+            allNewsData = list;
+          } else {
             allNewsData = DEFAULT_NEWS;
           }
-
           renderNewsTable(allNewsData);
           if (targetModalId) openNewsDetailModal(targetModalId);
         })
         .catch(function(err) {
-          console.warn("最新消息使用預設 12 筆資料：", err);
+          console.warn("最新公告載入備援資料：", err);
           allNewsData = DEFAULT_NEWS;
           renderNewsTable(allNewsData);
           if (targetModalId) openNewsDetailModal(targetModalId);
@@ -498,7 +471,7 @@
           date: date,
           content: content,
           link: link,
-          img: img || ('https://picsum.photos/seed/news' + id + '/600/400')
+          img: img || ('https://picsum.photos/seed/news' + id + '/200/120')
         });
       }
 
@@ -518,6 +491,11 @@
 
       var countBadge = document.getElementById("newsTotalBadge");
       if (countBadge) countBadge.innerText = "共 " + newsList.length + " 則公告";
+
+      if (newsDataTable) {
+        newsDataTable.destroy();
+        newsDataTable = null;
+      }
 
       var tbody = document.getElementById("newsTableBody");
       var html = "";
@@ -555,11 +533,39 @@
       }
 
       tbody.innerHTML = html;
+
+      if (typeof DataTable === "function") {
+        newsDataTable = new DataTable("#newsTable", {
+          pageLength: 5,
+          lengthMenu: [5, 10, 25, 50],
+          order: [[1, "desc"]],
+          columnDefs: [
+            { orderable: false, targets: [2, 5] }
+          ],
+          language: {
+            search: "搜尋：",
+            lengthMenu: "每頁顯示 _MENU_ 筆",
+            info: "顯示第 _START_ 至 _END_ 筆，共 _TOTAL_ 筆",
+            infoEmpty: "目前沒有資料",
+            zeroRecords: "找不到符合的公告",
+            paginate: {
+              first: "第一頁",
+              last: "最後一頁",
+              next: "下一頁",
+              previous: "上一頁"
+            }
+          }
+        });
+      }
     }
 
     // 搜尋公告過濾
     function filterNewsTable() {
       var query = document.getElementById("newsSearchInput").value.trim().toLowerCase();
+      if (newsDataTable) {
+        newsDataTable.search(query).draw();
+        return;
+      }
       if (!query) {
         renderNewsTable(allNewsData);
         return;
