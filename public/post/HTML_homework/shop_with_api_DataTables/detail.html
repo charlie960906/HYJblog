@@ -8,8 +8,6 @@
   <!-- DaisyUI + Tailwind (CDN 版) -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet" />
-  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
   <!-- Google Visualization API -->
   <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -111,6 +109,7 @@
               type="text"
               placeholder="搜尋公告標題或內文..."
               class="input input-bordered input-sm w-full pl-9 text-xs"
+              oninput="filterNewsTable()"
             />
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -122,7 +121,7 @@
       <!-- 12 則公告表格 (Table 形式) -->
       <div class="card bg-base-100 shadow-sm border border-base-200 overflow-hidden">
         <div class="overflow-x-auto">
-          <table id="newsTable" class="table table-zebra table-hover w-full text-xs sm:text-sm">
+          <table class="table table-zebra table-hover w-full text-xs sm:text-sm">
             <thead class="bg-base-200/70 text-slate-700 text-xs uppercase font-bold">
               <tr>
                 <th class="w-16 text-center">序號</th>
@@ -289,7 +288,7 @@
       }
     });
 
-    var SHEET_ID = "1GOosTuqGX2kcSTHGDELpyzWyNldirx5spKvO5BNTmwE";
+    var SHEET_ID = "1gv0E0WL66GmsT4_fVmE7TnIKGb3MK2_70_3YkAr2qKo";
     var SHEET_NAME_PRODUCTS = "工作表1";
     var SHEET_NAME_NEWS = "最新消息";
 
@@ -342,7 +341,6 @@
     ];
 
     var allNewsData = [];
-    var newsDataTable = null;
 
     if (typeof google !== 'undefined' && google.charts) {
       try {
@@ -356,7 +354,6 @@
     }
 
     function init() {
-      document.getElementById("newsSearchInput").addEventListener("input", filterNewsTable);
       var urlParams = new URLSearchParams(window.location.search);
       var type = urlParams.get('type');
       var id = urlParams.get('id');
@@ -492,11 +489,6 @@
       var countBadge = document.getElementById("newsTotalBadge");
       if (countBadge) countBadge.innerText = "共 " + newsList.length + " 則公告";
 
-      if (newsDataTable) {
-        newsDataTable.destroy();
-        newsDataTable = null;
-      }
-
       var tbody = document.getElementById("newsTableBody");
       var html = "";
 
@@ -533,39 +525,11 @@
       }
 
       tbody.innerHTML = html;
-
-      if (typeof DataTable === "function") {
-        newsDataTable = new DataTable("#newsTable", {
-          pageLength: 5,
-          lengthMenu: [5, 10, 25, 50],
-          order: [[1, "desc"]],
-          columnDefs: [
-            { orderable: false, targets: [2, 5] }
-          ],
-          language: {
-            search: "搜尋：",
-            lengthMenu: "每頁顯示 _MENU_ 筆",
-            info: "顯示第 _START_ 至 _END_ 筆，共 _TOTAL_ 筆",
-            infoEmpty: "目前沒有資料",
-            zeroRecords: "找不到符合的公告",
-            paginate: {
-              first: "第一頁",
-              last: "最後一頁",
-              next: "下一頁",
-              previous: "上一頁"
-            }
-          }
-        });
-      }
     }
 
     // 搜尋公告過濾
     function filterNewsTable() {
       var query = document.getElementById("newsSearchInput").value.trim().toLowerCase();
-      if (newsDataTable) {
-        newsDataTable.search(query).draw();
-        return;
-      }
       if (!query) {
         renderNewsTable(allNewsData);
         return;
