@@ -190,8 +190,6 @@ HTML 使用 `type="checkbox"` 建立核取方塊；如果多個選項名稱相�
 
 作業展示：[最新消息資訊編輯頁面](https://onlineshopwithapi.netlify.app)
 
-原始檔案位置：`public/post/HTML_homework/shop_with_api_DataTables/detail.html`
-
 ### 表單版面實作
 
 編輯頁面使用 DaisyUI 的卡片、輸入欄、文字區塊和主要按鈕組合：  
