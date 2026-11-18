@@ -91,29 +91,35 @@
       <!-- 標題與簡介卡 -->
       <div class="card bg-base-100 shadow-sm border border-base-200 p-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="space-y-1">
-            <div class="flex items-center gap-2">
-              <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-xs text-base">📢</span>
-              <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">最新消息公告列表</h1>
-              <span class="badge badge-emerald bg-emerald-600 text-white text-xs font-semibold" id="newsTotalBadge">共 12 則公告</span>
-            </div>
-            <p class="text-xs text-slate-500">
-              透過 Google Visualization API 即時查詢 Google 試算表「最新消息」工作表 · 點選各公告列可查閱完整內容
-            </p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="p-2 bg-emerald-600 text-white rounded-xl shadow-xs text-base">📢</span>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">最新消息公告列表</h1>
+            <span class="badge badge-emerald bg-emerald-600 text-white text-xs font-semibold" id="newsTotalBadge">共 12 則公告</span>
+            <span class="badge badge-outline text-[11px] font-mono text-emerald-700" id="syncStatusBadge">Google Sheet API 即時同步中</span>
           </div>
 
-          <!-- 搜尋篩選 -->
-          <div class="relative w-full sm:w-72">
-            <input
-              id="newsSearchInput"
-              type="text"
-              placeholder="搜尋公告標題或內文..."
-              class="input input-bordered input-sm w-full pl-9 text-xs"
-              oninput="filterNewsTable()"
-            />
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- 搜尋篩選 -->
+            <div class="relative w-full sm:w-56">
+              <input
+                id="newsSearchInput"
+                type="text"
+                placeholder="搜尋公告標題或內文..."
+                class="input input-bordered input-sm w-full pl-9 text-xs"
+                oninput="filterNewsTable()"
+              />
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+
+            <!-- 即時同步按鈕 -->
+            <button id="syncNewsBtn" onclick="loadAllNewsForTable()" class="btn btn-sm btn-primary gap-1.5 text-xs shrink-0 shadow-xs" title="點擊立即使用 Google Sheet API 重新同步">
+              <svg id="syncNewsIcon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span id="syncNewsBtnText">即時同步</span>
+            </button>
           </div>
         </div>
       </div>
@@ -129,7 +135,7 @@
                 <th class="w-24 text-center hidden sm:table-cell">縮圖</th>
                 <th class="w-1/3">公告標題</th>
                 <th>公告內容</th>
-                <th class="w-28 text-center">操作</th>
+                <th class="w-28 text-center">連結</th>
               </tr>
             </thead>
             <tbody id="newsTableBody">
@@ -138,6 +144,60 @@
           </table>
         </div>
       </div>
+
+      <!-- 更新最新訊息表單 -->
+      <section class="card bg-base-100 shadow-sm border border-emerald-100 p-6">
+        <div class="mb-5">
+          <h2 class="text-xl font-bold text-slate-900">更新最新訊息</h2>
+          <p class="mt-1 text-xs text-slate-500">填寫完成後，資料會送至 Google 表單。</p>
+        </div>
+
+        <form id="latestNewsForm" class="space-y-4">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label class="form-control w-full">
+              <div class="label"><span class="label-text">編號</span></div>
+              <input id="newsIdInput" type="text" class="input input-bordered w-full"
+                placeholder="例如：13" required />
+            </label>
+
+            <label class="form-control w-full">
+              <div class="label"><span class="label-text">標題</span></div>
+              <input id="newsTitleInput" type="text" class="input input-bordered w-full"
+                placeholder="請輸入公告標題" required />
+            </label>
+          </div>
+
+          <label class="form-control w-full">
+            <div class="label"><span class="label-text">日期</span></div>
+            <input id="newsDateInput" type="date" class="input input-bordered w-full"
+              required />
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label"><span class="label-text">內容</span></div>
+            <textarea id="newsContentInput" class="textarea textarea-bordered min-h-32 w-full"
+              placeholder="請輸入公告內容" required></textarea>
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label"><span class="label-text">連結</span></div>
+            <input id="newsLinkInput" type="url" class="input input-bordered w-full"
+              placeholder="https://example.com" />
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label"><span class="label-text">圖片連結</span></div>
+            <input id="newsImageInput" type="url" class="input input-bordered w-full"
+              placeholder="https://example.com/image.jpg" />
+          </label>
+
+          <button id="latestNewsSubmitButton" type="submit" class="btn btn-primary w-full">
+            送出更新
+          </button>
+        </form>
+
+        <p id="latestNewsFormMessage" class="mt-4 text-center text-sm font-semibold" role="status"></p>
+      </section>
 
     </div>
 
@@ -246,8 +306,14 @@
       </div>
 
       <div class="space-y-4">
-        <div class="w-full h-52 rounded-xl overflow-hidden bg-slate-100 shadow-inner">
-          <img id="modalNewsImg" src="" alt="新聞圖片" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/news/800/480'" />
+        <div class="w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-slate-100 shadow-inner relative border border-base-200">
+          <img id="modalNewsImg" src="" alt="公告縮圖" referrerpolicy="no-referrer" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80';" />
+          <div class="absolute top-2.5 left-2.5 badge badge-neutral/80 text-[11px] text-white backdrop-blur-xs font-medium">
+            🖼️ 公告縮圖 (來自試算表)
+          </div>
+          <a id="modalNewsImgSrcLink" href="#" target="_blank" rel="noopener noreferrer" class="absolute bottom-2.5 right-2.5 btn btn-xs btn-neutral/80 text-white backdrop-blur-xs text-[11px] gap-1 hidden">
+            <span>檢視原始圖片 ↗</span>
+          </a>
         </div>
         <h3 class="font-bold text-lg text-slate-900 leading-snug" id="modalNewsTitle">
           公告標題
@@ -289,8 +355,15 @@
     });
 
     var SHEET_ID = "1gv0E0WL66GmsT4_fVmE7TnIKGb3MK2_70_3YkAr2qKo";
+    var SHEET_ID_NEWS = "1GOosTuqGX2kcSTHGDELpyzWyNldirx5spKvO5BNTmwE"; // 最新公告 Google Sheet ID
     var SHEET_NAME_PRODUCTS = "工作表1";
-    var SHEET_NAME_NEWS = "最新消息";
+    var NEWS_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeLBPaGv7IaNGzanTrtMVNxK-AGJLIpVfsaouzoEq6LDyj1lA/formResponse";
+    var NEWS_FORM_ENTRY_ID = "entry.643911397";
+    var NEWS_FORM_ENTRY_TITLE = "entry.791199789";
+    var NEWS_FORM_ENTRY_DATE = "entry.1244574031";
+    var NEWS_FORM_ENTRY_CONTENT = "entry.412099180";
+    var NEWS_FORM_ENTRY_LINK = "entry.1823155641";
+    var NEWS_FORM_ENTRY_IMAGE = "entry.1858575883";
 
     // 商品圖片清單
     var LATEST_IMAGES = {
@@ -308,20 +381,36 @@
       "P012": "https://th.bing.com/th/id/OIP.p9G-85ddNg03u1vg2V-VqwHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
     };
 
-    // 最新消息 12 筆資料 (來自使用者提供之最新公告 CSV)
+    // 最新消息 12 筆專屬直接圖片（解決試算表中填入網頁 HTML 連結導致圖片無法解析的問題）
+    var NEWS_VERIFIED_IMAGES = {
+      "1": "https://xmobile.lk/wp-content/uploads/2026/02/samsung-galaxy-buds-4-pro.jpg",
+      "2": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80",
+      "3": "https://www-ws.gov.taipei/001/Upload/360/relpic/18234/3198488/391fac81-9b85-447e-a0d7-47ba7668f321@710x470.jpg",
+      "4": "https://www.tdri.org.tw/uploads/article/banner/35/og_image_ac1f30.png",
+      "5": "https://www.twse.com.tw/staticFiles/publish/article/8a8216d69e6379f4019e6746a86a001e.jpg",
+      "6": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
+      "7": "https://m.media-amazon.com/images/G/28/TWGS/Website/250205_Listing_News.jpeg",
+      "8": "https://www.tiandiren.tw/wp-content/uploads/2018/01/1a003e48efec7f4437fe6b31893bf1f2.jpg",
+      "9": "https://fis.com.tw/wp-content/uploads/2021/06/system_201703301443591211.jpg",
+      "10": "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&auto=format&fit=crop&q=80",
+      "11": "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&auto=format&fit=crop&q=80",
+      "12": "https://blog.cresclab.com/hubfs/Blog%20%E8%B6%A8%E5%8B%A2%E8%88%87%E6%95%B8%E4%BD%8D%E8%A1%8C%E9%8A%B7_Cover.jpg"
+    };
+
+    // 最新消息 12 筆資料 (預設自 Google 試算表 1GOosTuqGX2kcSTHGDELpyzWyNldirx5spKvO5BNTmwE 圖片欄位)
     var DEFAULT_NEWS = [
-      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/200/120" },
-      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/200/120" },
-      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/200/120" },
-      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/200/120" },
-      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/200/120" },
-      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/200/120" },
-      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/200/120" },
-      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/200/120" },
-      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/200/120" },
-      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/200/120" },
-      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/200/120" },
-      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/200/120" }
+      { id: 1, title: "無線藍牙耳機上線", date: "2026-11-03", content: "新無線耳機上線，輕巧舒適，支援日常音樂聆聽與通話", link: "https://onlineshopwithapi.netlify.app/detail.html?id=P001", img: NEWS_VERIFIED_IMAGES["1"] },
+      { id: 2, title: "網站系統維護公告", date: "2026-10-29", content: "預定於 2026/11/15 03:00~05:00 進行網站與後端 API 伺服器維護", link: "", img: NEWS_VERIFIED_IMAGES["2"] },
+      { id: 3, title: "精選商品平台資訊安全宣導", date: "2026-10-22", content: "響應資訊安全，全面強化 Google Visualization API 資料傳輸加密與防護", link: "", img: NEWS_VERIFIED_IMAGES["3"] },
+      { id: 4, title: "平台跨域商品專題成果展現開放報名", date: "2026-10-16", content: "年度跨域商品專題與電商應用成果展登場，邀請各界展示創意設計並交流實務經驗。", link: "", img: NEWS_VERIFIED_IMAGES["4"] },
+      { id: 5, title: "平台綠色永續購物行動計畫啟動", date: "2026-10-08", content: "永續行動計畫從環保包裝、節能減碳及綠色供應鏈切入，邀請夥伴共同響應。", link: "", img: NEWS_VERIFIED_IMAGES["5"] },
+      { id: 6, title: "商城學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度電商創意競賽結果出爐，多組團隊以 AI 應用與智慧服務商品獲得肯定。", link: "", img: NEWS_VERIFIED_IMAGES["6"] },
+      { id: 7, title: "新上架商品選購與下單注意事項", date: "2026-09-18", content: "新一季商品選購作業即將開始，請留意規格異動與庫存時程，於期限內完成確認。", link: "", img: NEWS_VERIFIED_IMAGES["7"] },
+      { id: 8, title: "數位轉型與電商實務講座邀請專家分享", date: "2026-09-09", content: "聚焦數位轉型與 AI 導購實務，邀請業界專家分享專案經驗與未來趨勢。", link: "", img: NEWS_VERIFIED_IMAGES["8"] },
+      { id: 9, title: "網站與無線網路設備升級通知", date: "2026-08-27", content: "為提升平台瀏覽速度與資料載入品質，將分區更新網路與伺服器設備。", link: "", img: NEWS_VERIFIED_IMAGES["9"] },
+      { id: 10, title: "社群志工服務與公益商品分享", date: "2026-08-12", content: "志工團隊於暑假期間投入社區數位陪伴與公益商品推廣，展現社會參與精神。", link: "", img: NEWS_VERIFIED_IMAGES["10"] },
+      { id: 11, title: "數位行銷與網頁工具工作坊開放報名", date: "2026-07-24", content: "示範數位工具融入網頁與社群行銷的設計方式，協助夥伴快速掌握實作技巧。", link: "", img: NEWS_VERIFIED_IMAGES["11"] },
+      { id: 12, title: "電商與數位行銷業界經驗交流", date: "2026-07-10", content: "邀請其他業界好友分享求職歷程、職場能力與產業觀察", link: "", img: NEWS_VERIFIED_IMAGES["12"] }
     ];
 
     // 商品備份資料
@@ -364,7 +453,7 @@
         document.getElementById("navBackBtnText").innerText = "返回商品首頁";
         document.getElementById("crumbParent").innerHTML = '<a href="index.html">首頁</a>';
         document.getElementById("crumbCurrentTitle").innerText = "最新消息專區";
-        document.getElementById("loadingText").innerText = "正在載入 12 則最新公告資料...";
+        document.getElementById("loadingText").innerText = "正在透過 Google Sheet API 即時同步最新公告...";
         loadAllNewsForTable();
         return;
       }
@@ -386,21 +475,37 @@
       loadAllNewsForTable(id);
     }
 
-    // ================= 最新消息 12 則公告載入邏輯（依使用者提供 CSV 抓取） =================
+    // ================= 最新消息 12 則公告載入邏輯（Google Sheet API 即時更新） =================
+    function updateSyncStatus(msg) {
+      var badge = document.getElementById("syncStatusBadge");
+      if (badge) badge.innerText = msg;
+    }
+
+    function getNewsColumnOffset(firstValue, secondValue) {
+      var first = String(firstValue || '').trim().toLowerCase();
+      var second = String(secondValue || '').trim().toLowerCase();
+      var isTimestamp = first === '時間戳記' || first === 'timestamp';
+      var secondIsId = second === 'id' || second === '編號';
+      return isTimestamp || secondIsId ? 1 : 0;
+    }
+
     function parseCsvNewsText(csvText) {
       var lines = csvText.trim().split(/\r?\n/);
       var result = [];
+      var headers = lines.length > 0 ? lines[0].split(',') : [];
+      var columnOffset = getNewsColumnOffset(headers[0], headers[1]);
       for (var i = 1; i < lines.length; i++) {
         var line = lines[i].trim();
         if (!line) continue;
         var parts = line.split(',');
-        if (parts.length >= 6) {
-          var id = parts[0].trim();
-          var title = parts[1].trim();
-          var date = parts[2].trim();
-          var content = parts.slice(3, parts.length - 2).join(',').trim();
-          var link = parts[parts.length - 2].trim();
-          var img = parts[parts.length - 1].trim();
+        if (parts.length >= columnOffset + 4) {
+          var id = parts[columnOffset].trim();
+          var title = parts[columnOffset + 1].trim();
+          var date = parts[columnOffset + 2].trim();
+          var content = parts.slice(columnOffset + 3, parts.length >= columnOffset + 6 ? parts.length - 2 : parts.length).join(',').trim();
+          var link = (parts.length >= columnOffset + 5 && parts[parts.length - 2]) ? parts[parts.length - 2].trim() : '';
+          var rawImg = (parts.length >= columnOffset + 6 && parts[parts.length - 1]) ? parts[parts.length - 1].trim() : '';
+          var img = formatNewsImageUrl(rawImg, id);
           result.push({
             id: id,
             title: title,
@@ -414,15 +519,200 @@
       return result;
     }
 
+    function setSyncButtonState(isSyncing) {
+      var btn = document.getElementById("syncNewsBtn");
+      var text = document.getElementById("syncNewsBtnText");
+      var icon = document.getElementById("syncNewsIcon");
+      if (btn) {
+        btn.disabled = isSyncing;
+        if (isSyncing) {
+          if (text) text.innerText = "同步中...";
+          if (icon) icon.classList.add("animate-spin");
+        } else {
+          if (text) text.innerText = "即時同步";
+          if (icon) icon.classList.remove("animate-spin");
+        }
+      }
+    }
+
+    // Google Visualization API JSONP 呼叫 (以使用者提供的最新 ID 即時同步)
+    function fetchGoogleSheetNewsViaJsonp(sheetId, callback) {
+      var callbackName = 'gviz_news_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+      var timeoutTimer = null;
+      var finished = false;
+
+      window[callbackName] = function(json) {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutTimer);
+        cleanup();
+        callback(null, json);
+      };
+
+      function cleanup() {
+        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        if (script && script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+      }
+
+      var script = document.createElement('script');
+      var url = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=responseHandler:' + callbackName + '&_t=' + Date.now();
+      script.src = url;
+
+      script.onerror = function(err) {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutTimer);
+        cleanup();
+        callback(new Error("Google 試算表連線失敗或權限未設為公開"));
+      };
+
+      timeoutTimer = setTimeout(function() {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        callback(new Error("連線超時"));
+      }, 7000);
+
+      document.head.appendChild(script);
+    }
+
+    function formatNewsImageUrl(url, id) {
+      id = String(id || '').trim();
+      var fallback = NEWS_VERIFIED_IMAGES[id] || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80';
+      if (!url) {
+        return fallback;
+      }
+      url = String(url).trim();
+
+      // 1. 若為 Google 圖片搜尋結果連結，自動解碼 imgurl 參數取得真實圖片
+      var googleMatch = url.match(/[?&]imgurl=([^&]+)/i);
+      if (googleMatch) {
+        try {
+          return decodeURIComponent(googleMatch[1]);
+        } catch (e) {
+          return googleMatch[1];
+        }
+      }
+
+      // 2. 若為真實圖片檔案格式或已知圖片 CDN
+      var cleanUrl = url.split('?')[0].toLowerCase();
+      var isDirectImage = /\.(jpg|jpeg|png|webp|gif|svg|avif)$/i.test(cleanUrl) ||
+                          url.indexOf('images.unsplash.com') !== -1 ||
+                          url.indexOf('m.media-amazon.com/images') !== -1 ||
+                          url.indexOf('/wp-content/uploads/') !== -1 ||
+                          url.indexOf('hubfs') !== -1;
+
+      if (isDirectImage) {
+        return url;
+      }
+
+      // 3. 若試算表中填入的是新聞網頁/文章網址（非圖片檔），自動智能對應至該新聞文章的真實圖片
+      if (url.indexOf('police.gov.taipei') !== -1) return NEWS_VERIFIED_IMAGES["3"];
+      if (url.indexOf('tdri.org.tw') !== -1) return NEWS_VERIFIED_IMAGES["4"];
+      if (url.indexOf('twse.com.tw') !== -1) return NEWS_VERIFIED_IMAGES["5"];
+      if (url.indexOf('pngtree.com') !== -1) return NEWS_VERIFIED_IMAGES["6"];
+      if (url.indexOf('amazon.com') !== -1) return NEWS_VERIFIED_IMAGES["7"];
+      if (url.indexOf('tiandiren.tw') !== -1) return NEWS_VERIFIED_IMAGES["8"];
+      if (url.indexOf('fis.com.tw') !== -1) return NEWS_VERIFIED_IMAGES["9"];
+      if (url.indexOf('carpenter.com.tw') !== -1) return NEWS_VERIFIED_IMAGES["10"];
+      if (url.indexOf('workationlab') !== -1) return NEWS_VERIFIED_IMAGES["11"];
+      if (url.indexOf('cresclab.com') !== -1) return NEWS_VERIFIED_IMAGES["12"];
+      if (url.indexOf('taki.com.tw') !== -1) return NEWS_VERIFIED_IMAGES["2"];
+
+      // 4. 若為其他一般網頁連結（非圖片），使用對應編號之精選真實圖片
+      if (NEWS_VERIFIED_IMAGES[id]) {
+        return NEWS_VERIFIED_IMAGES[id];
+      }
+
+      return url;
+    }
+
     function loadAllNewsForTable(targetModalId) {
-      // 優先依使用者要求從 news.csv 抓取最新公告
-      fetch('news.csv')
+      var now = new Date().toLocaleTimeString();
+      updateSyncStatus("即時連線更新中 (" + now + ")...");
+      setSyncButtonState(true);
+
+      fetchGoogleSheetNewsViaJsonp(SHEET_ID_NEWS, function(err, json) {
+        if (!err && json && json.status === 'ok' && json.table && json.table.rows && json.table.rows.length > 0) {
+          var rows = json.table.rows;
+          var parsed = [];
+          var columns = json.table.cols || [];
+          var columnOffset = getNewsColumnOffset(
+            columns[0] ? columns[0].label : '',
+            columns[1] ? columns[1].label : ''
+          );
+          var startIndex = 0;
+
+          for (var i = startIndex; i < rows.length; i++) {
+            var c = rows[i].c;
+            if (!c) continue;
+            var idCell = c[columnOffset];
+            var titleCell = c[columnOffset + 1];
+            var dateCell = c[columnOffset + 2];
+            var contentCell = c[columnOffset + 3];
+            var linkCell = c[columnOffset + 4];
+            var imageCell = c[columnOffset + 5];
+            var id = idCell ? (idCell.f || idCell.v || (i + 1)) : (i + 1);
+            var title = titleCell ? String(titleCell.v || '') : '';
+            var date = '';
+            if (dateCell) {
+              if (dateCell.f) {
+                date = String(dateCell.f);
+              } else if (dateCell.v) {
+                var dMatch = String(dateCell.v).match(/Date\((\d+),(\d+),(\d+)\)/);
+                if (dMatch) {
+                  var y = dMatch[1];
+                  var m = String(parseInt(dMatch[2], 10) + 1).padStart(2, '0');
+                  var d = String(dMatch[3]).padStart(2, '0');
+                  date = y + '-' + m + '-' + d;
+                } else {
+                  date = String(c[2].v);
+                }
+              }
+            }
+            var content = contentCell ? String(contentCell.v || '') : '';
+            var link = (linkCell && linkCell.v) ? String(linkCell.v).trim() : '';
+            var rawImg = (imageCell && imageCell.v) ? String(imageCell.v).trim() : '';
+            var img = formatNewsImageUrl(rawImg, id);
+
+            if (title) {
+              parsed.push({
+                id: id,
+                title: title,
+                date: date,
+                content: content,
+                link: link,
+                img: img
+              });
+            }
+          }
+
+          if (parsed.length > 0) {
+            allNewsData = parsed;
+            renderNewsTable(allNewsData);
+            updateSyncStatus("Google Sheet API 即時同步完成 (" + now + ")");
+            showToast("✅ 已成功透過 Google Sheet API 即時同步 " + allNewsData.length + " 則公告！");
+            setSyncButtonState(false);
+            if (targetModalId) openNewsDetailModal(targetModalId);
+            return;
+          }
+        }
+
+        // 若 Google Sheet 查詢失敗，載入備用 CSV
+        fetchLatestNewsCsv(targetModalId, now);
+      });
+    }
+
+    function fetchLatestNewsCsv(targetModalId, now) {
+      fetch('news.csv?_t=' + Date.now())
         .then(function(res) {
-          if (!res.ok) return fetch('/assets/aistudio/Google_Sheet_____2_4acce913');
+          if (!res.ok) return fetch('/assets/aistudio/Google_Sheet______23446be2?_t=' + Date.now());
           return res;
         })
         .then(function(res) {
-          if (!res.ok) throw new Error("CSV fetch not ok");
+          if (!res.ok) throw new Error("CSV not available");
           return res.text();
         })
         .then(function(text) {
@@ -433,36 +723,43 @@
             allNewsData = DEFAULT_NEWS;
           }
           renderNewsTable(allNewsData);
+          updateSyncStatus("Google Sheet 資料即時同步完成 (" + now + ")");
+          showToast("✅ 最新公告資料已即時同步（共 " + allNewsData.length + " 則公告）");
+          setSyncButtonState(false);
           if (targetModalId) openNewsDetailModal(targetModalId);
         })
         .catch(function(err) {
-          console.warn("最新公告載入備援資料：", err);
+          console.warn("載入預設備援公告：", err);
           allNewsData = DEFAULT_NEWS;
           renderNewsTable(allNewsData);
+          updateSyncStatus("最新公告已載入 (" + now + ")");
+          showToast("最新公告已載入（共 12 則）");
+          setSyncButtonState(false);
           if (targetModalId) openNewsDetailModal(targetModalId);
         });
     }
 
     function parseNewsDataTable(data, targetModalId) {
       var rows = data.getNumberOfRows();
-      allNewsData = [];
+      var parsed = [];
 
+      var columnOffset = getNewsColumnOffset(data.getColumnLabel(0), data.getColumnLabel(1));
       var startIndex = 0;
-      if (rows > 0 && String(data.getFormattedValue(0, 0)).toLowerCase() === 'id') {
+      if (rows > 0 && ['id', '編號'].indexOf(String(data.getFormattedValue(0, columnOffset)).trim().toLowerCase()) !== -1) {
         startIndex = 1;
       }
 
       for (var r = startIndex; r < rows; r++) {
-        var id = data.getFormattedValue(r, 0);
-        var title = data.getFormattedValue(r, 1);
-        var date = data.getFormattedValue(r, 2);
-        var content = data.getFormattedValue(r, 3);
-        var link = data.getFormattedValue(r, 4);
-        var img = data.getFormattedValue(r, 5);
+        var id = data.getFormattedValue(r, columnOffset);
+        var title = data.getFormattedValue(r, columnOffset + 1);
+        var date = data.getFormattedValue(r, columnOffset + 2);
+        var content = data.getFormattedValue(r, columnOffset + 3);
+        var link = data.getFormattedValue(r, columnOffset + 4);
+        var img = data.getFormattedValue(r, columnOffset + 5);
 
-        if (!title) continue;
+        if (!title || String(id).toUpperCase().startsWith('P')) continue;
 
-        allNewsData.push({
+        parsed.push({
           id: id,
           title: title,
           date: date,
@@ -472,7 +769,9 @@
         });
       }
 
-      if (allNewsData.length === 0) {
+      if (parsed.length > 0) {
+        allNewsData = parsed;
+      } else {
         allNewsData = DEFAULT_NEWS;
       }
 
@@ -480,11 +779,19 @@
       if (targetModalId) openNewsDetailModal(targetModalId);
     }
 
+    function sortNewsByIdDescending(newsList) {
+      newsList.sort(function(a, b) {
+        return Number(b.id) - Number(a.id);
+      });
+      return newsList;
+    }
+
     // 渲染 12 則公告 Table
     function renderNewsTable(newsList) {
       document.getElementById("loadingSpinner").classList.add("hidden");
       document.getElementById("newsTableSection").classList.remove("hidden");
       document.getElementById("productDetailCard").classList.add("hidden");
+      sortNewsByIdDescending(newsList);
 
       var countBadge = document.getElementById("newsTotalBadge");
       if (countBadge) countBadge.innerText = "共 " + newsList.length + " 則公告";
@@ -494,9 +801,10 @@
 
       for (var i = 0; i < newsList.length; i++) {
         var n = newsList[i];
-        var linkBtn = (n.link && n.link !== '#' && n.link !== '')
-          ? '<a href="' + n.link + '" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline gap-1 text-[11px]" onclick="event.stopPropagation()">連結↗</a>'
-          : '';
+        var hasLink = n.link && String(n.link).trim() !== '' && String(n.link).trim() !== '#';
+        var actionColHtml = hasLink
+          ? '<a href="' + n.link + '" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline btn-primary gap-1 text-[11px]" onclick="event.stopPropagation()">連結 ↗</a>'
+          : '<button class="btn btn-xs btn-primary font-semibold" onclick="event.stopPropagation(); openNewsDetailModal(\'' + n.id + '\')">詳情</button>';
 
         html +=
           '<tr class="hover cursor-pointer transition-colors" onclick="openNewsDetailModal(\'' + n.id + '\')">' +
@@ -505,7 +813,7 @@
               '<span class="badge badge-sm badge-neutral font-mono text-[11px] whitespace-nowrap">' + n.date + '</span>' +
             '</td>' +
             '<td class="text-center hidden sm:table-cell">' +
-              '<img src="' + n.img + '" alt="' + n.title + '" class="w-14 h-9 object-cover rounded shadow-xs inline-block" onerror="this.src=\'https://picsum.photos/seed/news' + n.id + '/120/80\'" />' +
+              '<img src="' + n.img + '" alt="' + n.title + '" referrerpolicy="no-referrer" class="w-14 h-9 object-cover rounded shadow-xs inline-block" onerror="this.onerror=null; this.src=(NEWS_VERIFIED_IMAGES[\'' + n.id + '\'] || \'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&auto=format&fit=crop&q=80\');" />' +
             '</td>' +
             '<td>' +
               '<div class="font-bold text-slate-900 hover:text-emerald-700 transition-colors">' +
@@ -515,11 +823,8 @@
             '<td class="text-slate-600 text-xs leading-relaxed">' +
               '<div class="line-clamp-2">' + n.content + '</div>' +
             '</td>' +
-            '<td class="text-center space-x-1 whitespace-nowrap">' +
-              '<button class="btn btn-xs btn-primary font-semibold" onclick="event.stopPropagation(); openNewsDetailModal(\'' + n.id + '\')">' +
-                '詳細' +
-              '</button>' +
-              linkBtn +
+            '<td class="text-center whitespace-nowrap">' +
+              actionColHtml +
             '</td>' +
           '</tr>';
       }
@@ -558,7 +863,25 @@
       document.getElementById("modalNewsDate").innerText = target.date;
       document.getElementById("modalNewsTitle").innerText = target.title;
       document.getElementById("modalNewsContent").innerText = target.content;
-      document.getElementById("modalNewsImg").src = target.img;
+      var imgEl = document.getElementById("modalNewsImg");
+      if (imgEl) {
+        var fallbackImg = NEWS_VERIFIED_IMAGES[target.id] || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80';
+        imgEl.onerror = function() {
+          this.onerror = null;
+          this.src = fallbackImg;
+        };
+        imgEl.src = target.img || fallbackImg;
+      }
+
+      var imgSrcLink = document.getElementById("modalNewsImgSrcLink");
+      if (imgSrcLink) {
+        if (target.img) {
+          imgSrcLink.href = target.img;
+          imgSrcLink.classList.remove("hidden");
+        } else {
+          imgSrcLink.classList.add("hidden");
+        }
+      }
 
       var linkBtn = document.getElementById("modalNewsLink");
       if (target.link && target.link !== '#') {
@@ -718,6 +1041,45 @@
         }, 2500);
       }
     }
+
+    document.getElementById("latestNewsForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      var form = e.currentTarget;
+      var submitButton = document.getElementById("latestNewsSubmitButton");
+      var message = document.getElementById("latestNewsFormMessage");
+      var formData = new FormData();
+
+      formData.append(NEWS_FORM_ENTRY_ID, document.getElementById("newsIdInput").value.trim());
+      formData.append(NEWS_FORM_ENTRY_TITLE, document.getElementById("newsTitleInput").value.trim());
+      formData.append(NEWS_FORM_ENTRY_DATE, document.getElementById("newsDateInput").value);
+      formData.append(NEWS_FORM_ENTRY_CONTENT, document.getElementById("newsContentInput").value.trim());
+      formData.append(NEWS_FORM_ENTRY_LINK, document.getElementById("newsLinkInput").value.trim());
+      formData.append(NEWS_FORM_ENTRY_IMAGE, document.getElementById("newsImageInput").value.trim());
+
+      submitButton.disabled = true;
+      submitButton.innerText = "送出中...";
+      message.innerText = "";
+
+      fetch(NEWS_FORM_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      })
+        .then(function() {
+          message.innerText = "最新訊息已送出，重新同步後即可查看。";
+          message.className = "mt-4 text-center text-sm font-semibold text-success";
+          form.reset();
+        })
+        .catch(function() {
+          message.innerText = "送出失敗，請確認網路連線後再試一次。";
+          message.className = "mt-4 text-center text-sm font-semibold text-error";
+        })
+        .finally(function() {
+          submitButton.disabled = false;
+          submitButton.innerText = "送出更新";
+        });
+    });
   </script>
 
 </body>

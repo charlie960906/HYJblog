@@ -43,11 +43,11 @@
 
     <div class="flex-none gap-2">
       <!-- 重新整理按鈕 -->
-      <button onclick="fetchAllData()" class="btn btn-sm btn-ghost gap-1 text-xs" title="從 Google 試算表重新抓取最新資料">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <button id="refreshBtn" onclick="fetchAllData()" class="btn btn-sm btn-ghost gap-1.5 text-xs" title="從 Google 試算表重新抓取最新資料">
+        <svg id="refreshIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
-        <span>重新整理</span>
+        <span id="refreshBtnText">重新整理</span>
       </button>
     </div>
   </div>
@@ -157,20 +157,20 @@
       "P012": "https://th.bing.com/th/id/OIP.p9G-85ddNg03u1vg2V-VqwHaHa?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
     };
 
-    // 最新消息 12 筆資料 (來自使用者提供之最新消息 Google 試算表 CSV)
+    // 最新消息 12 筆資料 (預設自 Google 試算表 1GOosTuqGX2kcSTHGDELpyzWyNldirx5spKvO5BNTmwE)
     var DEFAULT_NEWS = [
-      { id: 1, title: "校園智慧學習平台正式上線", date: "2026-11-03", content: "全新智慧學習平台即日起提供課程公告、教材查詢與學習進度管理功能，協助師生更有效率地掌握課程資訊。", link: "https://example.com/news/001", img: "https://picsum.photos/seed/news1/200/120" },
-      { id: 2, title: "圖書館延長開放時間公告", date: "2026-10-29", content: "配合期中評量與專題製作需求，圖書館自本週起延長平日晚間開放時間，詳細時段請參閱館務公告。", link: "https://example.com/news/002", img: "https://picsum.photos/seed/news2/200/120" },
-      { id: 3, title: "資訊安全宣導週系列活動開跑", date: "2026-10-22", content: "本校舉辦資訊安全宣導週，安排電子郵件辨識、密碼安全及個人資料保護等主題活動，歡迎教職員工生踴躍參與。", link: "https://example.com/news/003", img: "https://picsum.photos/seed/news3/200/120" },
-      { id: 4, title: "跨域創新專題成果展開放報名", date: "2026-10-16", content: "年度跨域創新專題成果展即將登場，邀請各系學生展示創意作品，並與產業代表交流實務經驗。", link: "https://example.com/news/004", img: "https://picsum.photos/seed/news4/200/120" },
-      { id: 5, title: "校園環境永續行動計畫啟動", date: "2026-10-08", content: "永續行動計畫將從節能、減塑及資源回收三個面向推動，並邀請各單位共同提出改善方案。", link: "https://example.com/news/005", img: "https://picsum.photos/seed/news5/200/120" },
-      { id: 6, title: "學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度學生創意競賽結果出爐，多組團隊以人工智慧應用、智慧服務及數位內容作品獲得評審肯定。", link: "https://example.com/news/006", img: "https://picsum.photos/seed/news6/200/120" },
-      { id: 7, title: "新學期選課注意事項", date: "2026-09-18", content: "新學期選課作業即將開始，請同學留意選課時程、擋修條件與課程異動資訊，並於期限內完成確認。", link: "https://example.com/news/007", img: "https://picsum.photos/seed/news7/200/120" },
-      { id: 8, title: "產學合作講座邀請業界專家分享", date: "2026-09-09", content: "本次講座聚焦數位轉型與AI導入實務，邀請業界專家分享專案經驗、人才需求及未來發展趨勢。", link: "https://example.com/news/008", img: "https://picsum.photos/seed/news8/200/120" },
-      { id: 9, title: "校園無線網路設備升級通知", date: "2026-08-27", content: "為提升教學與研究網路品質，資訊單位將分區更新無線網路設備，施工期間部分區域可能短暫中斷服務。", link: "https://example.com/news/009", img: "https://picsum.photos/seed/news9/200/120" },
-      { id: 10, title: "暑期志工服務成果分享", date: "2026-08-12", content: "學生志工團隊於暑假期間投入社區數位陪伴與環境整理服務，透過實際行動展現關懷與公民參與精神。", link: "https://example.com/news/010", img: "https://picsum.photos/seed/news10/200/120" },
-      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "工作坊將示範數位工具融入課堂活動的設計方式，並安排分組實作，協助教師發展可應用於課程的教學方案。", link: "https://example.com/news/011", img: "https://picsum.photos/seed/news11/200/120" },
-      { id: 12, title: "校友職涯經驗交流活動", date: "2026-07-10", content: "邀請不同領域校友返校分享求職歷程、職場能力與產業觀察，提供在校學生生涯探索參考。", link: "https://example.com/news/012", img: "https://picsum.photos/seed/news12/200/120" }
+      { id: 1, title: "無線藍牙耳機上線", date: "2026-11-03", content: "新無線耳機上線，輕巧舒適，支援日常音樂聆聽與通話", link: "https://onlineshopwithapi.netlify.app/detail.html?id=P001", img: "https://xmobile.lk/wp-content/uploads/2026/02/samsung-galaxy-buds-4-pro.jpg" },
+      { id: 2, title: "網站系統維護公告", date: "2026-10-29", content: "預定於 2026/11/15 03:00~05:00 進行網站與後端 API 伺服器維護", link: "", img: "https://taki.com.tw/news/cat-2/87?srsltid=AYCX9vIaSsNeiAgWkUHgmGYM6KCzz_L27dEUqP_IUZpaTmO7Z2VzENOZ" },
+      { id: 3, title: "精選商品平台資訊安全宣導", date: "2026-10-22", content: "響應資訊安全，全面強化 Google Visualization API 資料傳輸加密與防護", link: "", img: "https://police.gov.taipei/News_Content.aspx?n=0B23E5FDC58A7558&sms=779AFA96A002C3AF&s=A0AE852E26AF5252" },
+      { id: 4, title: "平台跨域商品專題成果展現開放報名", date: "2026-10-16", content: "年度跨域商品專題與電商應用成果展登場，邀請各界展示創意設計並交流實務經驗。", link: "", img: "https://www.tdri.org.tw/zh-TW/design-resource/coc" },
+      { id: 5, title: "平台綠色永續購物行動計畫啟動", date: "2026-10-08", content: "永續行動計畫從環保包裝、節能減碳及綠色供應鏈切入，邀請夥伴共同響應。", link: "", img: "https://www.twse.com.tw/market_insights/zh/detail/8a8216d69e6379f4019e67512b770023" },
+      { id: 6, title: "商城學生創意競賽獲獎名單公布", date: "2026-09-30", content: "本年度電商創意競賽結果出爐，多組團隊以 AI 應用與智慧服務商品獲得肯定。", link: "", img: "https://picsum.photos/seed/news6/200/120" },
+      { id: 7, title: "新上架商品選購與下單注意事項", date: "2026-09-18", content: "新一季商品選購作業即將開始，請留意規格異動與庫存時程，於期限內完成確認。", link: "", img: "https://picsum.photos/seed/news7/200/120" },
+      { id: 8, title: "數位轉型與電商實務講座邀請專家分享", date: "2026-09-09", content: "聚焦數位轉型與 AI 導購實務，邀請業界專家分享專案經驗與未來趨勢。", link: "", img: "https://picsum.photos/seed/news8/200/120" },
+      { id: 9, title: "網站與無線網路設備升級通知", date: "2026-08-27", content: "為提升平台瀏覽速度與資料載入品質，將分區更新網路與伺服器設備。", link: "", img: "https://picsum.photos/seed/news9/200/120" },
+      { id: 10, title: "社群志工服務與公益商品分享", date: "2026-08-12", content: "志工團隊於暑假期間投入社區數位陪伴與公益商品推廣，展現社會參與精神。", link: "", img: "https://picsum.photos/seed/news10/200/120" },
+      { id: 11, title: "教學創新工作坊開放報名", date: "2026-07-24", content: "示範數位工具融入網頁與社群行銷的設計方式，協助夥伴快速掌握實作技巧。", link: "", img: "https://picsum.photos/seed/news11/200/120" },
+      { id: 12, title: "電商與數位行銷業界經驗交流", date: "2026-07-10", content: "邀請其他業界好友分享求職歷程、職場能力與產業觀察", link: "", img: "https://picsum.photos/seed/news12/200/120" }
     ];
 
     // 商品備份資料
@@ -209,11 +209,34 @@
     }
 
     function fetchAllData() {
-      fetchNewsData();
+      var refreshBtn = document.getElementById("refreshBtn");
+      var refreshText = document.getElementById("refreshBtnText");
+      var refreshIcon = document.getElementById("refreshIcon");
+      if (refreshBtn) {
+        refreshBtn.disabled = true;
+        if (refreshText) refreshText.innerText = "重新整理中...";
+        if (refreshIcon) refreshIcon.classList.add("animate-spin");
+      }
       fetchProductData();
+      setTimeout(function() {
+        if (refreshBtn) {
+          refreshBtn.disabled = false;
+          if (refreshText) refreshText.innerText = "重新整理";
+          if (refreshIcon) refreshIcon.classList.remove("animate-spin");
+        }
+        showToast("✅ 已成功重新整理最新商品！");
+      }, 700);
     }
 
     // ========== 最新消息區塊（Table 形式，串聯 Google 試算表） ==========
+    function getNewsColumnOffset(firstValue, secondValue) {
+      var first = String(firstValue || '').trim().toLowerCase();
+      var second = String(secondValue || '').trim().toLowerCase();
+      var isTimestamp = first === '時間戳記' || first === 'timestamp';
+      var secondIsId = second === 'id' || second === '編號';
+      return isTimestamp || secondIsId ? 1 : 0;
+    }
+
     function fetchNewsData() {
       var baseUrl =
         'https://docs.google.com/spreadsheets/d/' +
@@ -258,20 +281,22 @@
           var rows = json.table.rows;
           allNews = [];
 
+          var columns = json.table.cols || [];
+          var columnOffset = getNewsColumnOffset(
+            columns[0] ? columns[0].label : '',
+            columns[1] ? columns[1].label : ''
+          );
           var startIndex = 0;
-          if (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'id') {
-            startIndex = 1;
-          }
 
           for (var i = startIndex; i < rows.length; i++) {
             var c = rows[i].c;
             if (!c) continue;
-            var id = c[0] ? c[0].v : (i + 1);
-            var title = c[1] ? String(c[1].v) : '';
-            var date = c[2] ? String(c[2].f || c[2].v) : '';
-            var content = c[3] ? String(c[3].v) : '';
-            var link = c[4] ? String(c[4].v) : '';
-            var img = c[5] ? String(c[5].v) : '';
+            var id = c[columnOffset] ? c[columnOffset].v : (i + 1);
+            var title = c[columnOffset + 1] ? String(c[columnOffset + 1].v) : '';
+            var date = c[columnOffset + 2] ? String(c[columnOffset + 2].f || c[columnOffset + 2].v) : '';
+            var content = c[columnOffset + 3] ? String(c[columnOffset + 3].v) : '';
+            var link = c[columnOffset + 4] ? String(c[columnOffset + 4].v) : '';
+            var img = c[columnOffset + 5] ? String(c[columnOffset + 5].v) : '';
 
             if (!title) continue;
 
@@ -303,18 +328,19 @@
       var rows = data.getNumberOfRows();
       allNews = [];
 
+      var columnOffset = getNewsColumnOffset(data.getColumnLabel(0), data.getColumnLabel(1));
       var startIndex = 0;
-      if (rows > 0 && String(data.getFormattedValue(0, 0)).toLowerCase() === 'id') {
+      if (rows > 0 && ['id', '編號'].indexOf(String(data.getFormattedValue(0, columnOffset)).trim().toLowerCase()) !== -1) {
         startIndex = 1;
       }
 
       for (var r = startIndex; r < rows; r++) {
-        var id = data.getFormattedValue(r, 0);
-        var title = data.getFormattedValue(r, 1);
-        var date = data.getFormattedValue(r, 2);
-        var content = data.getFormattedValue(r, 3);
-        var link = data.getFormattedValue(r, 4);
-        var img = data.getFormattedValue(r, 5);
+        var id = data.getFormattedValue(r, columnOffset);
+        var title = data.getFormattedValue(r, columnOffset + 1);
+        var date = data.getFormattedValue(r, columnOffset + 2);
+        var content = data.getFormattedValue(r, columnOffset + 3);
+        var link = data.getFormattedValue(r, columnOffset + 4);
+        var img = data.getFormattedValue(r, columnOffset + 5);
 
         if (!title) continue;
 
@@ -336,9 +362,17 @@
       }
     }
 
+    function sortNewsByIdDescending(newsList) {
+      newsList.sort(function(a, b) {
+        return Number(b.id) - Number(a.id);
+      });
+      return newsList;
+    }
+
     // 渲染首頁最新消息（只有一條，點擊查看訊息跳轉至新頁面展示 12 則公告）
     function renderNewsTable(newsList) {
       if (!newsList || newsList.length === 0) return;
+      sortNewsByIdDescending(newsList);
       var latest = newsList[0];
       var dateEl = document.getElementById("singleNewsDate");
       var titleEl = document.getElementById("singleNewsTitle");
@@ -426,63 +460,71 @@
       renderFilteredCards(allProducts);
     }
 
-    function fetchViaDirectApi(url) {
-      fetch(url)
-        .then(function(res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.text();
-        })
-        .then(function(text) {
-          var startIdx = text.indexOf('{');
-          var endIdx = text.lastIndexOf('}') + 1;
-          if (startIdx === -1 || endIdx <= startIdx) throw new Error("無法解析回傳格式");
-
-          var json = JSON.parse(text.substring(startIdx, endIdx));
-          if (json.status === 'error') throw new Error(json.errors[0].message);
-
-          var rows = json.table.rows;
+    function fetchViaDirectApi() {
+      fetchProductsViaJsonp(function(err, list) {
+        hideLoading();
+        if (!err && list && list.length > 0) {
+          allProducts = list;
+        } else {
           allProducts = [];
+        }
+        renderFilteredCards(allProducts);
+      });
+    }
 
-          var startIndex = 0;
-          if (rows.length > 0 && rows[0].c && rows[0].c[0] && rows[0].c[0].v) {
-            var val0 = String(rows[0].c[0].v).toLowerCase().trim();
-            if (val0 === 'id' || val0 === '編號') startIndex = 1;
-          }
+    function fetchProductsViaJsonp(callback) {
+      var cbName = 'gviz_products_cb_' + Date.now();
+      var timeout = null;
+      var finished = false;
 
-          for (var i = startIndex; i < rows.length; i++) {
+      window[cbName] = function(json) {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeout);
+        cleanup();
+        var list = [];
+        if (json && json.status === 'ok' && json.table && json.table.rows) {
+          var rows = json.table.rows;
+          var start = (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'id') ? 1 : 0;
+          for (var i = start; i < rows.length; i++) {
             var c = rows[i].c;
             if (!c) continue;
-
             var id = String(c[0] ? c[0].v : '').trim();
             var name = String(c[1] ? c[1].v : '').trim();
             var desc = String(c[2] ? c[2].v : '').trim();
             var rawPrice = c[3] ? (c[3].f || c[3].v) : '0';
             var img = String(c[4] ? c[4].v : '').trim();
-
             if (!id) continue;
-
             var numPrice = Number(String(rawPrice).replace(/[^0-9.]/g, ''));
             var formattedPrice = !isNaN(numPrice) && numPrice > 0 ? numPrice.toLocaleString() : (rawPrice || "0");
             var finalImg = (img && img.indexOf('picsum.photos') === -1) ? img : (LATEST_IMAGES[id] || img);
-
-            allProducts.push({
-              id: id,
-              name: name || id,
-              desc: desc || "尚無商品說明",
-              price: formattedPrice,
-              img: finalImg
-            });
+            list.push({ id: id, name: name || id, desc: desc || "尚無商品說明", price: formattedPrice, img: finalImg });
           }
+        }
+        callback(null, list);
+      };
 
-          hideLoading();
-          renderFilteredCards(allProducts);
-        })
-        .catch(function(err) {
-          console.warn("商品試算表連線失敗，啟用備份資料庫：", err);
-          hideLoading();
-          allProducts = FALLBACK_PRODUCTS;
-          renderFilteredCards(allProducts);
-        });
+      function cleanup() {
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      var script = document.createElement('script');
+      script.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME_PRODUCTS) + '&tqx=responseHandler:' + cbName + '&_t=' + Date.now();
+      script.onerror = function() {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeout);
+        cleanup();
+        callback(new Error('Connection error'));
+      };
+      timeout = setTimeout(function() {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        callback(new Error('Timeout'));
+      }, 6000);
+      document.head.appendChild(script);
     }
 
     function hideLoading() {
@@ -558,7 +600,26 @@
 
       renderFilteredCards(filtered);
     }
+
+    function showToast(msg) {
+      var toast = document.getElementById("toastNotification");
+      var toastMsg = document.getElementById("toastMessage");
+      if (toast && toastMsg) {
+        toastMsg.innerText = msg;
+        toast.classList.remove("hidden");
+        setTimeout(function() {
+          toast.classList.add("hidden");
+        }, 2500);
+      }
+    }
   </script>
+
+  <!-- 提示訊息 Toast -->
+  <div id="toastNotification" class="toast toast-end hidden z-50">
+    <div class="alert alert-success text-white text-xs shadow-lg">
+      <span id="toastMessage">已完成！</span>
+    </div>
+  </div>
 
 </body>
 </html>
